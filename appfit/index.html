@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitMatch — Find Your Sport Companion</title>
+  <meta name="description" content="Find premium running, tennis, and fitness partners near you. Swiss typography, bento layouts, and real-time mapping.">
+  <!-- Google Fonts: Bebas Neue (Condensed display), Space Grotesk (UI sans), Space Mono (Labels/Timestamps) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Space+Grotesk:wght@300;400;500;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- BACK LINK -->
+  <a href="../uploads/diplogic.html" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M11 7H3M3 7L7 3M3 7L7 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    DipLogic Portfolio
+  </a>
+  <!-- VERGE MASTHEAD & NAVIGATION -->
+  <header class="masthead">
+    <div class="masthead-container">
+      <div class="logo-area">
+        <h1 class="logo-text" id="brand-logo">FITMATCH</h1>
+        <span class="logo-sub">CAMPUS STREAMS // ACTIVE_NOW</span>
+      </div>
+      <nav class="main-nav" aria-label="Primary Navigation">
+        <ul class="nav-links">
+          <li><a href="#" class="nav-link active" id="nav-explore">EXPLORE</a></li>
+          <li><a href="#" class="nav-link" id="nav-timeline">STREAM</a></li>
+          <li><a href="#" class="nav-link" id="nav-matches">MATCHES</a></li>
+        </ul>
+      </nav>
+      <div class="auth-cta">
+        <button class="btn btn-primary" id="btn-my-profile">MY PROFILE</button>
+      </div>
+      <!-- Hamburger menu for mobile -->
+      <button class="hamburger" id="hamburger-toggle" aria-label="Toggle Menu" aria-expanded="false">
+        <span class="bar"></span>
+        <span class="bar"></span>
+        <span class="bar"></span>
+      </button>
+    </div>
+  </header>
+
+  <!-- MOBILE NAVIGATION DRAWER -->
+  <div class="mobile-drawer" id="mobile-drawer">
+    <nav class="drawer-nav" aria-label="Mobile Navigation">
+      <ul>
+        <li><a href="#" class="drawer-link active" id="m-explore">EXPLORE</a></li>
+        <li><a href="#" class="drawer-link" id="m-timeline">STREAM</a></li>
+        <li><a href="#" class="drawer-link" id="m-matches">MATCHES</a></li>
+      </ul>
+      <div class="drawer-footer">
+        <button class="btn btn-primary w-full" id="m-btn-profile">MY PROFILE</button>
+      </div>
+    </nav>
+  </div>
+
+  <!-- APPLICATION CONTAINER -->
+  <main class="app-grid-container">
+    
+    <!-- LEFT COLUMN: ATHLETE LIST FEED (30% WIDTH) -->
+    <aside class="timeline-sidebar" aria-label="Activity Feed">
+      <div class="section-header-block">
+        <span class="kicker">SPORT COMPANIONS</span>
+        <h2 class="section-title">ACTIVE BUDDIES</h2>
+      </div>
+      
+      <!-- List container (clean portrait cards) -->
+      <div class="timeline-container">
+        <ul class="timeline-list" id="activity-timeline">
+          <!-- Dynamically populated vertical 4:5 athlete cards -->
+        </ul>
+      </div>
+    </aside>
+
+    <!-- RIGHT COLUMN: INTERACTIVE MAP & SWIPE SWEEPER (70% WIDTH) -->
+    <section class="center-stage" aria-label="Interactive Board">
+      
+      <!-- TOP FILTERS BAR -->
+      <div class="filters-bar">
+        <div class="filter-scroll">
+          <button class="filter-btn active" data-sport="all">ALL SPORTS</button>
+          <button class="filter-btn" data-sport="running">RUNNING</button>
+          <button class="filter-btn" data-sport="tennis">TENNIS</button>
+          <button class="filter-btn" data-sport="cycling">CYCLING</button>
+          <button class="filter-btn" data-sport="fitness">FITNESS</button>
+        </div>
+        
+        <div class="view-toggle">
+          <button class="toggle-btn active" id="toggle-map">MAP VIEW</button>
+          <button class="toggle-btn" id="toggle-cards">SWIPE DECK</button>
+        </div>
+      </div>
+
+      <!-- VIEW 1: DYNAMIC GPS VECTOR MAP -->
+      <div class="map-view-wrapper active" id="map-panel">
+        <div class="custom-gps-map" id="gps-map">
+          <!-- Vector Map Background SVG -->
+          <svg class="map-grid-svg" id="map-svg-grid" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <pattern id="grid-pattern" width="40" height="40" patternUnits="userSpaceOnUse">
+                <path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255, 255, 255, 0.03)" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <!-- Grid -->
+            <rect width="100%" height="100%" fill="url(#grid-pattern)" />
+            
+            <!-- Road Networks / Paths (Brutalist vector style) -->
+            <path d="M-50 150 L350 150 L500 250 L850 250" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" />
+            <path d="M150 -50 L150 650" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" />
+            <path d="M600 -50 L600 650" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="4" />
+            <path d="M-50 450 L400 450 L850 350" fill="none" stroke="rgba(255,255,255,0.06)" stroke-width="6" />
+            
+            <!-- Diagonal Connecting Tracks -->
+            <path d="M150 150 L600 450" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="3" stroke-dasharray="10 5" />
+            <path d="M600 150 L150 450" fill="none" stroke="rgba(255,255,255,0.03)" stroke-width="3" stroke-dasharray="10 5" />
+            
+            <!-- Campus Lake Park Outline (Brutalist Green Outlined Vector) -->
+            <path d="M220 200 Q260 120 380 180 T500 320 Q480 400 340 380 T220 200 Z" fill="rgba(60, 255, 208, 0.02)" stroke="rgba(60, 255, 208, 0.12)" stroke-width="2" stroke-dasharray="5 5" />
+            <text x="320" y="270" fill="rgba(60, 255, 208, 0.2)" font-family="Space Mono" font-size="11" letter-spacing="2">CAMPUS PARK LOOP</text>
+            
+            <!-- Tracks -->
+            <path d="M250 230 C300 210 380 230 400 280 C420 330 350 350 300 330 Z" fill="none" stroke="rgba(82, 0, 255, 0.15)" stroke-width="3" />
+            
+            <!-- Dynamic Glowing Vector Connection Path from center (Your GPS) to target pin -->
+            <path id="glowing-connector" d="" fill="none" stroke="var(--color-mint)" stroke-width="2" stroke-dasharray="8 4" style="opacity: 0; filter: drop-shadow(0 0 5px var(--color-mint));" />
+            
+            <!-- Anchor for Me (GPS Center Location) -->
+            <circle cx="400" cy="300" r="6" fill="#fff" stroke="var(--color-purple)" stroke-width="2" />
+          </svg>
+
+          <!-- INTERACTIVE MAP PINS -->
+          <!-- Pin 1: Sarah (Running) -->
+          <div class="map-pin" style="top: 25%; left: 35%;" data-id="1" data-x="280" data-y="150">
+            <div class="pin-pulse pin-running"></div>
+            <div class="pin-icon bg-running">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M13.49 5.66c.45-.07.9-.12 1.35-.17a1 1 0 0 1 .23 2c-.44.05-.88.1-1.32.16L12.3 9.4l2.12 2.12c.51.52.8 1.21.8 1.94v3.18a1.002 1.002 0 0 1-2 0v-3.18c0-.2-.08-.39-.22-.53L11.3 11.2l-1.6 3.2c-.22.44-.61.76-1.09.87l-3.3.8a1 1 0 1 1-.48-1.94l3.3-.8c.08-.02.14-.07.18-.14L10 10.2l-2.07-2.07L6.46 9.1a1 1 0 1 1-1.42-1.42l2.5-2.5c.29-.29.7-.39 1.08-.26L11.75 6l1.74-.34zM10.5 4a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3z"/></svg>
+            </div>
+            <div class="pin-tooltip">Sarah (5K Run)</div>
+          </div>
+
+          <!-- Pin 2: Marcus (Tennis) -->
+          <div class="map-pin" style="top: 48%; left: 68%;" data-id="2" data-x="544" data-y="288">
+            <div class="pin-pulse pin-tennis"></div>
+            <div class="pin-icon bg-tennis">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 13v1c0 1.1.9 2 2 2v3.93zm5.21-2.79c-.29-.42-.71-.77-1.21-1.01V15c0-1.1-.9-2-2-2h-3v-2h3c1.1 0 2-.9 2-2V6.07c2.36 1.34 4.07 3.73 4.6 6.55l-1.39 4.52z"/></svg>
+            </div>
+            <div class="pin-tooltip">Marcus (Tennis Clay)</div>
+          </div>
+
+          <!-- Pin 3: Alex (Cycling) -->
+          <div class="map-pin" style="top: 68%; left: 24%;" data-id="3" data-x="192" data-y="408">
+            <div class="pin-pulse pin-cycling"></div>
+            <div class="pin-icon bg-cycling">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm7-6.2l-1.9-2.4-1.6 3.2 2.7 2.7c.3.3.7.4 1.1.4h3.7v-2h-3.1l-1.9-1.9zm7.5-2.3c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z"/></svg>
+            </div>
+            <div class="pin-tooltip">Alex (40K Bike Ride)</div>
+          </div>
+
+          <!-- Pin 4: Dmitry (Fitness) -->
+          <div class="map-pin" style="top: 80%; left: 52%;" data-id="4" data-x="416" data-y="480">
+            <div class="pin-pulse pin-fitness"></div>
+            <div class="pin-icon bg-fitness">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M20.57 14.86L22 13.43 20.57 12 17 15.57 8.43 7 12 3.43 10.57 2 9.14 3.43 7.71 2 5.57 4.14 4.14 2.71 2.71 4.14 4.14 5.57 2 7.71 3.43 9.14 2 10.57 3.43 12 7 8.43 15.57 17 12 20.57 13.43 22 14.86 20.57 16.29 22 18.43 19.86 19.86 21.29 21.29 19.86 19.86 18.43 22 16.29 20.57 14.86z"/></svg>
+            </div>
+            <div class="pin-tooltip">Dmitry (Gym spotter)</div>
+          </div>
+
+          <!-- Pin 5: Emily (Yoga) -->
+          <div class="map-pin" style="top: 15%; left: 62%;" data-id="5" data-x="496" data-y="90">
+            <div class="pin-pulse pin-fitness"></div>
+            <div class="pin-icon bg-fitness">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M12 3c-1.1 0-2 .9-2 2s.9 2 2 2 2-.9 2-2-.9-2-2-2zm0 6c-2.2 0-4 1.8-4 4 0 1.5.8 2.8 2 3.5V21h4v-4.5c1.2-.7 2-2 2-3.5 0-2.2-1.8-4-4-4z"/></svg>
+            </div>
+            <div class="pin-tooltip">Emily (Yoga)</div>
+          </div>
+
+          <!-- Pin 6: Jordan (Basketball) -->
+          <div class="map-pin" style="top: 38%; left: 18%;" data-id="6" data-x="144" data-y="228">
+            <div class="pin-pulse pin-tennis"></div>
+            <div class="pin-icon bg-tennis">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 12 10 10-4.48 10-12S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+            </div>
+            <div class="pin-tooltip">Jordan (Basketball)</div>
+          </div>
+
+          <!-- Pin 7: Elena (Swimming) -->
+          <div class="map-pin" style="top: 58%; left: 45%;" data-id="7" data-x="360" data-y="348">
+            <div class="pin-pulse pin-cycling"></div>
+            <div class="pin-icon bg-cycling">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M2 15c.5 0 .9-.2 1.2-.5l1.6-1.6 1.6 1.6c.3.3.7.5 1.2.5s.9-.2 1.2-.5l1.6-1.6 1.6 1.6c.3.3.7.5 1.2.5s.9-.2 1.2-.5l1.6-1.6 1.6 1.6c.3.3.7.5 1.2.5s.9-.2 1.2-.5l1.6-1.6 1.2 1.2c.4.3.8.4 1.2.4v-2c-.5 0-.9-.2-1.2-.5l-1.6-1.6-1.6 1.6c-.3.3-.7.5-1.2.5s-.9-.2-1.2-.5L11 12.3l-1.6 1.6c-.3.3-.7.5-1.2.5s-.9-.2-1.2-.5L5.4 12.3l-1.6 1.6c-.3.3-.7.5-1.2.5H2v2z"/></svg>
+            </div>
+            <div class="pin-tooltip">Elena (Swimming)</div>
+          </div>
+
+          <!-- Pin 8: Liam (Cycling) -->
+          <div class="map-pin" style="top: 85%; left: 75%;" data-id="8" data-x="600" data-y="510">
+            <div class="pin-pulse pin-cycling"></div>
+            <div class="pin-icon bg-cycling">
+              <svg viewBox="0 0 24 24" width="16" height="16"><path fill="#000" d="M15.5 5.5c1.1 0 2-.9 2-2s-.9-2-2-2-2 .9-2 2 .9 2 2 2zM5 12c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5zm7-6.2l-1.9-2.4-1.6 3.2 2.7 2.7c.3.3.7.4 1.1.4h3.7v-2h-3.1l-1.9-1.9zm7.5-2.3c-2.8 0-5 2.2-5 5s2.2 5 5 5 5-2.2 5-5-2.2-5-5-5zm0 8.5c-1.9 0-3.5-1.6-3.5-3.5s1.6-3.5 3.5-3.5 3.5 1.6 3.5 3.5-1.6 3.5-3.5 3.5z"/></svg>
+            </div>
+            <div class="pin-tooltip">Liam (Cycling)</div>
+          </div>
+          
+          <!-- Map Overlay HUD -->
+          <div class="map-hud">
+            <span class="hud-label" id="radar-text-label">GPS AREA OVERVIEW</span>
+            <div class="hud-telemetry-row">
+              <span class="hud-value" id="hud-location">ACTIVE COMPANIONS NEARBY</span>
+              <span class="hud-telemetry-coords" id="hud-coords">LAT: 55.7512 // LNG: 37.6184</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- VIEW 2: SWIPE DECK PANEL -->
+      <div class="swipe-view-wrapper" id="swipe-panel">
+        <div class="swipe-deck-container">
+          <div class="swipe-card-deck" id="card-deck">
+            <!-- Swipeable cards dynamically injected here -->
+            <div class="deck-empty-state">
+              <h3 class="mono-shout">No More Athletes</h3>
+              <p>Try resetting the deck or filtering categories.</p>
+              <button class="btn btn-secondary mt-16" id="btn-reset-deck">RESET DECK</button>
+            </div>
+          </div>
+
+          <!-- Swipe Actions -->
+          <div class="swipe-controls">
+            <button class="control-btn btn-no" id="action-dislike" aria-label="Pass">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+            <button class="control-btn btn-match" id="action-like" aria-label="Match">
+              <svg viewBox="0 0 24 24" width="28" height="28" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- OVERLAY SLIDE-OUT DRAWER: PROFILE DETAILS & CHAT BOX -->
+  <div class="drawer-overlay" id="profile-drawer-overlay">
+    <div class="profile-drawer" id="profile-drawer">
+      <!-- Drawer Header Bar -->
+      <div class="drawer-header">
+        <span class="drawer-kicker">ATHLETE DOSSIER</span>
+        <button class="close-drawer-btn" id="btn-close-drawer" aria-label="Close Profile">
+          <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+          <span>CLOSE</span>
+        </button>
+      </div>
+
+      <!-- Scrollable content wrapper -->
+      <div class="drawer-content">
+        
+        <!-- BENTO PROFILE BLOCK -->
+        <div class="profile-details-bento" id="profile-bento">
+          <!-- Bento Tile 1: Hero Identity -->
+          <div class="bento-tile tile-hero">
+            <img src="" alt="" class="profile-photo" id="profile-avatar">
+            <div class="profile-meta-layer">
+              <div class="badge-row">
+                <span class="card-badge bg-gradient-neon" id="profile-sport-tag">RUNNING</span>
+                <span class="tag-meta" id="profile-level">INTERMEDIATE</span>
+              </div>
+              <h2 class="profile-name" id="profile-display-name">SARAH JENKINS</h2>
+              <p class="profile-tagline" id="profile-bio">"Aiming for sub-25min 5K. Let's push paces together!"</p>
+            </div>
+          </div>
+
+          <!-- Bento Tile 2: Primary Stats -->
+          <div class="bento-tile tile-stats">
+            <span class="tile-kicker">ATHLETE STATISTICS</span>
+            <div class="stats-grid">
+              <div class="stat-box">
+                <div class="stat-val" id="profile-stat-primary">4:35</div>
+                <div class="stat-unit" id="profile-unit-primary">MIN/KM PACE</div>
+              </div>
+              <div class="stat-box">
+                <div class="stat-val" id="profile-stat-secondary">10K</div>
+                <div class="stat-unit" id="profile-unit-secondary">MAX DISTANCE</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bento Tile 3: Consistency Heatmap -->
+          <div class="bento-tile tile-schedule">
+            <span class="tile-kicker">WORKOUT CONSISTENCY (4 WEEKS)</span>
+            <div class="heatmap-grid" id="profile-heatmap">
+              <!-- Grid elements filled dynamically via Javascript -->
+            </div>
+          </div>
+
+          <!-- Bento Tile 4: Distance -->
+          <div class="bento-tile tile-distance">
+            <span class="tile-kicker">RADAR</span>
+            <div class="proximity-hud">
+              <span class="proximity-val" id="profile-proximity">0.8 KM</span>
+              <span class="proximity-label">DISTANCE AWAY</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- CHAT CONSOLE MODULE -->
+        <div class="chat-container">
+          <div class="chat-header">
+            <div class="active-partner">
+              <div class="pulse-indicator"></div>
+              <span class="chat-title" id="chat-partner-name">CHAT: SARAH JENKINS</span>
+            </div>
+            <span class="chat-status-tag">ACTIVE CONNECTION</span>
+          </div>
+          
+          <!-- Messages Box -->
+          <div class="chat-messages" id="chat-messages-box">
+            <!-- Appended via JS -->
+          </div>
+
+          <!-- Chat Input -->
+          <form class="chat-input-form" id="chat-form">
+            <input type="text" class="chat-field" id="chat-input" placeholder="Type a message..." autocomplete="off">
+            <button type="submit" class="chat-send-btn" aria-label="Send Message">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <footer class="app-footer">
+    <div class="footer-container">
+      <p class="footer-copy">© 2026 FITMATCH INC. THE VERGE DESIGN PATTERNS. MAP UPDATES.</p>
+      <div class="footer-meta">
+        <span>GRID ACTIVE</span>
+        <span class="health-indicator">SYSTEM NORMAL</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>

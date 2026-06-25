@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AURA | Pure Artesian</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600&family=Playfair+Display:ital,wght@0,400;0,600;1,400&display=swap');
+
+  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; }
+  body {
+    min-height: 500vh;
+    background: #01050a;
+    color: #fff;
+    font-family: 'Outfit', sans-serif;
+    overflow-x: hidden;
+  }
+  ::-webkit-scrollbar { display: none; }
+  html { scrollbar-width: none; }
+
+  @media (hover: hover) and (pointer: fine) { body { cursor: none; } }
+
+  /* ── GRAIN ── */
+  .noise {
+    position: fixed; inset: 0; z-index: 2; pointer-events: none;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* ── WEBGL ── */
+  canvas#webgl {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%; z-index: 1;
+  }
+
+  /* ── SVG BOTTLE ── */
+  .bottle-wrap {
+    position: fixed; top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 3; pointer-events: none;
+    width: 280px;
+    will-change: transform;
+  }
+  .bottle-svg {
+    width: 100%; height: auto; display: block;
+    filter:
+      drop-shadow(0 0 28px rgba(80,170,255,0.55))
+      drop-shadow(0 0 80px rgba(40,120,220,0.35))
+      drop-shadow(0 0 140px rgba(20,80,200,0.18));
+  }
+  @media (max-width: 900px) { .bottle-wrap { width: 200px; } }
+  @media (max-width: 560px) { .bottle-wrap { width: 150px; } }
+
+  /* ── CURSOR ── */
+  .cursor-inner, .cursor-outer {
+    position: fixed; top: 0; left: 0;
+    border-radius: 50%; pointer-events: none;
+    z-index: 9999; transform: translate(-50%,-50%);
+    opacity: 0; /* shows on first mousemove */
+    transition: opacity 0.2s;
+  }
+  .cursor-inner {
+    width: 6px; height: 6px; background: #fff;
+  }
+  .cursor-outer {
+    width: 40px; height: 40px;
+    border: 1.5px solid rgba(128,200,255,0.65);
+    transition:
+      opacity 0.2s,
+      width  0.26s cubic-bezier(0.23,1,0.32,1),
+      height 0.26s cubic-bezier(0.23,1,0.32,1),
+      background 0.26s;
+  }
+  .cursor-outer.hover {
+    width: 56px; height: 56px;
+    background: rgba(128,200,255,0.07);
+  }
+  @media (hover: none) { .cursor-inner, .cursor-outer { display: none !important; } }
+
+  /* ── HEADER ── */
+  .main-header {
+    position: fixed; top: 0; left: 0; right: 0;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 36px 60px; pointer-events: auto; z-index: 20;
+  }
+  .main-header::before {
+    content: ''; position: absolute; inset: 0;
+    background: linear-gradient(180deg, rgba(1,5,10,0.72) 0%, transparent 100%);
+    pointer-events: none;
+  }
+  .brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 26px; font-weight: 600; letter-spacing: 6px;
+    color: #fff; text-decoration: none; position: relative;
+  }
+  .main-nav {
+    display: flex; align-items: center; gap: 4px; position: relative;
+  }
+  .main-nav a {
+    color: rgba(255,255,255,0.58); text-decoration: none;
+    font-size: 12px; font-weight: 300; letter-spacing: 2px;
+    text-transform: uppercase; padding: 8px 14px;
+    transition: color 0.22s;
+  }
+  .main-nav a:hover { color: #fff; }
+  .nav-dot {
+    width: 3px; height: 3px; border-radius: 50%;
+    background: rgba(160,220,255,0.35); flex-shrink: 0;
+  }
+  .reserve-btn {
+    position: relative; background: #fff; color: #01050a;
+    border: none; padding: 12px 28px;
+    font-family: 'Outfit', sans-serif; font-size: 12px;
+    font-weight: 600; letter-spacing: 2px; text-transform: uppercase;
+    border-radius: 40px; text-decoration: none; display: inline-block;
+    transition:
+      transform 0.22s cubic-bezier(0.23,1,0.32,1),
+      background 0.22s;
+  }
+  .reserve-btn:hover { transform: scale(1.04); background: #ddf2ff; }
+  .reserve-btn:active { transform: scale(0.97); }
+
+  /* ── BACK LINK ── */
+  .back-link {
+    position: fixed; bottom: 34px; left: 60px;
+    z-index: 20; pointer-events: auto;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    color: rgba(255,255,255,0.28); text-decoration: none;
+    display: flex; align-items: center; gap: 8px;
+    transition: color 0.22s;
+  }
+  .back-link svg { flex-shrink: 0; transition: transform 0.22s cubic-bezier(0.23,1,0.32,1); }
+  .back-link:hover { color: rgba(255,255,255,0.65); }
+  .back-link:hover svg { transform: translateX(-3px); }
+
+  /* ── GRID ── */
+  .grid-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%; pointer-events: none; z-index: 5;
+  }
+  .grid-h-line {
+    position: absolute; top: 88px; left: 0;
+    width: 100%; height: 1px; background: rgba(255,255,255,0.055);
+  }
+  .grid-v-line {
+    position: absolute; top: 0; height: 100%; width: 1px;
+    background: rgba(255,255,255,0.05);
+  }
+  .grid-dot {
+    position: absolute; width: 4px; height: 4px;
+    border-radius: 50%; background: rgba(160,220,255,0.28);
+    left: 50%; transform: translateX(-50%);
+  }
+
+  /* ── SLIDES ── */
+  .slide {
+    position: fixed; left: 0; width: 100%; padding: 0 60px;
+    opacity: 0; pointer-events: none; z-index: 15;
+    transition: opacity 0.75s cubic-bezier(0.23,1,0.32,1);
+    will-change: opacity;
+  }
+  .slide.active { opacity: 1; }
+  #slide-1 { bottom: 90px; }
+  #slide-2 { top: 50%; transform: translateY(-50%); text-align: right; }
+  #slide-3 { top: 50%; transform: translateY(-50%); }
+  #slide-4 { bottom: 90px; text-align: right; }
+
+  .slide-title {
+    font-family: 'Playfair Display', serif; font-weight: 400;
+    font-size: clamp(56px, 10vw, 148px);
+    line-height: 0.92; letter-spacing: -0.02em; margin-bottom: 28px;
+  }
+  .slide-title em { font-style: italic; }
+  .desc-row { display: flex; gap: 48px; max-width: 720px; }
+  #slide-4 .desc-row { margin-left: auto; }
+  .slide-desc {
+    font-weight: 300; font-size: 15px;
+    line-height: 1.75; color: rgba(255,255,255,0.6); max-width: 340px;
+  }
+  #slide-2 .slide-desc { margin-left: auto; }
+
+  /* per-letter reveal */
+  .char {
+    display: inline-block;
+    opacity: 0; filter: blur(10px); transform: translateY(14px);
+    transition:
+      opacity  0.5s cubic-bezier(0.23,1,0.32,1),
+      filter   0.5s cubic-bezier(0.23,1,0.32,1),
+      transform 0.5s cubic-bezier(0.23,1,0.32,1);
+  }
+  .slide.active .char { opacity: 1; filter: blur(0); transform: translateY(0); }
+  .slide-desc { opacity: 0; transition: opacity 0.3s; }
+  .slide.active .slide-desc {
+    opacity: 1;
+    transition: opacity 0.85s cubic-bezier(0.23,1,0.32,1) 0.3s;
+  }
+
+  /* ── IMAGE MASK ── */
+  .slide-image-mask {
+    position: fixed; top: 50%; left: 60px;
+    width: 34vw; height: 52vh; max-width: 440px;
+    overflow: hidden; z-index: 12; pointer-events: none;
+    border-radius: 2px;
+    clip-path: inset(0 100% 0 0);
+    transform: translateY(-50%) scale(1.06);
+    filter: blur(12px) brightness(0.4); opacity: 0;
+    transition:
+      clip-path  1.2s cubic-bezier(0.7,0,0.16,1),
+      transform  1.3s cubic-bezier(0.23,1,0.32,1),
+      filter     1.0s cubic-bezier(0.23,1,0.32,1),
+      opacity    0.7s ease-out;
+  }
+  .slide-image-mask.active {
+    clip-path: inset(0 0 0 0);
+    transform: translateY(-50%) scale(1);
+    filter: blur(0) brightness(1); opacity: 1;
+  }
+  .slide-image-mask::before {
+    content: ''; position: absolute; top: 0; bottom: 0; width: 2px;
+    background: linear-gradient(180deg, transparent, rgba(160,220,255,0.9), transparent);
+    left: 0; opacity: 0; z-index: 3;
+    box-shadow: 0 0 20px rgba(120,200,255,0.8);
+  }
+  .slide-image-mask.active::before {
+    animation: sweepLine 1.2s cubic-bezier(0.7,0,0.16,1) forwards;
+  }
+  @keyframes sweepLine {
+    0%   { left:0;    opacity:0; }
+    12%  { opacity:1; }
+    88%  { opacity:1; }
+    100% { left:100%; opacity:0; }
+  }
+  .slide-image-mask img {
+    width:100%; height:100%; object-fit:cover;
+    filter: brightness(0.7) saturate(0.8) hue-rotate(170deg) contrast(1.1);
+    mix-blend-mode: luminosity;
+    transform: scale(1.1);
+    transition: transform 5s ease-out;
+  }
+  .slide-image-mask.active img { transform: scale(1); }
+  .slide-image-mask::after {
+    content:''; position:absolute; inset:0;
+    background: linear-gradient(160deg, rgba(10,40,80,0.5), rgba(20,90,130,0.35));
+    mix-blend-mode: color; pointer-events:none;
+  }
+
+  /* ── STORY PROGRESS ── */
+  .story-progress {
+    position: fixed; top: 0; right: 60px; height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+    gap: 14px; z-index: 16; pointer-events: none;
+  }
+  .story-dash {
+    width: 2px; height: 44px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 1px; position: relative; overflow: hidden;
+  }
+  .story-dash::after {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: 100%; height: 0%;
+    background: rgba(160,220,255,0.85);
+    transition: height 0.38s cubic-bezier(0.23,1,0.32,1);
+    border-radius: 1px;
+  }
+  .story-dash.filled::after { height: 100%; }
+
+  /* ── CTA OVERLAY ── */
+  .cta-overlay {
+    position: fixed; inset: 0; z-index: 17;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 30px;
+    opacity: 0; pointer-events: none;
+    transition: opacity 0.9s cubic-bezier(0.23,1,0.32,1);
+    background: rgba(1,5,10,0.78);
+    backdrop-filter: blur(22px) saturate(1.2);
+    -webkit-backdrop-filter: blur(22px) saturate(1.2);
+  }
+  .cta-overlay.active { opacity: 1; pointer-events: auto; }
+  .cta-back {
+    position: absolute; top: 40px; right: 60px;
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.18);
+    color: rgba(255,255,255,0.5);
+    font-family: 'Outfit', sans-serif;
+    font-size: 11px; letter-spacing: 2px; text-transform: uppercase;
+    padding: 10px 22px; border-radius: 40px;
+    transition: color 0.22s, border-color 0.22s, transform 0.15s;
+  }
+  .cta-back:hover { color: rgba(255,255,255,0.85); border-color: rgba(255,255,255,0.45); }
+  .cta-back:active { transform: scale(0.97); }
+  .cta-eyebrow {
+    font-size: 11px; letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(160,220,255,0.6); font-weight: 300;
+  }
+  .cta-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(44px, 7vw, 96px);
+    font-weight: 400; letter-spacing: -0.02em; line-height: 0.94;
+    text-align: center;
+  }
+  .cta-title em { font-style: italic; }
+  .cta-sub {
+    font-size: 16px; font-weight: 300; color: rgba(255,255,255,0.5);
+    text-align: center; max-width: 440px; line-height: 1.75;
+  }
+  .cta-btn {
+    background: #fff; color: #01050a; border: none;
+    padding: 18px 48px; font-family: 'Outfit', sans-serif;
+    font-size: 13px; font-weight: 600; letter-spacing: 2.5px;
+    text-transform: uppercase; border-radius: 40px;
+    text-decoration: none; display: inline-flex; align-items: center; gap: 12px;
+    transition:
+      transform 0.22s cubic-bezier(0.23,1,0.32,1),
+      background 0.22s;
+  }
+  .cta-btn:hover { transform: scale(1.04); background: #ddf2ff; }
+  .cta-btn:active { transform: scale(0.97); }
+
+  /* ── SCROLL HINT ── */
+  .scroll-hint {
+    position: fixed; bottom: 34px; left: 50%;
+    transform: translateX(-50%);
+    font-size: 10px; letter-spacing: 4px; text-transform: uppercase;
+    color: rgba(255,255,255,0.3); z-index: 16; pointer-events: none;
+    animation: hintPulse 2.5s infinite;
+    transition: opacity 0.5s;
+  }
+  .scroll-hint.hidden { opacity: 0; }
+  @keyframes hintPulse { 0%,100%{opacity:.3} 50%{opacity:.72} }
+
+  /* ── MOBILE ── */
+  @media (max-width: 768px) {
+    .main-header { padding: 22px 24px; }
+    .main-nav { display: none; }
+    .brand { font-size: 20px; letter-spacing: 4px; }
+    .slide { padding: 0 24px; }
+    .desc-row { flex-direction: column; gap: 16px; }
+    .story-progress { right: 18px; }
+    .slide-image-mask { width: 72vw; height: 45vh; }
+    .back-link { left: 24px; }
+    .cta-back { top: 24px; right: 24px; }
+    .scroll-hint { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<canvas id="webgl"></canvas>
+
+<!-- ── SVG BOTTLE ── -->
+<div class="bottle-wrap" id="bottleWrap">
+  <svg class="bottle-svg" viewBox="0 0 100 280" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+      <!-- Bottle interior clip -->
+      <clipPath id="bClip">
+        <path d="M41 0 L59 0 L59 14 Q62 18 62 26 L62 32 Q72 46 78 62 L78 230 Q78 252 50 254 Q22 252 22 230 L22 62 Q28 46 38 32 L38 26 Q38 18 41 14 Z"/>
+      </clipPath>
+      <!-- Water gradient -->
+      <linearGradient id="wGrad" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+        <stop offset="0%"   stop-color="rgba(18,110,195,0.78)"/>
+        <stop offset="45%"  stop-color="rgba(72,178,238,0.68)"/>
+        <stop offset="100%" stop-color="rgba(18,110,195,0.78)"/>
+      </linearGradient>
+      <!-- Glass gradient -->
+      <linearGradient id="gGrad" x1="0" y1="0" x2="1" y2="0" gradientUnits="objectBoundingBox">
+        <stop offset="0%"   stop-color="rgba(120,200,255,0.18)"/>
+        <stop offset="22%"  stop-color="rgba(220,245,255,0.09)"/>
+        <stop offset="78%"  stop-color="rgba(220,245,255,0.03)"/>
+        <stop offset="100%" stop-color="rgba(120,200,255,0.14)"/>
+      </linearGradient>
+    </defs>
+
+    <!-- ── WATER FILL (clipped) ── -->
+    <g clip-path="url(#bClip)">
+      <rect id="waterRect" x="22" y="140" width="56" height="120" fill="url(#wGrad)"/>
+      <!-- Animated wave surface -->
+      <path id="wavePath" d="M22,140 Q36,136 50,140 Q64,144 78,140 L78,148 Q64,152 50,148 Q36,144 22,148Z" fill="rgba(140,215,255,0.45)"/>
+      <!-- Inner shimmer lines -->
+      <path id="shimmer1" d="M26,160 Q37,156 48,160 Q59,164 70,160 Q76,158 78,160" stroke="rgba(200,240,255,0.3)" stroke-width="0.9" fill="none"/>
+      <path id="shimmer2" d="M26,176 Q40,172 54,176 Q68,180 78,176"               stroke="rgba(200,240,255,0.18)" stroke-width="0.9" fill="none"/>
+    </g>
+
+    <!-- ── GLASS BODY ── -->
+    <path d="M41 0 L59 0 L59 14 Q62 18 62 26 L62 32 Q72 46 78 62 L78 230 Q78 252 50 254 Q22 252 22 230 L22 62 Q28 46 38 32 L38 26 Q38 18 41 14 Z"
+          fill="url(#gGrad)"
+          stroke="rgba(160,225,255,0.52)" stroke-width="1.2"/>
+
+    <!-- ── HIGHLIGHTS ── -->
+    <!-- Left edge shine -->
+    <path d="M28,70 Q26,130 27,210" stroke="rgba(255,255,255,0.2)" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Right edge subtle -->
+    <path d="M70,70 Q72,95 71,120"  stroke="rgba(255,255,255,0.08)" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- ── CAP ── -->
+    <rect x="38" y="0" width="24" height="15" rx="3"
+          fill="rgba(140,210,255,0.2)"
+          stroke="rgba(160,225,255,0.62)" stroke-width="1.2"/>
+    <line x1="38" y1="11" x2="62" y2="11" stroke="rgba(160,225,255,0.38)" stroke-width="0.8"/>
+
+    <!-- ── LABEL AREA ── -->
+    <rect x="26" y="100" width="48" height="72" rx="1.5"
+          fill="rgba(255,255,255,0.03)"
+          stroke="rgba(160,225,255,0.12)" stroke-width="0.8"/>
+    <line x1="30" y1="102" x2="70" y2="102" stroke="rgba(160,225,255,0.18)" stroke-width="0.5"/>
+    <line x1="30" y1="170" x2="70" y2="170" stroke="rgba(160,225,255,0.18)" stroke-width="0.5"/>
+    <text x="50" y="130" text-anchor="middle"
+          font-family="'Playfair Display', Georgia, serif"
+          font-size="8.5" font-weight="400" letter-spacing="3.5"
+          fill="rgba(200,238,255,0.72)">AURA</text>
+    <text x="50" y="144" text-anchor="middle"
+          font-family="'Outfit', sans-serif"
+          font-size="4.2" font-weight="300" letter-spacing="1.8"
+          fill="rgba(200,238,255,0.38)">PURE ARTESIAN</text>
+    <line x1="34" y1="151" x2="66" y2="151" stroke="rgba(160,225,255,0.16)" stroke-width="0.5"/>
+
+    <!-- ── BASE DETAIL ── -->
+    <path d="M24,236 L76,236" stroke="rgba(160,225,255,0.18)" stroke-width="0.8"/>
+    <path d="M23,243 L77,243" stroke="rgba(160,225,255,0.12)" stroke-width="0.7"/>
+    <path d="M22,250 Q22,254 50,254 Q78,254 78,250" stroke="rgba(160,225,255,0.2)" stroke-width="0.8" fill="none"/>
+  </svg>
+</div>
+
+<div class="cursor-inner" id="cursorInner"></div>
+<div class="cursor-outer"  id="cursorOuter"></div>
+
+<!-- GRID -->
+<div class="grid-overlay" id="gridOverlay">
+  <div class="grid-h-line"></div>
+</div>
+
+<!-- STORY PROGRESS -->
+<div class="story-progress">
+  <div class="story-dash" data-stage="0"></div>
+  <div class="story-dash" data-stage="1"></div>
+  <div class="story-dash" data-stage="2"></div>
+  <div class="story-dash" data-stage="3"></div>
+</div>
+
+<!-- HEADER -->
+<header class="main-header">
+  <a href="#" class="brand">AURA</a>
+  <nav class="main-nav">
+    <a href="#" data-goto="0">Source</a>
+    <span class="nav-dot"></span>
+    <a href="#" data-goto="1">Clarity</a>
+    <span class="nav-dot"></span>
+    <a href="#" data-goto="2">Flow</a>
+    <span class="nav-dot"></span>
+    <a href="#" data-goto="3">Essence</a>
+  </nav>
+  <a href="https://t.me/DipLogic" target="_blank" rel="noopener" class="reserve-btn">Reserve</a>
+</header>
+
+<!-- BACK LINK -->
+<a href="diplogic.html" class="back-link">
+  <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+    <path d="M11 7H3M3 7L7 3M3 7L7 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+  </svg>
+  DipLogic Portfolio
+</a>
+
+<!-- SLIDES -->
+<div class="slide" id="slide-1">
+  <h2 class="slide-title" data-text="Liquid|Diamond"></h2>
+  <div class="desc-row">
+    <p class="slide-desc">Sourced from untouched glacial depths. A testament to nature's ultimate luxury, untouched by time or surface elements.</p>
+    <p class="slide-desc">Filtered through layers of ancient quartz, achieving a crystalline purity that resets the standard of hydration.</p>
+  </div>
+</div>
+
+<div class="slide-image-mask" id="slide-2-img">
+  <img src="https://images.unsplash.com/photo-1437482078695-73f5ca6c96e2?q=80&w=1000&auto=format&fit=crop" alt="Glacial Ice" loading="lazy">
+</div>
+
+<div class="slide" id="slide-2">
+  <h2 class="slide-title" data-text="Absolute|Clarity"></h2>
+  <p class="slide-desc">Zero impurities. A taste as crisp as arctic air. Every drop reflects the pure light of pristine origins.</p>
+</div>
+
+<div class="slide" id="slide-3">
+  <h2 class="slide-title" data-text="Sacred Flow"></h2>
+  <p class="slide-desc">Water that breathes life. The fluid dynamics of AURA balance essential minerals to rejuvenate body and mind.</p>
+</div>
+
+<div class="slide" id="slide-4">
+  <h2 class="slide-title" data-text="Eternal|Source"></h2>
+  <p class="slide-desc">Experience true hydration. A classic element reborn in a masterpiece of modern, sustainable glass design.</p>
+</div>
+
+<!-- CTA -->
+<div class="cta-overlay" id="ctaOverlay">
+  <button class="cta-back" id="ctaBack">↑ Back</button>
+  <span class="cta-eyebrow">Reserve your allocation</span>
+  <h2 class="cta-title">A taste of<br><em>perfection</em></h2>
+  <p class="cta-sub">AURA is sourced in limited quantities each season. Reserve your allocation and be among the first to experience nature's finest expression.</p>
+  <a href="https://t.me/DipLogic" target="_blank" rel="noopener" class="cta-btn">
+    Reserve Access
+    <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+      <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </a>
+</div>
+
+<div class="scroll-hint" id="scrollHint">Scroll to explore</div>
+
+<script type="importmap">
+{ "imports": { "three": "https://unpkg.com/three@0.160.0/build/three.module.js" } }
+</script>
+<script type="module">
+import * as THREE from 'three';
+
+/* ══════════════════ WEBGL ══════════════════ */
+const canvas = document.getElementById('webgl');
+let webglOK = true, renderer, scene, camera, bubbles, bGeo, bData, causticsMat, causticsScene, causticsCam;
+const N_BUBBLES = 600;
+
+try {
+  renderer = new THREE.WebGLRenderer({ canvas, antialias: true });
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+  renderer.toneMapping = THREE.ACESFilmicToneMapping;
+  renderer.toneMappingExposure = 1.5;
+  scene = new THREE.Scene();
+  scene.background = new THREE.Color('#01050a');
+  scene.fog = new THREE.FogExp2('#01050a', 0.015);
+  camera = new THREE.PerspectiveCamera(45, innerWidth / innerHeight, 0.1, 100);
+  camera.position.set(0, 0, 8);
+  const kL = new THREE.DirectionalLight(0xffffff, 12); kL.position.set(5,5,5); scene.add(kL);
+  const rL = new THREE.DirectionalLight(0x40c0ff, 15); rL.position.set(-6,2,-5); scene.add(rL);
+  const fL = new THREE.DirectionalLight(0x0033aa, 5);  fL.position.set(0,-6,0);  scene.add(fL);
+  scene.add(new THREE.AmbientLight(0x102040, 1.5));
+  scene.add(new THREE.Group()); // bottleGroup placeholder
+
+  /* bubbles */
+  const bTex = (() => {
+    const c = document.createElement('canvas'); c.width = c.height = 64;
+    const ctx = c.getContext('2d');
+    const g = ctx.createRadialGradient(32,32,0,32,32,32);
+    g.addColorStop(0,'rgba(255,255,255,1)'); g.addColorStop(0.15,'rgba(255,255,255,0.9)');
+    g.addColorStop(0.5,'rgba(255,255,255,0.15)'); g.addColorStop(1,'rgba(255,255,255,0)');
+    ctx.fillStyle = g; ctx.fillRect(0,0,64,64);
+    return new THREE.CanvasTexture(c);
+  })();
+  bGeo = new THREE.BufferGeometry();
+  const bP = new Float32Array(N_BUBBLES*3), bC = new Float32Array(N_BUBBLES*3);
+  bData = [];
+  const cW = new THREE.Color('#e6f7ff'), cA = new THREE.Color('#00e5ff');
+  for (let i = 0; i < N_BUBBLES; i++) {
+    const r = 0.5+Math.random()*2.2, a = Math.random()*Math.PI*2;
+    bP[i*3]=Math.cos(a)*r; bP[i*3+1]=Math.random()*8-4; bP[i*3+2]=Math.sin(a)*r;
+    const col = Math.random()<0.8?cW:cA;
+    bC[i*3]=col.r; bC[i*3+1]=col.g; bC[i*3+2]=col.b;
+    bData.push({ speedY:0.2+Math.random()*0.4, sw:2+Math.random()*2, sa:0.1+Math.random()*0.2,
+                 ph:Math.random()*Math.PI*2, bx:bP[i*3], bz:bP[i*3+2] });
+  }
+  bGeo.setAttribute('position', new THREE.BufferAttribute(bP, 3));
+  bGeo.setAttribute('color',    new THREE.BufferAttribute(bC, 3));
+  bubbles = new THREE.Points(bGeo, new THREE.PointsMaterial({
+    size:0.06, map:bTex, transparent:true, vertexColors:true,
+    depthWrite:false, blending:THREE.AdditiveBlending, opacity:0.9
+  }));
+  scene.add(bubbles);
+
+  /* caustics */
+  causticsMat = new THREE.ShaderMaterial({
+    depthTest:false, depthWrite:false,
+    uniforms: { uTime:{value:0}, uScroll:{value:0}, uRes:{value:new THREE.Vector2(innerWidth,innerHeight)} },
+    vertexShader:   `varying vec2 vUv; void main(){ vUv=uv; gl_Position=vec4(position,1.); }`,
+    fragmentShader: `
+      precision highp float;
+      varying vec2 vUv; uniform float uTime,uScroll; uniform vec2 uRes;
+      float c(vec2 p){ float t=uTime*.4,v=0.;
+        v+=sin(p.x*3.+t)*cos(p.y*3.-t); v+=sin(p.x*5.-t*1.3)*cos(p.y*4.+t*.7);
+        v+=sin(length(p)*6.-t*1.5); v+=cos((p.x+p.y)*4.+t); return v*.25; }
+      void main(){
+        vec2 p=(vUv-.5)*vec2(uRes.x/uRes.y,1.)*4.;
+        float v=pow(abs(c(p)),1.6), s=smoothstep(0.,1.,uScroll);
+        vec3 col=mix(mix(vec3(.005,.01,.03),vec3(.05,.2,.4),s),
+                     mix(vec3(.05,.15,.3), vec3(.4,.8,.9),s), v);
+        col*=mix(.7,1.15,vUv.y);
+        gl_FragColor=vec4(col,1.);
+      }
+    `
+  });
+  const cp = new THREE.Mesh(new THREE.PlaneGeometry(2,2), causticsMat);
+  cp.frustumCulled = false;
+  causticsScene = new THREE.Scene(); causticsScene.add(cp);
+  causticsCam = new THREE.OrthographicCamera(-1,1,1,-1,0,1);
+} catch(e) {
+  webglOK = false;
+  if (canvas) canvas.style.display = 'none';
+}
+
+/* ══════════════════ STATE ══════════════════ */
+let tgtScroll=0, curScroll=0, tgtMX=0, tgtMY=0, mouseX=0, mouseY=0;
+let mpx=0, mpy=0, cx=0, cy=0, ox=0, oy=0;
+let cursorReady = false;
+let waterLevel = 0.62; // current interpolated water fill (0..1)
+
+function scrollPct() {
+  const max = document.body.scrollHeight - innerHeight;
+  return max > 0 ? scrollY / max : 0;
+}
+
+const scrollHint = document.getElementById('scrollHint');
+window.addEventListener('scroll', () => {
+  tgtScroll = scrollPct();
+  if (tgtScroll > 0.015) scrollHint.classList.add('hidden');
+}, { passive: true });
+
+/* ── CURSOR — appears at exact position on first move (no lerp jank) ── */
+const cInner = document.getElementById('cursorInner');
+const cOuter  = document.getElementById('cursorOuter');
+
+window.addEventListener('mousemove', e => {
+  mpx = e.clientX; mpy = e.clientY;
+  tgtMX = (e.clientX / innerWidth)  * 2 - 1;
+  tgtMY = (e.clientY / innerHeight) * 2 - 1;
+  if (!cursorReady) {
+    cursorReady = true;
+    cx = ox = mpx; cy = oy = mpy;   // snap to real position immediately
+    cInner.style.opacity = '1';
+    cOuter.style.opacity  = '1';
+  }
+}, { passive: true });
+
+document.querySelectorAll('a, button').forEach(el => {
+  el.addEventListener('mouseenter', () => cOuter.classList.add('hover'));
+  el.addEventListener('mouseleave', () => cOuter.classList.remove('hover'));
+});
+
+/* ── NAV ── */
+const GOTO = [0.01, 0.28, 0.54, 0.78];
+document.querySelectorAll('[data-goto]').forEach(a => {
+  a.addEventListener('click', e => {
+    e.preventDefault();
+    const max = document.body.scrollHeight - innerHeight;
+    window.scrollTo({ top: GOTO[+a.dataset.goto] * max, behavior: 'smooth' });
+  });
+});
+document.getElementById('ctaBack').addEventListener('click', () => {
+  window.scrollTo({ top: (document.body.scrollHeight - innerHeight) * 0.88, behavior: 'smooth' });
+});
+
+/* ── SPLIT CHARS ── */
+document.querySelectorAll('.slide-title').forEach(t => {
+  const lines = t.dataset.text.split('|');
+  t.innerHTML = '';
+  lines.forEach((line, li) => {
+    [...line].forEach((ch, i) => {
+      const s = document.createElement('span');
+      s.className = 'char'; s.textContent = ch === ' ' ? '\u00A0' : ch;
+      s.style.transitionDelay = (i * 0.023) + 's';
+      t.appendChild(s);
+    });
+    if (li < lines.length - 1) t.appendChild(document.createElement('br'));
+  });
+});
+
+/* ── GRID ── */
+const grid = document.getElementById('gridOverlay');
+const dotEls = [];
+for (let i = 0; i < 5; i++) {
+  const l = document.createElement('div');
+  l.className = 'grid-v-line'; l.style.left = (i*25)+'%';
+  grid.appendChild(l);
+  for (let d = 0; d < 3; d++) {
+    const dot = document.createElement('div'); dot.className = 'grid-dot';
+    const w = document.createElement('div');
+    w.style.cssText = `position:absolute;left:${i*25}%;top:${22+d*26}%`;
+    w.appendChild(dot); grid.appendChild(w);
+    dotEls.push({ el:w, dir:(i+d)%2?-1:1, base:22+d*26, ph:Math.random()*Math.PI*2 });
+  }
+}
+
+/* ── SLIDES ── */
+const slides     = ['slide-1','slide-2','slide-3','slide-4'].map(id=>document.getElementById(id));
+const imgMask    = document.getElementById('slide-2-img');
+const storyDashes = document.querySelectorAll('.story-dash');
+const ctaOverlay  = document.getElementById('ctaOverlay');
+const BP = [
+  { in:0.00, out:0.22 }, { in:0.27, out:0.48 },
+  { in:0.53, out:0.72 }, { in:0.77, out:0.93 }
+];
+function updateSlides(p) {
+  BP.forEach((bp,i) => slides[i].classList.toggle('active', p>=bp.in && p<=bp.out));
+  imgMask.classList.toggle('active', p>=BP[1].in && p<=BP[1].out);
+  storyDashes.forEach((d,i) => d.classList.toggle('filled', p>=BP[i].in));
+  ctaOverlay.classList.toggle('active', p>=0.94);
+}
+
+/* ── RESIZE ── */
+window.addEventListener('resize', () => {
+  if (!webglOK) return;
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+  causticsMat.uniforms.uRes.value.set(innerWidth, innerHeight);
+});
+
+/* ══════════════════ SVG BOTTLE UPDATE ══════════════════ */
+const bottleWrap = document.getElementById('bottleWrap');
+const waterRect  = document.getElementById('waterRect');
+const wavePath   = document.getElementById('wavePath');
+const shimmer1   = document.getElementById('shimmer1');
+const shimmer2   = document.getElementById('shimmer2');
+
+// Bottle interior: y=62 (base of shoulder) … y=250 (base)
+const BOTTLE_TOP = 62, BOTTLE_BOT = 250, BOTTLE_H = BOTTLE_BOT - BOTTLE_TOP; // 188
+
+function updateBottle(t, scroll) {
+  // Water level: 62% full → 34% full as you scroll
+  const targetWater = 0.62 - scroll * 0.28;
+  waterLevel += (targetWater - waterLevel) * 0.055;
+
+  const waveAmp = 2.8;
+  const wY = BOTTLE_TOP + BOTTLE_H * (1 - waterLevel); // y of water surface
+  const wH = BOTTLE_H   * waterLevel + 8;              // height of water rect
+
+  if (waterRect) {
+    waterRect.setAttribute('y', wY.toFixed(1));
+    waterRect.setAttribute('height', wH.toFixed(1));
+  }
+
+  if (wavePath) {
+    const ph  = t * 1.4;
+    const a1  = wY + Math.sin(ph)       * waveAmp;
+    const a2  = wY - Math.sin(ph)       * waveAmp;
+    const mid = wY;
+    const b1  = wY + 8 + Math.sin(ph + 0.4) * (waveAmp * 0.7);
+    const b2  = wY + 8 - Math.sin(ph + 0.4) * (waveAmp * 0.7);
+    wavePath.setAttribute('d',
+      `M22,${a1.toFixed(1)} Q36,${(mid-waveAmp*1.1).toFixed(1)} 50,${mid.toFixed(1)} ` +
+      `Q64,${(mid+waveAmp*1.1).toFixed(1)} 78,${a2.toFixed(1)} ` +
+      `L78,${b2.toFixed(1)} Q64,${(wY+8+waveAmp*.7).toFixed(1)} 50,${(wY+8).toFixed(1)} ` +
+      `Q36,${(wY+8-waveAmp*.7).toFixed(1)} 22,${b1.toFixed(1)}Z`
+    );
+  }
+
+  // Shimmer lines float inside water
+  if (shimmer1 && wY < BOTTLE_BOT - 30) {
+    const sy1 = wY + 18 + Math.sin(t*1.2) * 3;
+    shimmer1.setAttribute('d',
+      `M26,${sy1.toFixed(1)} Q37,${(sy1-4).toFixed(1)} 48,${sy1.toFixed(1)} ` +
+      `Q59,${(sy1+4).toFixed(1)} 70,${sy1.toFixed(1)} Q76,${(sy1-2).toFixed(1)} 78,${sy1.toFixed(1)}`);
+    const sy2 = wY + 34 + Math.sin(t*1.2 + 1) * 3;
+    shimmer2.setAttribute('d',
+      `M26,${sy2.toFixed(1)} Q40,${(sy2-3).toFixed(1)} 54,${sy2.toFixed(1)} Q68,${(sy2+3).toFixed(1)} 78,${sy2.toFixed(1)}`);
+  }
+
+  // Float + mouse tilt transform
+  if (bottleWrap) {
+    const floatY  = Math.sin(t * 0.78) * 10;
+    const tiltX   = mouseX * 14;
+    const tiltY   = mouseY * 5;
+    const breathe = 1 + Math.sin(t * 1.2) * 0.011;
+    bottleWrap.style.transform =
+      `translate(-50%,-50%) translate(${tiltX.toFixed(1)}px,${(floatY+tiltY).toFixed(1)}px) scale(${breathe.toFixed(4)})`;
+  }
+}
+
+/* ══════════════════ LOOP ══════════════════ */
+const t0 = performance.now();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = (performance.now() - t0) / 1000;
+
+  curScroll += (tgtScroll - curScroll) * 0.028;
+  mouseX    += (tgtMX    - mouseX)    * 0.06;
+  mouseY    += (tgtMY    - mouseY)    * 0.06;
+
+  /* cursor — inner snaps, outer lerps */
+  if (cursorReady) {
+    cx += (mpx - cx) * 0.34; cy += (mpy - cy) * 0.34;
+    ox += (mpx - ox) * 0.12; oy += (mpy - oy) * 0.12;
+    cInner.style.transform = `translate(${mpx}px,${mpy}px) translate(-50%,-50%)`;
+    cOuter.style.transform  = `translate(${ox.toFixed(1)}px,${oy.toFixed(1)}px) translate(-50%,-50%)`;
+  }
+
+  /* bottle */
+  updateBottle(t, curScroll);
+
+  /* grid dots drift */
+  dotEls.forEach(d => {
+    d.el.style.top = (d.base + Math.sin(t*.5+d.ph)*3.5*d.dir).toFixed(1)+'%';
+  });
+
+  /* slides */
+  updateSlides(curScroll);
+
+  /* webgl */
+  if (webglOK) {
+    try {
+      const ang = curScroll * Math.PI * 2;
+      camera.position.x = Math.sin(ang) * 8;
+      camera.position.z = Math.cos(ang) * 8;
+      camera.position.y = Math.sin(curScroll * Math.PI) * 1.5;
+      camera.lookAt(-0.9*(1-Math.min(curScroll/.22,1)),0,0);
+      const pos = bGeo.attributes.position.array;
+      for (let i = 0; i < N_BUBBLES; i++) {
+        const d = bData[i];
+        pos[i*3+1] += d.speedY * 0.016;
+        pos[i*3]   = d.bx + Math.sin(t*d.sw+d.ph)*d.sa;
+        pos[i*3+2] = d.bz + Math.cos(t*d.sw+d.ph)*d.sa;
+        if (pos[i*3+1] > 4) pos[i*3+1] = -4;
+      }
+      bGeo.attributes.position.needsUpdate = true;
+      causticsMat.uniforms.uTime.value   = t;
+      causticsMat.uniforms.uScroll.value = curScroll;
+      renderer.autoClear = false; renderer.clear();
+      renderer.render(causticsScene, causticsCam);
+      renderer.render(scene, camera);
+    } catch(e) { webglOK=false; if(canvas) canvas.style.display='none'; }
+  }
+}
+
+updateSlides(0);
+animate();
+</script>
+</body>
+</html>

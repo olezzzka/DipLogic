@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clay & Soul — Fine Ceramic Studio & Masterclasses</title>
+  <meta name="description" content="Premium handcrafted ceramics and intimate workshops in New York. Feel the clay, discover your soul.">
+  
+  <!-- SEO Open Graph -->
+  <meta property="og:title" content="Clay & Soul — Artisan Ceramics & Workshops">
+  <meta property="og:description" content="Premium handcrafted ceramics. Small groups, individual guidance.">
+  <meta property="og:type" content="website">
+  
+  <!-- Google Fonts: Playfair Display (Serif Display), Plus Jakarta Sans (Sans-Serif UI), IBM Plex Mono (Monospace details) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  
+  <!-- Main Stylesheet -->
+  <link rel="stylesheet" href="./index.css">
+</head>
+<body>
+  <!-- BACK LINK -->
+  <a href="../../uploads/diplogic.html" class="back-link">
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+      <path d="M11 7H3M3 7L7 3M3 7L7 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+    DipLogic Portfolio
+  </a>
+
+  <!-- Scroll-driven vertical curved line -->
+  <div class="scroll-line-container">
+    <svg id="scroll-svg" viewBox="0 0 100 1000" preserveAspectRatio="none">
+      <path id="scroll-path" d="M 50,0 C 10,150 90,300 50,450 C 10,600 90,750 50,900 C 20,940 80,970 50,1000" fill="none" stroke="currentColor" stroke-width="1.2" pathLength="1" />
+    </svg>
+  </div>
+
+  <!-- 1. PRELOADER -->
+  <div id="preloader" class="preloader">
+    <div class="preloader-content">
+      <div class="preloader-badge">Clay & Soul</div>
+      <h1 class="preloader-title">Shaping Earthly Beauty</h1>
+      <div class="preloader-progress-container">
+        <div id="preloader-bar" class="preloader-bar"></div>
+      </div>
+      <div class="preloader-status">
+        <span class="preloader-loading-text">Loading assets...</span>
+        <span id="preloader-percent" class="preloader-percent">00%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. HEADER / NAVIGATION -->
+  <header class="header">
+    <div class="header-container">
+      <a href="#" class="logo" id="logo-link">
+        <span class="logo-text">CLAY & SOUL</span>
+      </a>
+      
+      <nav class="nav-menu" id="nav-menu">
+        <a href="#about" class="nav-link">About</a>
+        <a href="#process" class="nav-link">Craft</a>
+        <a href="#collections" class="nav-link">Collections</a>
+        <a href="#schedule" class="nav-link">Workshops</a>
+      </nav>
+      
+      <div class="header-cta">
+        <a href="#booking" class="btn btn-outlined-primary" id="header-cta-btn">Book Workshop</a>
+      </div>
+    </div>
+  </header>
+
+  <!-- 3. HERO / CANVAS SECTION -->
+  <section class="hero-section" id="hero">
+    <!-- Pinned Canvas Wrapper -->
+    <div class="canvas-wrapper">
+      <canvas id="morph-canvas"></canvas>
+      <div class="canvas-overlay"></div>
+    </div>
+
+    <!-- Pinned Hero Text Content (Left-aligned, narrow column) -->
+    <div class="hero-content-container">
+      <div class="hero-text-block">
+        <div class="hero-badge-mono">COLLECTION 01 / VASE</div>
+        <h1 class="hero-title">A Touch of the Authentic</h1>
+        <p class="hero-description">Watch raw clay yield to the artisan's hands and discover its soul. Scroll down to start the transformation.</p>
+        <div class="hero-scroll-indicator">
+          <span class="scroll-arrow-char">↓</span>
+          <span class="scroll-text-mono">scroll to shape clay</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Ticket-style Exhibition Widget (Watermark Cover in bottom-right corner) -->
+    <div class="watermark-overlay-widget" id="watermark-overlay">
+      <div class="ticket-header">
+        <div class="ticket-meta-row">
+          <span class="ticket-label">EVENT / WORKSHOP</span>
+          <span class="ticket-status-dot">ACTIVE</span>
+        </div>
+        <h3 class="ticket-title">Handbuilding: Tea Pair</h3>
+      </div>
+      
+      <div class="ticket-divider"></div>
+      
+      <div class="ticket-body">
+        <div class="ticket-detail">
+          <span class="detail-label">DATE & TIME</span>
+          <span class="detail-value">Sunday, June 28, 3:00 PM</span>
+        </div>
+        <div class="ticket-detail">
+          <span class="detail-label">AVAILABILITY</span>
+          <span class="detail-value highlight-green">3 spots remaining</span>
+        </div>
+      </div>
+      
+      <div class="ticket-divider"></div>
+      
+      <div class="ticket-footer">
+        <a href="#booking" class="btn btn-solid-accent btn-sm" id="widget-cta-btn">Book Spot — $60</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- 4. ABOUT SECTION / BENTO GRID -->
+  <section class="section about-section" id="about">
+    <div class="container">
+      <div class="section-header">
+        <span class="subtitle">Artisan Manifesto</span>
+        <h2 class="section-title">Beauty in Imperfection</h2>
+      </div>
+
+      <!-- Bento Grid Layout -->
+      <div class="bento-grid">
+        <!-- Card 1: Large Philosophy -->
+        <div class="bento-card bento-card-large col-span-2 row-span-2 reveal-item">
+          <div class="bento-card-content">
+            <span class="card-tag">Wabi-Sabi Philosophy</span>
+            <h3 class="card-title">The Art of Slow Living</h3>
+            <p class="card-text">In our studio, we do not chase factory perfection. Every finger trace on clay, every glaze irregularity is a signature of the moment. We create items that carry the warmth of human hands and tell a story.</p>
+            <div class="card-quote">
+              “Clay remembers every touch. It does not tolerate haste, but rewards patience.”
+              <span class="quote-author">— Oleg Demidov, Founder</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Card 2: Artist Portrait info -->
+        <div class="bento-card col-span-1 row-span-1 reveal-item">
+          <div class="bento-card-content">
+            <span class="card-tag">The Artisan</span>
+            <h3 class="card-title">Oleg Demidov</h3>
+            <p class="card-text">12 years behind the potter's wheel. Trained in Kyoto, Japan, studying traditional high-temperature anagama wood-firing techniques.</p>
+          </div>
+        </div>
+
+        <!-- Card 3: Materials -->
+        <div class="bento-card col-span-1 row-span-1 reveal-item">
+          <div class="bento-card-content">
+            <span class="card-tag">Materials</span>
+            <h3 class="card-title">Pure Organics</h3>
+            <p class="card-text">We use only wild clay, coarse chamotte, and custom glazes crafted from wood ash and metal oxides.</p>
+          </div>
+        </div>
+
+        <!-- Card 4: Detailed Process Grid -->
+        <div class="bento-card bento-card-wide col-span-3 row-span-1 reveal-item" id="process">
+          <div class="bento-card-content">
+            <span class="card-tag">Production</span>
+            <h3 class="card-title">The Journey of Clay</h3>
+            <div class="process-steps">
+              <div class="step">
+                <span class="step-num">01</span>
+                <h4 class="step-title">Shaping</h4>
+                <p class="step-desc">A meditative dialogue with spinning clay on the wheel or slab handbuilding.</p>
+              </div>
+              <div class="step">
+                <span class="step-num">02</span>
+                <h4 class="step-title">Drying</h4>
+                <p class="step-desc">Slow moisture evaporation in a controlled room for 7–10 days to prevent warping.</p>
+              </div>
+              <div class="step">
+                <span class="step-num">03</span>
+                <h4 class="step-title">Bisque Firing</h4>
+                <p class="step-desc">First firing at 950°C, making the clay strong yet porous enough to absorb glaze.</p>
+              </div>
+              <div class="step">
+                <span class="step-num">04</span>
+                <h4 class="step-title">Glazing</h4>
+                <p class="step-desc">Coating with custom glass formula and final glaze firing at 1220°C to lock in texture.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 5. COLLECTIONS SECTION (HORIZONTAL SCROLL) -->
+  <section class="section collections-section" id="collections">
+    <div class="horizontal-scroll-track" id="horizontal-track">
+      <div class="collections-intro">
+        <span class="subtitle">Our Work</span>
+        <h2 class="section-title">Objects of Meaning</h2>
+        <p class="section-lead">Unique collections of tableware and interior decor, released in limited runs. Each piece exists in a single edition.</p>
+      </div>
+      
+      <!-- Slide 1 -->
+      <div class="collection-slide">
+        <div class="slide-image-wrapper">
+          <img src="./images/clay_vase_earthy.webp" alt="Vase Breath of the Earth" class="slide-image">
+        </div>
+        <div class="slide-info">
+          <span class="slide-category">Interior Vases</span>
+          <h3 class="slide-title">Vase “Breath of the Earth”</h3>
+          <p class="slide-description">Textured chamotte clay, reduction wood-firing. Height 35 cm.</p>
+          <span class="slide-price">$240</span>
+        </div>
+      </div>
+      
+      <!-- Slide 2 -->
+      <div class="collection-slide">
+        <div class="slide-image-wrapper">
+          <img src="./images/clay_bowl_moss.webp" alt="Bowl Forest Moss" class="slide-image">
+        </div>
+        <div class="slide-info">
+          <span class="slide-category">Tea Utensils</span>
+          <h3 class="slide-title">Bowl “Forest Moss”</h3>
+          <p class="slide-description">Stoneware clay, matte ash glaze with crackle effect. Ideal for Matcha.</p>
+          <span class="slide-price">$70</span>
+        </div>
+      </div>
+      
+      <!-- Slide 3 -->
+      <div class="collection-slide">
+        <div class="slide-image-wrapper">
+          <img src="./images/clay_cup_porcelain.webp" alt="Teacup Sea Salt" class="slide-image">
+        </div>
+        <div class="slide-info">
+          <span class="slide-category">Teacups</span>
+          <h3 class="slide-title">Teacup “Sea Salt”</h3>
+          <p class="slide-description">Thin-walled porcelain, semi-matte glaze, raw textured bottom. 120 ml.</p>
+          <span class="slide-price">$50</span>
+        </div>
+      </div>
+      
+      <!-- Slide 4 -->
+      <div class="collection-slide text-slide">
+        <div class="text-slide-content">
+          <h3 class="text-slide-title">Custom Commission</h3>
+          <p class="text-slide-text">We design and craft custom tableware series for restaurants or bespoke art objects tailored to your space.</p>
+          <a href="#booking" class="btn btn-outlined-white">Start Project</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 6. SCHEDULE & BOOKING SECTION -->
+  <section class="section schedule-section" id="schedule">
+    <div class="container">
+      <div class="schedule-grid">
+        <!-- Left: Workshops Table -->
+        <div class="workshops-list-container reveal-item">
+          <span class="subtitle">Intimate Groups</span>
+          <h2 class="section-title">Workshop Schedule</h2>
+          <p class="section-lead">Classes are held in small groups of up to 6 people. Price includes all materials, two firings, and custom glazing.</p>
+          
+          <div class="table-wrapper">
+            <table class="schedule-table">
+              <thead>
+                <tr>
+                  <th>Date</th>
+                  <th>Program</th>
+                  <th>Time</th>
+                  <th>Availability</th>
+                  <th>Price</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr class="table-row-interactive" data-workshop="Handbuilding: Tea Pair (Jun 28)">
+                  <td class="date-cell">Jun 28, Sun</td>
+                  <td class="title-cell">Handbuilding: Tea Pair</td>
+                  <td>3:00 PM</td>
+                  <td><span class="badge badge-success">3 spots left</span></td>
+                  <td class="price-cell">$60</td>
+                </tr>
+                <tr class="table-row-interactive" data-workshop="Potter's Wheel Intro (Jul 04)">
+                  <td class="date-cell">Jul 04, Sat</td>
+                  <td class="title-cell">Intro to Potter's Wheel</td>
+                  <td>12:00 PM</td>
+                  <td><span class="badge badge-success">2 spots left</span></td>
+                  <td class="price-cell">$70</td>
+                </tr>
+                <tr class="table-row-interactive" data-workshop="Sculptural Vase (Jul 05)">
+                  <td class="date-cell">Jul 05, Sun</td>
+                  <td class="title-cell">Sculptural Vase (Handbuilding)</td>
+                  <td>2:00 PM</td>
+                  <td><span class="badge badge-neutral">1 spot left</span></td>
+                  <td class="price-cell">$85</td>
+                </tr>
+                <tr class="table-row-interactive" data-workshop="Private Workshop (Custom)">
+                  <td class="date-cell">Any Day</td>
+                  <td class="title-cell">Private Couple's Workshop</td>
+                  <td>By Booking</td>
+                  <td><span class="badge badge-neutral">Bookable</span></td>
+                  <td class="price-cell">$130</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Right: Elegant Booking Form -->
+        <div class="booking-form-card reveal-item" id="booking">
+          <h3 class="form-card-title">Book a Spot</h3>
+          <p class="form-card-subtitle">Leave your details below, and we will get back to you within 15 minutes to confirm your reservation.</p>
+          
+          <form id="booking-form" class="booking-form">
+            <div class="form-group">
+              <label for="form-name" class="form-label">Your Name</label>
+              <input type="text" id="form-name" class="form-input" placeholder="Alexander" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="form-phone" class="form-label">Phone Number</label>
+              <input type="tel" id="form-phone" class="form-input" placeholder="+1 (555) 000-0000" required>
+            </div>
+            
+            <div class="form-group">
+              <label for="form-workshop" class="form-label">Choose Workshop</label>
+              <select id="form-workshop" class="form-select">
+                <option value="Handbuilding: Tea Pair (Jun 28)">Handbuilding: Tea Pair (Jun 28) — $60</option>
+                <option value="Potter's Wheel Intro (Jul 04)">Intro to Potter's Wheel (Jul 04) — $70</option>
+                <option value="Sculptural Vase (Jul 05)">Sculptural Vase (Jul 05) — $85</option>
+                <option value="Private Workshop (Custom)">Private Couple's Workshop — $130</option>
+              </select>
+            </div>
+
+            <button type="submit" class="btn btn-solid-accent btn-full" id="submit-btn">
+              Book My Spot
+            </button>
+          </form>
+
+          <!-- Success State (hidden initially) -->
+          <div id="booking-success" class="booking-success-message hidden">
+            <div class="success-icon-svg">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            </div>
+            <h4 class="success-title">Spot Reserved!</h4>
+            <p class="success-text">We have sent you a confirmation text. We will contact you shortly to finalize your booking details.</p>
+            <button id="success-close-btn" class="btn btn-outlined-primary btn-sm">Back to Schedule</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 7. FOOTER -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <span class="footer-logo">CLAY & SOUL</span>
+          <p class="footer-tagline">Connecting people with earth through touch, focus, and creativity.</p>
+        </div>
+        <div class="footer-links-grid">
+          <div class="footer-links-col">
+            <h4 class="footer-col-title">Menu</h4>
+            <a href="#about" class="footer-link">About</a>
+            <a href="#process" class="footer-link">Craft Process</a>
+            <a href="#collections" class="footer-link">Collections</a>
+            <a href="#schedule" class="footer-link">Workshops</a>
+          </div>
+          <div class="footer-links-col">
+            <h4 class="footer-col-title">Studio</h4>
+            <span class="footer-info-item">148 Lafayette St, SoHo<br>New York, NY 10013</span>
+            <span class="footer-info-item">Daily from 11:00 AM to 9:00 PM</span>
+          </div>
+          <div class="footer-links-col">
+            <h4 class="footer-col-title">Contact</h4>
+            <a href="tel:+12125558877" class="footer-link-highlight">+1 (212) 555-8877</a>
+            <a href="mailto:hello@clayandsoul.com" class="footer-link">hello@clayandsoul.com</a>
+            <div class="social-icons">
+              <a href="#" class="social-link" title="Telegram">Telegram</a>
+              <a href="#" class="social-link" title="Instagram">Instagram</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="footer-bottom">
+        <p class="copyright">&copy; 2026 Clay & Soul Studio. All rights reserved.</p>
+        <p class="designer-credits">Designed in Minimalist Editorial Style</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Script entries managed by Vite -->
+  <script type="module" src="./app.js"></script>
+</body>
+</html>

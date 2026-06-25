@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PureAura — Mindfully Crafted Skincare</title>
+    <meta name="description" content="PureAura — ultra-premium vegan & cruelty-free organic skincare designed to nurture your skin and respect the planet.">
+    <!-- Google Fonts: Outfit for UI, Playfair Display for Luxury Serif Headlines -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600&family=Playfair+Display:ital,wght@0,400;0,500;1,400&display=swap" rel="stylesheet">
+    <!-- Phosphor Icons (Light weight) -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Custom Interactive Spring Cursor -->
+    <div class="custom-cursor" id="custom-cursor">
+        <span class="cursor-text" id="cursor-text"></span>
+    </div>
+
+    <!-- Shifting grain texture overlay for tactile feel -->
+    <div class="grain-overlay"></div>
+
+    <!-- BACK LINK -->
+    <a href="../uploads/diplogic.html" class="back-link">
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+            <path d="M11 7H3M3 7L7 3M3 7L7 11" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        DipLogic Portfolio
+    </a>
+
+    <!-- Navigation Bar: Floating glass pill -->
+    <nav class="nav-container">
+        <div class="nav-pill">
+            <a href="#" class="nav-logo" id="logo-link">PureAura</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link active" data-target="home">Home</a>
+                <a href="#" class="nav-link" data-target="catalog">Catalog</a>
+                <a href="#" class="nav-link" data-target="values">Philosophy</a>
+            </div>
+            <div class="nav-actions">
+                <button class="cart-trigger" id="cart-btn" aria-label="Open cart">
+                    <i class="ph-light ph-shopping-bag"></i>
+                    <span class="cart-count">0</span>
+                </button>
+                <button class="menu-hamburger" id="menu-btn" aria-label="Open menu">
+                    <span class="hamburger-line"></span>
+                    <span class="hamburger-line"></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Mobile Screen-Filling Menu -->
+    <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-links">
+            <a href="#" class="mobile-nav-link" data-target="home">Home</a>
+            <a href="#" class="mobile-nav-link" data-target="catalog">Catalog</a>
+            <a href="#" class="mobile-nav-link" data-target="values">Philosophy</a>
+        </div>
+    </div>
+
+    <!-- Smooth scroll wrapper for Lenis -->
+    <div id="smooth-wrapper">
+        <div id="smooth-content">
+            <main class="main-wrapper">
+                
+                <!-- ================= HOME VIEW ================= -->
+                <section id="view-home" class="page-view active">
+                    <!-- Hero Section (Artistic Asymmetry with Liquid BG) -->
+                    <header class="hero-section">
+                        <div class="hero-bg-media">
+                            <div class="orb orb-1"></div>
+                            <div class="orb orb-2"></div>
+                            <div class="orb orb-3"></div>
+                            <div class="hero-overlay"></div>
+                        </div>
+                        <div class="hero-content">
+                            <div class="eyebrow-container">
+                                <span class="eyebrow-badge">Conscious Skincare</span>
+                            </div>
+                            <h1 class="hero-title" id="hero-title">
+                                <span>Pure Formulations.</span><br>
+                                <span>Conscious Beauty.</span>
+                            </h1>
+                            <p class="hero-subtitle">
+                                Organic vegan & cruelty-free skincare that cares for your skin and the planet. We unlock the true potency of natural botanical ingredients.
+                            </p>
+                            <div class="hero-actions">
+                                <button class="btn btn-primary" id="hero-to-catalog-btn">
+                                    Explore Catalog
+                                    <span class="btn-icon-circle">
+                                        <i class="ph-light ph-arrow-up-right"></i>
+                                    </span>
+                                </button>
+                                <button class="btn btn-secondary" id="hero-to-values-btn">Our Philosophy</button>
+                            </div>
+                        </div>
+                    </header>
+
+                    <!-- Infinite Marquee (Certifications) - Structured for seamless loop on all viewports -->
+                    <section class="marquee-section">
+                        <div class="marquee-container">
+                            <div class="marquee-track">
+                                <div class="marquee-content">
+                                    <div class="marquee-item">100% VEGAN</div>
+                                    <div class="marquee-item"><i class="ph-light ph-leaf"></i></div>
+                                    <div class="marquee-item">CRUELTY FREE</div>
+                                    <div class="marquee-item"><i class="ph-light ph-shield-check"></i></div>
+                                    <div class="marquee-item">ORGANIC INGREDIENTS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-sparkles"></i></div>
+                                    <div class="marquee-item">RECYCLABLE GLASS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-globe-hemisphere-west"></i></div>
+                                    <div class="marquee-item">DERMATOLOGIST TESTED</div>
+                                    <div class="marquee-item"><i class="ph-light ph-heart"></i></div>
+                                    <div class="marquee-item">CLEAN BEAUTY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-star"></i></div>
+                                    <div class="marquee-item">BOTANICAL FORMULAS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-flower-lotus"></i></div>
+                                    <div class="marquee-item">ECO-FRIENDLY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-recycle"></i></div>
+                                </div>
+                                <div class="marquee-content">
+                                    <div class="marquee-item">100% VEGAN</div>
+                                    <div class="marquee-item"><i class="ph-light ph-leaf"></i></div>
+                                    <div class="marquee-item">CRUELTY FREE</div>
+                                    <div class="marquee-item"><i class="ph-light ph-shield-check"></i></div>
+                                    <div class="marquee-item">ORGANIC INGREDIENTS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-sparkles"></i></div>
+                                    <div class="marquee-item">RECYCLABLE GLASS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-globe-hemisphere-west"></i></div>
+                                    <div class="marquee-item">DERMATOLOGIST TESTED</div>
+                                    <div class="marquee-item"><i class="ph-light ph-heart"></i></div>
+                                    <div class="marquee-item">CLEAN BEAUTY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-star"></i></div>
+                                    <div class="marquee-item">BOTANICAL FORMULAS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-flower-lotus"></i></div>
+                                    <div class="marquee-item">ECO-FRIENDLY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-recycle"></i></div>
+                                </div>
+                                <div class="marquee-content">
+                                    <div class="marquee-item">100% VEGAN</div>
+                                    <div class="marquee-item"><i class="ph-light ph-leaf"></i></div>
+                                    <div class="marquee-item">CRUELTY FREE</div>
+                                    <div class="marquee-item"><i class="ph-light ph-shield-check"></i></div>
+                                    <div class="marquee-item">ORGANIC INGREDIENTS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-sparkles"></i></div>
+                                    <div class="marquee-item">RECYCLABLE GLASS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-globe-hemisphere-west"></i></div>
+                                    <div class="marquee-item">DERMATOLOGIST TESTED</div>
+                                    <div class="marquee-item"><i class="ph-light ph-heart"></i></div>
+                                    <div class="marquee-item">CLEAN BEAUTY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-star"></i></div>
+                                    <div class="marquee-item">BOTANICAL FORMULAS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-flower-lotus"></i></div>
+                                    <div class="marquee-item">ECO-FRIENDLY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-recycle"></i></div>
+                                </div>
+                                <div class="marquee-content">
+                                    <div class="marquee-item">100% VEGAN</div>
+                                    <div class="marquee-item"><i class="ph-light ph-leaf"></i></div>
+                                    <div class="marquee-item">CRUELTY FREE</div>
+                                    <div class="marquee-item"><i class="ph-light ph-shield-check"></i></div>
+                                    <div class="marquee-item">ORGANIC INGREDIENTS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-sparkles"></i></div>
+                                    <div class="marquee-item">RECYCLABLE GLASS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-globe-hemisphere-west"></i></div>
+                                    <div class="marquee-item">DERMATOLOGIST TESTED</div>
+                                    <div class="marquee-item"><i class="ph-light ph-heart"></i></div>
+                                    <div class="marquee-item">CLEAN BEAUTY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-star"></i></div>
+                                    <div class="marquee-item">BOTANICAL FORMULAS</div>
+                                    <div class="marquee-item"><i class="ph-light ph-flower-lotus"></i></div>
+                                    <div class="marquee-item">ECO-FRIENDLY</div>
+                                    <div class="marquee-item"><i class="ph-light ph-recycle"></i></div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Bento Values Section (Interest / Storytelling) -->
+                    <section class="values-section py-section">
+                        <div class="section-container">
+                            <div class="section-header text-center">
+                                <span class="eyebrow-badge">Our Core Values</span>
+                                <h2 class="section-title">Born from nature, refined by science</h2>
+                            </div>
+                            <div class="bento-grid">
+                                <!-- Card 1 (Large - Eco & Cruelty Free) - Color Harmonized Image -->
+                                <div class="bento-card col-span-2 row-span-2 double-bezel-outer">
+                                    <div class="double-bezel-inner">
+                                        <div class="bento-card-media">
+                                            <img src="https://images.unsplash.com/photo-1617897903246-719242758050?q=80&w=800&auto=format&fit=crop" alt="Natural botanical skincare">
+                                        </div>
+                                        <div class="bento-card-content">
+                                            <h3>Cruelty-Free & Vegan</h3>
+                                            <p>None of our products or ingredients are ever tested on animals. We are 100% vegan, choosing only the highest quality plant-based alternatives to protect both your skin and our fellow creatures.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card 2 (Standard - Recyclable Glass) -->
+                                <div class="bento-card double-bezel-outer">
+                                    <div class="double-bezel-inner flex-row-reverse">
+                                        <div class="bento-card-icon">
+                                            <i class="ph-light ph-recycle"></i>
+                                        </div>
+                                        <div class="bento-card-content">
+                                            <h3>Conscious Packaging</h3>
+                                            <p>We use only recyclable dark medical-grade glass and biodegradable cardboards to preserve the active potency of our botanical formulas.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- Card 3 (Standard - Full Transparency) -->
+                                <div class="bento-card double-bezel-outer">
+                                    <div class="double-bezel-inner">
+                                        <div class="bento-card-icon">
+                                            <i class="ph-light ph-eye"></i>
+                                        </div>
+                                        <div class="bento-card-content">
+                                            <h3>Pure Transparency</h3>
+                                            <p>We disclose 100% of our ingredients, listing the origin and purpose of every single component. You always know what goes on your skin.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Interactive Story Section (Desire / Scroll Reveal) -->
+                    <section class="story-reveal-section py-section">
+                        <div class="reveal-sticky-container">
+                            <div class="reveal-text-container">
+                                <p class="reveal-word" data-index="0">Our</p>
+                                <p class="reveal-word" data-index="1">skincare</p>
+                                <p class="reveal-word" data-index="2">begins</p>
+                                <p class="reveal-word" data-index="3">where</p>
+                                <p class="reveal-word" data-index="4">compromise</p>
+                                <p class="reveal-word" data-index="5">ends.</p>
+                                <p class="reveal-word" data-index="6">Only</p>
+                                <p class="reveal-word" data-index="7">whole</p>
+                                <p class="reveal-word" data-index="8">botanical</p>
+                                <p class="reveal-word" data-index="9">extracts,</p>
+                                <p class="reveal-word" data-index="10">cold-pressed</p>
+                                <p class="reveal-word" data-index="11">organic</p>
+                                <p class="reveal-word" data-index="12">oils,</p>
+                                <p class="reveal-word" data-index="13">and</p>
+                                <p class="reveal-word" data-index="14">clinically</p>
+                                <p class="reveal-word" data-index="15">proven</p>
+                                <p class="reveal-word" data-index="16">clean</p>
+                                <p class="reveal-word" data-index="17">formulations.</p>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Product Slideshow (Hits of Sales & New Arrivals) -->
+                    <section class="slider-section py-section">
+                        <div class="section-container">
+                            <div class="slider-header">
+                                <div class="slider-titles">
+                                    <span class="eyebrow-badge">Best Sellers</span>
+                                    <h2 class="section-title">Your Daily Ritual</h2>
+                                </div>
+                                <div class="slider-controls">
+                                    <button class="slider-arrow btn-prev" aria-label="Previous product"><i class="ph-light ph-arrow-left"></i></button>
+                                    <button class="slider-arrow btn-next" aria-label="Next product"><i class="ph-light ph-arrow-right"></i></button>
+                                </div>
+                            </div>
+                            <!-- Drag Slider Container - Populated dynamically via app.js -->
+                            <div class="slider-viewport" id="hits-slider">
+                                <div class="slider-track" id="hits-track">
+                                    <!-- Dynamic slides go here -->
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+
+                    <!-- Testimonial / Feedback Section (Action / Footer prelude) -->
+                    <section class="testimonial-section py-section">
+                        <div class="section-container">
+                            <div class="testimonial-carousel double-bezel-outer">
+                                <div class="double-bezel-inner">
+                                    <div class="testimonial-content">
+                                        <div class="testimonial-stars">
+                                            <i class="ph-fill ph-star"></i>
+                                            <i class="ph-fill ph-star"></i>
+                                            <i class="ph-fill ph-star"></i>
+                                            <i class="ph-fill ph-star"></i>
+                                            <i class="ph-fill ph-star"></i>
+                                        </div>
+                                        <blockquote class="testimonial-quote">
+                                            "PureAura completely transformed my skin. Having rosacea makes finding clean products a nightmare. The Botanical Bloom Serum worked wonders in two weeks: redness is gone, and my tone is perfectly even."
+                                        </blockquote>
+                                        <div class="testimonial-author">
+                                            <cite class="author-name">Elena V.</cite>
+                                            <span class="author-info">Verified Customer, 29</span>
+                                        </div>
+                                    </div>
+                                    <div class="testimonial-media">
+                                        <img src="https://images.unsplash.com/photo-1556228578-0d85b1a4d571?q=80&w=600&auto=format&fit=crop" alt="Customer review visual">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                </section>
+
+                <!-- ================= CATALOG VIEW ================= -->
+                <section id="view-catalog" class="page-view">
+                    <div class="catalog-container py-section">
+                        <div class="catalog-header">
+                            <span class="eyebrow-badge">Catalog</span>
+                            <h1 class="catalog-title">Conscious Choice</h1>
+                            <p class="catalog-subtitle">Select the perfect skincare routine tailored to your skin's unique needs.</p>
+                        </div>
+
+                        <div class="catalog-layout">
+                            <!-- Filters Sidebar -->
+                            <aside class="catalog-filters">
+                                <div class="filters-inner double-bezel-outer">
+                                    <div class="double-bezel-inner">
+                                        <div class="filter-group">
+                                            <h3 class="filter-group-title">Skin Type</h3>
+                                            <div class="filter-options">
+                                                <button class="filter-chip active" data-filter="skin" data-value="all">All Types</button>
+                                                <button class="filter-chip" data-filter="skin" data-value="dry">Dry</button>
+                                                <button class="filter-chip" data-filter="skin" data-value="oily">Oily</button>
+                                                <button class="filter-chip" data-filter="skin" data-value="sensitive">Sensitive</button>
+                                                <button class="filter-chip" data-filter="skin" data-value="combination">Combination</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="filter-group">
+                                            <h3 class="filter-group-title">Skin Concern</h3>
+                                            <div class="filter-options">
+                                                <button class="filter-chip active" data-filter="concern" data-value="all">All Concerns</button>
+                                                <button class="filter-chip" data-filter="concern" data-value="redness">Redness & Calming</button>
+                                                <button class="filter-chip" data-filter="concern" data-value="hydration">Dryness & Hydration</button>
+                                                <button class="filter-chip" data-filter="concern" data-value="pores">Pores & Shine</button>
+                                                <button class="filter-chip" data-filter="concern" data-value="aging">Fine Lines & Aging</button>
+                                            </div>
+                                        </div>
+
+                                        <div class="filter-group">
+                                            <h3 class="filter-group-title">Product Type</h3>
+                                            <div class="filter-options">
+                                                <button class="filter-chip active" data-filter="format" data-value="all">All Formats</button>
+                                                <button class="filter-chip" data-filter="format" data-value="serum">Serums</button>
+                                                <button class="filter-chip" data-filter="format" data-value="cream">Creams</button>
+                                                <button class="filter-chip" data-filter="format" data-value="oil">Oils</button>
+                                                <button class="filter-chip" data-filter="format" data-value="toner">Toners</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </aside>
+
+                            <!-- Product Grid -->
+                            <div class="catalog-grid-wrapper">
+                                <div class="catalog-grid" id="catalog-products-grid">
+                                    <!-- Populated dynamically via app.js -->
+                                </div>
+                                <!-- Empty Grid State -->
+                                <div class="catalog-empty-state" id="catalog-empty" style="display: none;">
+                                    <i class="ph-light ph-wind"></i>
+                                    <p>No products match your selected criteria. Try adjusting the filters.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- ================= PRODUCT DETAILS VIEW ================= -->
+                <section id="view-product" class="page-view">
+                    <div class="product-details-container py-section" id="product-detail-content">
+                        <!-- Content will be injected dynamically via app.js -->
+                    </div>
+                </section>
+
+            </main>
+
+            <!-- Global Footer -->
+            <footer class="global-footer">
+                <div class="footer-container">
+                    <div class="footer-grid">
+                        <div class="footer-brand">
+                            <span class="footer-logo">PureAura</span>
+                            <p class="footer-tagline">Conscious skincare formulas crafted to bring out your skin's natural radiance while fully respecting our environment.</p>
+                        </div>
+                        <div class="footer-nav">
+                            <h4 class="footer-section-title">Navigation</h4>
+                            <ul class="footer-links">
+                                <li><a href="#" class="footer-link" data-target="home">Home</a></li>
+                                <li><a href="#" class="footer-link" data-target="catalog">Catalog</a></li>
+                                <li><a href="#" class="footer-link" data-target="values">Philosophy</a></li>
+                            </ul>
+                        </div>
+                        <div class="footer-info">
+                            <h4 class="footer-section-title">Certifications</h4>
+                            <p class="footer-text">All our products are certified Cruelty-Free (PETA) and registered with The Vegan Society. Our carbon footprint is fully offset.</p>
+                        </div>
+                    </div>
+                    <div class="footer-bottom">
+                        <p>&copy; 2026 PureAura. All rights reserved. Created with absolute respect for nature.</p>
+                    </div>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <!-- Side Cart Drawer (Overlay has blur effect via CSS) -->
+    <div class="cart-drawer-overlay" id="cart-overlay"></div>
+    <div class="cart-drawer" id="cart-drawer">
+        <div class="cart-drawer-header">
+            <h2 class="cart-drawer-title">Your Ritual (<span id="cart-total-count">0</span>)</h2>
+            <button class="cart-drawer-close" id="cart-close-btn" aria-label="Close cart">
+                <i class="ph-light ph-x"></i>
+            </button>
+        </div>
+        <div class="cart-drawer-items" id="cart-items-container">
+            <!-- Dynamic items go here -->
+        </div>
+        <div class="cart-drawer-footer">
+            <div class="cart-subtotal-row">
+                <span class="subtotal-label">Subtotal</span>
+                <span class="subtotal-value" id="cart-subtotal">$0.00</span>
+            </div>
+            <button class="btn btn-primary w-full" id="checkout-trigger-btn">
+                Checkout
+                <span class="btn-icon-circle">
+                    <i class="ph-light ph-arrow-up-right"></i>
+                </span>
+            </button>
+        </div>
+    </div>
+
+    <!-- Checkout Modal Overlay -->
+    <div class="checkout-modal-overlay" id="checkout-overlay">
+        <div class="checkout-modal double-bezel-outer">
+            <div class="double-bezel-inner">
+                <div class="checkout-header">
+                    <h2 class="checkout-title">Checkout Details</h2>
+                    <button class="checkout-close" id="checkout-close-btn" aria-label="Close modal">
+                        <i class="ph-light ph-x"></i>
+                    </button>
+                </div>
+                <form class="checkout-form" id="checkout-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkout-name" class="form-label">Full Name</label>
+                            <input type="text" id="checkout-name" class="form-input" required placeholder="Alexandra Kovaleva">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkout-email" class="form-label">Email Address</label>
+                            <input type="email" id="checkout-email" class="form-input" required placeholder="alexandra@pureaura.com">
+                        </div>
+                        <div class="form-group">
+                            <label for="checkout-phone" class="form-label">Phone Number</label>
+                            <input type="tel" id="checkout-phone" class="form-input" required placeholder="+1 (555) 019-2834">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="checkout-address" class="form-label">Shipping Address</label>
+                            <input type="text" id="checkout-address" class="form-input" required placeholder="742 Evergreen Terrace, Springfield, OR 97477">
+                        </div>
+                    </div>
+                    <div class="checkout-summary">
+                        <span class="summary-label">Total Amount:</span>
+                        <span class="summary-value" id="checkout-total-price">$0.00</span>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-full" id="place-order-btn">
+                        Place Order
+                        <span class="btn-icon-circle">
+                            <i class="ph-light ph-check"></i>
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Toast Notification -->
+    <div class="toast-notification" id="toast-notif">
+        <div class="toast-icon">
+            <i class="ph-light ph-check-circle"></i>
+        </div>
+        <div class="toast-message" id="toast-msg">Item added to your ritual</div>
+    </div>
+
+    <!-- Lenis Smooth Scroll CDN -->
+    <script src="https://unpkg.com/lenis@1.1.13/dist/lenis.min.js"></script>
+    <!-- GSAP & ScrollTrigger from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

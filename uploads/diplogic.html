@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DipLogic — Сайты, которые работают</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --black: #080808;
+    --white: #f5f5f5;
+    --gray-900: #111111;
+    --gray-800: #1a1a1a;
+    --gray-700: #2a2a2a;
+    --gray-400: #888888;
+    --gray-200: #cccccc;
+    --accent: #ffffff;
+    --font-sans: 'Space Grotesk', sans-serif;
+    --font-mono: 'Space Mono', monospace;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--black);
+    color: var(--white);
+    font-family: var(--font-sans);
+    font-size: 18px;
+    line-height: 1.6;
+    overflow-x: hidden;
+    cursor: none;
+    position: relative;
+  }
+
+  /* NOISE TEXTURE */
+  .noise {
+    position: fixed;
+    inset: 0;
+    z-index: 9000;
+    pointer-events: none;
+    opacity: 0.04;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    mix-blend-mode: overlay;
+  }
+
+  /* CURSOR */
+  .cursor {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: white;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10010;
+    transform: translate(-50%, -50%);
+    transition: transform 0.1s ease;
+    mix-blend-mode: difference;
+  }
+  .cursor-ring {
+    position: fixed;
+    width: 36px;
+    height: 36px;
+    border: 1px solid rgba(255,255,255,0.4);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 10009;
+    transform: translate(-50%, -50%);
+    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+  }
+  .cursor-ring.hover {
+    width: 60px;
+    height: 60px;
+    border-color: rgba(255,255,255,0.8);
+  }
+  /* AMBIENT GLOW */
+  .cursor-glow {
+    position: fixed;
+    width: 500px;
+    height: 500px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+    mix-blend-mode: screen;
+  }
+
+  /* SCROLL PROGRESS */
+  .scroll-progress {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    width: 0%;
+    background: var(--white);
+    z-index: 10000;
+    transition: width 0.05s linear;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed;
+    top: 0; left: 0; right: 0;
+    z-index: 100;
+    padding: 24px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s, background 0.3s;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    border-color: var(--gray-800);
+  }
+  .nav-logo {
+    font-family: var(--font-sans);
+    font-weight: 700;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    color: var(--white);
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .nav-logo-icon { width: 30px; height: 30px; }
+  .nav-links {
+    display: flex;
+    gap: 40px;
+    list-style: none;
+  }
+  .nav-links a {
+    color: var(--gray-400);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 400;
+    letter-spacing: 0.02em;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+  .nav-cta {
+    background: var(--white);
+    color: var(--black);
+    padding: 12px 26px;
+    border-radius: 2px;
+    font-size: 16px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: opacity 0.2s;
+    letter-spacing: 0.01em;
+    display: inline-block;
+  }
+  .nav-cta:hover { opacity: 0.85; }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 0 48px 80px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero-bg-grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+    background-size: 60px 60px;
+    animation: gridFade 3s ease forwards;
+    opacity: 0;
+    will-change: transform;
+  }
+  @keyframes gridFade { to { opacity: 1; } }
+
+  .hero-content { position: relative; z-index: 2; will-change: transform; }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--gray-700);
+    padding: 8px 16px;
+    border-radius: 2px;
+    font-size: 14px;
+    font-family: var(--font-mono);
+    color: var(--gray-400);
+    margin-bottom: 32px;
+    width: fit-content;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.6s 0.2s forwards;
+  }
+  .hero-badge::before {
+    content: '';
+    width: 7px; height: 7px;
+    background: var(--white);
+    border-radius: 50%;
+    animation: blink 2s infinite;
+  }
+  @keyframes blink { 0%,100% { opacity:1 } 50% { opacity:0.2 } }
+
+  .hero-title {
+    font-size: clamp(58px, 8.5vw, 130px);
+    font-weight: 700;
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    margin-bottom: 36px;
+    opacity: 0;
+    transform: translateY(30px);
+    animation: slideUp 0.7s 0.35s forwards;
+  }
+  .hero-title em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
+  }
+
+  .hero-bottom {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: slideUp 0.7s 0.5s forwards;
+  }
+  .hero-desc {
+    max-width: 440px;
+    font-size: 20px;
+    color: var(--gray-400);
+    line-height: 1.65;
+  }
+  .hero-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 16px;
+  }
+  .btn-primary {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    background: var(--white);
+    color: var(--black);
+    padding: 18px 36px;
+    font-size: 17px;
+    font-weight: 600;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: opacity 0.2s;
+    letter-spacing: -0.01em;
+    will-change: transform;
+  }
+  .btn-primary:hover { opacity: 0.88; }
+  .btn-primary svg { transition: transform 0.2s; }
+  .btn-primary:hover svg { transform: translateX(4px); }
+  .hero-scroll-hint {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--gray-700);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+
+  @keyframes slideUp {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* MARQUEE */
+  .marquee-wrap {
+    border-top: 1px solid var(--gray-800);
+    border-bottom: 1px solid var(--gray-800);
+    padding: 18px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    position: relative;
+    z-index: 2;
+    background: var(--black);
+  }
+  .marquee-track {
+    display: inline-flex;
+    animation: marquee 20s linear infinite;
+  }
+  .marquee-track:hover { animation-play-state: paused; }
+  .marquee-item {
+    display: inline-flex;
+    align-items: center;
+    gap: 24px;
+    padding: 0 40px;
+    font-size: 15px;
+    font-family: var(--font-mono);
+    color: var(--gray-400);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+  .marquee-dot {
+    width: 4px; height: 4px;
+    background: var(--gray-700);
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
+
+  /* SECTION */
+  section { padding: 130px 48px; position: relative; z-index: 2; background: var(--black); }
+  .section-label {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--gray-400);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 48px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .section-label::before {
+    content: '';
+    width: 32px; height: 1px;
+    background: var(--gray-700);
+  }
+
+  /* SERVICES */
+  .services { border-top: 1px solid var(--gray-800); }
+  .services-header {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 80px;
+  }
+  .services-title {
+    font-size: clamp(40px, 4.5vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+  }
+  .services-intro {
+    color: var(--gray-400);
+    font-size: 19px;
+    line-height: 1.7;
+    padding-top: 8px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border: 1px solid var(--gray-800);
+  }
+  .service-card {
+    padding: 48px;
+    border-right: 1px solid var(--gray-800);
+    border-bottom: 1px solid var(--gray-800);
+    position: relative;
+    overflow: hidden;
+    transition: background 0.3s;
+    transform-style: preserve-3d;
+    will-change: transform;
+    cursor: pointer;
+  }
+  .service-card:nth-child(2n) { border-right: none; }
+  .service-card:nth-last-child(-n+2) { border-bottom: none; }
+  .service-card::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--gray-900);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .service-card:hover::after { opacity: 1; }
+  .service-card > * { position: relative; z-index: 1; transform: translateZ(20px); }
+
+  .service-num {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--gray-700);
+    margin-bottom: 32px;
+  }
+  .service-icon {
+    width: 52px; height: 52px;
+    margin-bottom: 24px;
+    color: var(--white);
+  }
+  .service-name {
+    font-size: 28px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .service-desc {
+    font-size: 16px;
+    color: var(--gray-400);
+    line-height: 1.65;
+  }
+  .service-arrow {
+    margin-top: 32px;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 15px;
+    color: var(--gray-400);
+    transition: color 0.2s, gap 0.2s;
+  }
+  .service-card:hover .service-arrow { color: var(--white); gap: 12px; }
+
+  /* PROCESS */
+  .process { border-top: 1px solid var(--gray-800); background: var(--gray-900); }
+  .process-title {
+    font-size: clamp(40px, 4.5vw, 64px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    margin-bottom: 80px;
+    max-width: 640px;
+  }
+  .process-steps {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border-top: 1px solid var(--gray-800);
+  }
+  .process-step {
+    padding: 48px 40px;
+    border-right: 1px solid var(--gray-800);
+  }
+  .process-step:last-child { border-right: none; }
+  .step-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gray-700);
+    margin-bottom: 24px;
+  }
+  .step-title {
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 12px;
+  }
+  .step-desc {
+    font-size: 16px;
+    color: var(--gray-400);
+    line-height: 1.65;
+  }
+
+  /* WHY */
+  .why { border-top: 1px solid var(--gray-800); }
+  .why-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 120px;
+    align-items: start;
+  }
+  .why-title {
+    font-size: clamp(40px, 4.5vw, 60px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1;
+    position: sticky;
+    top: 120px;
+  }
+  .why-items { display: flex; flex-direction: column; }
+  .why-item {
+    padding: 32px 0;
+    border-bottom: 1px solid var(--gray-800);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 24px;
+    align-items: start;
+    transition: padding-left 0.3s;
+  }
+  .why-item:hover { padding-left: 8px; }
+  .why-item-num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gray-700);
+    padding-top: 6px;
+  }
+  .why-item-title {
+    font-size: 23px;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    margin-bottom: 8px;
+  }
+  .why-item-desc {
+    font-size: 16px;
+    color: var(--gray-400);
+    line-height: 1.65;
+  }
+
+  /* VERIFY */
+  .verify { border-top: 1px solid var(--gray-800); }
+  .verify-inner {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr;
+    gap: 80px;
+    align-items: center;
+  }
+  .verify-left .section-label { margin-bottom: 32px; }
+  .verify-headline {
+    font-size: clamp(36px, 4vw, 56px);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.02;
+    margin-bottom: 28px;
+  }
+  .verify-text {
+    font-size: 18px;
+    color: var(--gray-400);
+    line-height: 1.7;
+    max-width: 460px;
+  }
+  /* Verification card — терминал проверки */
+  .verify-card {
+    border: 1px solid var(--gray-700);
+    border-radius: 4px;
+    background: linear-gradient(160deg, var(--gray-900), var(--black));
+    overflow: hidden;
+    position: relative;
+    cursor: pointer;
+    transition: border-color 0.3s, box-shadow 0.3s;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .verify-card:hover,
+  .verify-card:focus-visible {
+    border-color: var(--gray-400);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    outline: none;
+  }
+  .verify-cta-hint {
+    margin-top: 22px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gray-400);
+    letter-spacing: 0.03em;
+    transition: color 0.3s, gap 0.3s;
+  }
+  .verify-card:hover .verify-cta-hint {
+    color: var(--white);
+    gap: 12px;
+  }
+  .verify-cta-hint.copied { color: var(--white); }
+  .verify-card-top {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--gray-800);
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gray-400);
+    letter-spacing: 0.05em;
+  }
+  .verify-dots { display: flex; gap: 6px; margin-right: 8px; }
+  .verify-dots span {
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--gray-700);
+  }
+  .verify-body { padding: 32px; }
+  .verify-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--gray-800);
+    gap: 20px;
+  }
+  .verify-row:last-of-type { border-bottom: none; }
+  .verify-key {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--gray-700);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .verify-val {
+    font-size: 16px;
+    font-weight: 500;
+    text-align: right;
+    letter-spacing: -0.01em;
+  }
+  .verify-val.mono { font-family: var(--font-mono); font-weight: 400; }
+  .verify-code-block {
+    margin-top: 24px;
+    padding: 18px 20px;
+    border: 1px dashed var(--gray-700);
+    border-radius: 3px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    background: rgba(255,255,255,0.015);
+  }
+  .verify-code-label {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gray-700);
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 6px;
+  }
+  .verify-code-value {
+    font-family: var(--font-mono);
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+  }
+  .verify-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    color: var(--white);
+    white-space: nowrap;
+  }
+  .verify-status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--white);
+    box-shadow: 0 0 0 0 rgba(255,255,255,0.6);
+    animation: verifyPulse 2s infinite;
+  }
+  @keyframes verifyPulse {
+    0% { box-shadow: 0 0 0 0 rgba(255,255,255,0.5); }
+    70% { box-shadow: 0 0 0 8px rgba(255,255,255,0); }
+    100% { box-shadow: 0 0 0 0 rgba(255,255,255,0); }
+  }
+  .verify-scan {
+    position: absolute;
+    left: 0; right: 0;
+    height: 60px;
+    background: linear-gradient(180deg, transparent, rgba(255,255,255,0.04), transparent);
+    pointer-events: none;
+    animation: scanMove 4s ease-in-out infinite;
+  }
+  @keyframes scanMove {
+    0%, 100% { top: -60px; }
+    50% { top: 100%; }
+  }
+
+  @media (max-width: 768px) {
+    .verify-inner { grid-template-columns: 1fr; gap: 48px; }
+    .verify-code-value { font-size: 18px; }
+  }
+
+  /* STATS */
+  .stats {
+    background: var(--white);
+    color: var(--black);
+    border-top: 1px solid var(--gray-200);
+  }
+  .stats-inner {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid rgba(0,0,0,0.1);
+  }
+  .stat {
+    padding: 64px 48px;
+    border-right: 1px solid rgba(0,0,0,0.1);
+  }
+  .stat:last-child { border-right: none; }
+  .stat-num {
+    font-size: clamp(52px, 5.5vw, 88px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 1;
+    margin-bottom: 12px;
+    font-family: var(--font-mono);
+  }
+  .stat-label {
+    font-size: 16px;
+    color: #555;
+    font-weight: 400;
+  }
+
+  /* CTA */
+  .cta-section {
+    padding: 170px 48px;
+    border-top: 1px solid var(--gray-800);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+  .cta-bg {
+    position: absolute;
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+  }
+  .cta-label {
+    font-size: 13px;
+    font-family: var(--font-mono);
+    color: var(--gray-400);
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    margin-bottom: 32px;
+  }
+  .cta-title {
+    font-size: clamp(44px, 6.5vw, 96px);
+    font-weight: 700;
+    letter-spacing: -0.04em;
+    line-height: 0.95;
+    margin-bottom: 48px;
+    max-width: 860px;
+    position: relative;
+  }
+  .cta-title em {
+    font-style: normal;
+    color: transparent;
+    -webkit-text-stroke: 1px rgba(255,255,255,0.25);
+  }
+  .cta-actions {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    position: relative;
+  }
+  .btn-secondary {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 1px solid var(--gray-700);
+    color: var(--gray-400);
+    padding: 18px 36px;
+    font-size: 17px;
+    font-weight: 500;
+    text-decoration: none;
+    border-radius: 2px;
+    transition: border-color 0.2s, color 0.2s;
+    will-change: transform;
+  }
+  .btn-secondary:hover { border-color: var(--gray-400); color: var(--white); }
+
+  /* FOOTER */
+  footer {
+    border-top: 1px solid var(--gray-800);
+    padding: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    position: relative;
+    z-index: 2;
+    background: var(--black);
+  }
+  .footer-logo {
+    font-weight: 700;
+    font-size: 18px;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .footer-links {
+    display: flex;
+    gap: 32px;
+  }
+  .footer-links a {
+    color: var(--gray-400);
+    text-decoration: none;
+    font-size: 15px;
+    transition: color 0.2s;
+  }
+  .footer-links a:hover { color: var(--white); }
+  .footer-copy {
+    font-size: 15px;
+    color: var(--gray-700);
+    font-family: var(--font-mono);
+  }
+
+  /* REVEAL */
+  .reveal {
+    opacity: 0;
+    transform: translateY(32px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* MOBILE */
+  @media (max-width: 768px) {
+    body { cursor: auto; font-size: 17px; }
+    .cursor, .cursor-ring, .cursor-glow { display: none; }
+    nav { padding: 20px 24px; }
+    .nav-links { display: none; }
+    .hero { padding: 0 24px 64px; }
+    section { padding: 80px 24px; }
+    .services-header { grid-template-columns: 1fr; gap: 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+    .service-card { border-right: none !important; transform: none !important; }
+    .process-steps { grid-template-columns: 1fr 1fr; }
+    .process-step:nth-child(2) { border-right: none; }
+    .why-inner { grid-template-columns: 1fr; gap: 48px; }
+    .why-title { position: static; }
+    .stats-inner { grid-template-columns: 1fr; }
+    .stat { border-right: none !important; border-bottom: 1px solid rgba(0,0,0,0.1); }
+    .cta-section { padding: 100px 24px; }
+    .cta-actions { flex-direction: column; width: 100%; }
+    .btn-primary, .btn-secondary { justify-content: center; }
+    footer { flex-direction: column; gap: 24px; text-align: center; }
+    .footer-links { flex-wrap: wrap; justify-content: center; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+  /* ===== DEMO MODAL ===== */
+  .modal-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10001;
+    background: rgba(0,0,0,0.8);
+    backdrop-filter: blur(10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 32px;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.35s ease;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: auto; }
+  .modal {
+    width: 100%;
+    max-width: 1080px;
+    max-height: 88vh;
+    background: var(--black);
+    border: 1px solid var(--gray-700);
+    border-radius: 8px;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    transform: translateY(30px) scale(0.98);
+    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+  }
+  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
+  .modal-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 20px 28px;
+    border-bottom: 1px solid var(--gray-800);
+    flex-shrink: 0;
+  }
+  .modal-head-left { display: flex; align-items: center; gap: 14px; }
+  .modal-tag {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    color: var(--gray-700);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 4px 10px;
+    border: 1px solid var(--gray-800);
+    border-radius: 2px;
+  }
+  .modal-title { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
+  .modal-close {
+    width: 38px; height: 38px;
+    border: 1px solid var(--gray-700);
+    background: transparent;
+    border-radius: 3px;
+    color: var(--gray-400);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: border-color 0.2s, color 0.2s, transform 0.2s;
+  }
+  .modal-close:hover { border-color: var(--gray-400); color: var(--white); transform: rotate(90deg); }
+  .modal-body {
+    overflow-y: auto;
+    padding: 0;
+    background:
+      radial-gradient(ellipse at top, rgba(255,255,255,0.02), transparent 60%),
+      var(--black);
+  }
+  .modal-body::-webkit-scrollbar { width: 8px; }
+  .modal-body::-webkit-scrollbar-track { background: var(--gray-900); }
+  .modal-body::-webkit-scrollbar-thumb { background: var(--gray-700); border-radius: 4px; }
+  .demo-frame { display: none; }
+  .demo-frame.active { display: block; }
+  .demo-caption {
+    padding: 16px 28px;
+    border-top: 1px solid var(--gray-800);
+    font-size: 13px;
+    color: var(--gray-400);
+    font-family: var(--font-mono);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+  }
+  .demo-caption .dot { width: 6px; height: 6px; border-radius: 50%; background: #4ade80; }
+  .demo-fullsite-btn {
+    margin-left: auto;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: var(--white);
+    color: var(--black);
+    padding: 8px 18px;
+    border-radius: 3px;
+    font-family: var(--font-sans);
+    font-size: 13px;
+    font-weight: 600;
+    text-decoration: none;
+    letter-spacing: -0.01em;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+  .demo-fullsite-btn:hover { opacity: 0.85; transform: translateX(3px); }
+  @media (max-width: 768px) {
+    .demo-fullsite-btn { margin-left: 0; margin-top: 10px; }
+    .demo-caption { flex-wrap: wrap; }
+  }
+
+  /* ===== MOCKUP: ARBITRAGE DASHBOARD ===== */
+  .mk-arb { padding: 28px; font-size: 13px; }
+  .mk-arb-top {
+    display: flex; justify-content: space-between; align-items: center;
+    margin-bottom: 20px; flex-wrap: wrap; gap: 16px;
+  }
+  .mk-arb-brand { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 16px; }
+  .mk-arb-live {
+    display: inline-flex; align-items: center; gap: 7px;
+    font-family: var(--font-mono); font-size: 11px; color: #4ade80;
+    padding: 4px 10px; border: 1px solid rgba(74,222,128,0.3); border-radius: 20px;
+  }
+  .mk-arb-live .pulse { width: 7px; height: 7px; border-radius: 50%; background: #4ade80; animation: blink 1.2s infinite; }
+  .mk-arb-layout { display: grid; grid-template-columns: 200px 1fr; gap: 20px; }
+  .mk-arb-side {
+    border: 1px solid var(--gray-800); border-radius: 6px; padding: 18px;
+    display: flex; flex-direction: column; gap: 18px; height: fit-content;
+  }
+  .mk-arb-side h4 {
+    font-family: var(--font-mono); font-size: 10px; color: var(--gray-700);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 4px;
+  }
+  .mk-filter-val { font-size: 18px; font-weight: 700; font-family: var(--font-mono); }
+  .mk-slider { width: 100%; height: 4px; background: var(--gray-800); border-radius: 2px; position: relative; margin-top: 8px; }
+  .mk-slider-fill { position: absolute; left: 0; top: 0; height: 100%; background: var(--white); border-radius: 2px; }
+  .mk-slider-knob {
+    position: absolute; top: 50%; width: 14px; height: 14px; border-radius: 50%;
+    background: var(--white); transform: translate(-50%, -50%); cursor: grab; box-shadow: 0 2px 8px rgba(0,0,0,0.5);
+  }
+  .mk-toggle-row { display: flex; gap: 6px; }
+  .mk-toggle {
+    flex: 1; text-align: center; padding: 7px; border: 1px solid var(--gray-800);
+    border-radius: 4px; font-size: 11px; cursor: pointer; color: var(--gray-400); transition: all 0.2s;
+  }
+  .mk-toggle.on { background: var(--white); color: var(--black); border-color: var(--white); font-weight: 600; }
+  .mk-arb-table { border: 1px solid var(--gray-800); border-radius: 6px; overflow: hidden; }
+  .mk-tr { display: grid; grid-template-columns: 1.2fr 1fr 1fr 0.9fr 1fr 0.8fr; align-items: center; padding: 13px 14px; border-bottom: 1px solid var(--gray-800); font-size: 12px; }
+  .mk-tr:last-child { border-bottom: none; }
+  .mk-tr.head { background: var(--gray-900); font-family: var(--font-mono); font-size: 10px; color: var(--gray-700); text-transform: uppercase; letter-spacing: 0.05em; }
+  .mk-tr.row:hover { background: var(--gray-900); }
+  .mk-pair { font-weight: 700; }
+  .mk-exch { color: var(--gray-200); font-family: var(--font-mono); font-size: 11px; }
+  .mk-spread { font-weight: 700; font-family: var(--font-mono); }
+  .mk-spread.hi { color: #4ade80; }
+  .mk-spread.mid { color: #fbbf24; }
+  .mk-net { display: inline-flex; align-items: center; gap: 5px; font-size: 11px; color: #4ade80; }
+  .mk-net.closed { color: #f87171; }
+  .mk-net .nd { width: 6px; height: 6px; border-radius: 50%; background: currentColor; }
+  .mk-sig-btn {
+    font-size: 11px; padding: 6px 12px; border-radius: 4px; border: none;
+    background: var(--white); color: var(--black); font-weight: 600; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 5px; transition: opacity 0.2s;
+  }
+  .mk-sig-btn:hover { opacity: 0.85; }
+  .mk-sig-btn.sent { background: rgba(74,222,128,0.15); color: #4ade80; }
+
+  /* ===== MOCKUP: BOT LANDING ===== */
+  .mk-bot { padding: 0; }
+  .mk-bot-hero {
+    padding: 48px 40px; text-align: center;
+    background: radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.05), transparent 60%);
+    border-bottom: 1px solid var(--gray-800);
+  }
+  .mk-bot-eyebrow { font-family: var(--font-mono); font-size: 11px; color: var(--gray-400); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 16px; }
+  .mk-bot-h1 { font-size: clamp(28px, 4vw, 44px); font-weight: 700; letter-spacing: -0.03em; line-height: 1.05; margin-bottom: 16px; }
+  .mk-bot-sub { color: var(--gray-400); font-size: 15px; max-width: 480px; margin: 0 auto 28px; line-height: 1.6; }
+  .mk-bot-cta { display: inline-block; background: var(--white); color: var(--black); padding: 14px 32px; border-radius: 3px; font-weight: 600; font-size: 15px; cursor: pointer; }
+  .mk-bot-stats { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--gray-800); }
+  .mk-bot-stat { padding: 28px; text-align: center; border-right: 1px solid var(--gray-800); }
+  .mk-bot-stat:last-child { border-right: none; }
+  .mk-bot-stat-num { font-size: 32px; font-weight: 700; font-family: var(--font-mono); letter-spacing: -0.02em; }
+  .mk-bot-stat-num.green { color: #4ade80; }
+  .mk-bot-stat-num.red { color: #f87171; }
+  .mk-bot-stat-label { font-size: 12px; color: var(--gray-400); margin-top: 6px; }
+  .mk-calc { padding: 40px; display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: center; border-bottom: 1px solid var(--gray-800); }
+  .mk-calc h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 8px; }
+  .mk-calc p { color: var(--gray-400); font-size: 14px; margin-bottom: 24px; }
+  .mk-calc-label { font-size: 12px; color: var(--gray-400); margin-bottom: 8px; display: flex; justify-content: space-between; }
+  .mk-calc-label b { color: var(--white); font-family: var(--font-mono); }
+  .mk-calc-result {
+    border: 1px solid var(--gray-700); border-radius: 8px; padding: 32px; text-align: center;
+    background: radial-gradient(ellipse at center, rgba(74,222,128,0.06), transparent);
+  }
+  .mk-calc-result-label { font-size: 12px; color: var(--gray-400); text-transform: uppercase; letter-spacing: 0.08em; font-family: var(--font-mono); margin-bottom: 10px; }
+  .mk-calc-result-val { font-size: 44px; font-weight: 700; font-family: var(--font-mono); color: #4ade80; letter-spacing: -0.02em; }
+  .mk-calc-result-sub { font-size: 13px; color: var(--gray-400); margin-top: 8px; }
+  .mk-ib { padding: 40px; }
+  .mk-ib h3 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 24px; }
+  .mk-ib-table { border: 1px solid var(--gray-800); border-radius: 6px; overflow: hidden; }
+  .mk-ib-tr { display: grid; grid-template-columns: 1fr 1fr 1fr; padding: 14px 18px; border-bottom: 1px solid var(--gray-800); font-size: 13px; }
+  .mk-ib-tr:last-child { border-bottom: none; }
+  .mk-ib-tr.head { background: var(--gray-900); font-family: var(--font-mono); font-size: 10px; color: var(--gray-700); text-transform: uppercase; }
+  .mk-ib-tr b { font-family: var(--font-mono); color: #4ade80; }
+
+  /* ===== MOCKUP: GAME STORE ===== */
+  .mk-game { padding: 0; --neon: #a855f7; --neon2: #22d3ee; }
+  .mk-game-hero {
+    padding: 40px; position: relative; overflow: hidden;
+    background: linear-gradient(135deg, rgba(168,85,247,0.15), rgba(34,211,238,0.1)), var(--black);
+    border-bottom: 1px solid var(--gray-800);
+  }
+  .mk-game-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(168,85,247,0.07) 1px, transparent 1px), linear-gradient(90deg, rgba(168,85,247,0.07) 1px, transparent 1px);
+    background-size: 30px 30px;
+  }
+  .mk-game-hero > * { position: relative; }
+  .mk-game-online { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 12px; color: #22d3ee; margin-bottom: 16px; }
+  .mk-game-online .gd { width: 8px; height: 8px; border-radius: 50%; background: #22d3ee; box-shadow: 0 0 8px #22d3ee; animation: blink 1.5s infinite; }
+  .mk-game-title { font-size: clamp(28px, 4vw, 42px); font-weight: 800; letter-spacing: -0.02em; margin-bottom: 8px; text-shadow: 0 0 24px rgba(168,85,247,0.5); }
+  .mk-game-sub { color: var(--gray-200); font-size: 14px; }
+  .mk-game-store { padding: 32px 40px; }
+  .mk-game-store h3 { font-size: 18px; font-weight: 700; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; }
+  .mk-cart-badge {
+    font-family: var(--font-mono); font-size: 13px; padding: 6px 14px;
+    border: 1px solid var(--neon); border-radius: 20px; color: #c084fc;
+    display: inline-flex; align-items: center; gap: 8px;
+  }
+  .mk-products { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  .mk-prod {
+    border: 1px solid var(--gray-800); border-radius: 8px; padding: 20px; position: relative;
+    transition: border-color 0.25s, transform 0.25s; overflow: hidden;
+  }
+  .mk-prod:hover { border-color: var(--neon); transform: translateY(-4px); }
+  .mk-prod-badge { position: absolute; top: 12px; right: 12px; font-size: 10px; font-family: var(--font-mono); padding: 3px 8px; border-radius: 10px; background: rgba(168,85,247,0.2); color: #c084fc; }
+  .mk-prod-icon { font-size: 32px; margin-bottom: 14px; }
+  .mk-prod-name { font-weight: 700; font-size: 16px; margin-bottom: 4px; }
+  .mk-prod-desc { font-size: 12px; color: var(--gray-400); margin-bottom: 16px; line-height: 1.5; min-height: 36px; }
+  .mk-prod-price { display: flex; align-items: baseline; gap: 8px; margin-bottom: 14px; }
+  .mk-prod-price .now { font-size: 20px; font-weight: 700; font-family: var(--font-mono); }
+  .mk-prod-price .old { font-size: 13px; color: var(--gray-700); text-decoration: line-through; }
+  .mk-buy {
+    width: 100%; padding: 10px; border: none; border-radius: 5px; cursor: pointer;
+    background: linear-gradient(135deg, var(--neon), #7c3aed); color: white; font-weight: 700; font-size: 13px;
+    transition: opacity 0.2s, transform 0.1s;
+  }
+  .mk-buy:hover { opacity: 0.9; }
+  .mk-buy:active { transform: scale(0.97); }
+  .mk-buy.added { background: rgba(74,222,128,0.2); color: #4ade80; }
+  .mk-game-account {
+    margin: 0 40px 32px; padding: 24px; border: 1px solid var(--gray-800); border-radius: 8px;
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .mk-acc-item h5 { font-family: var(--font-mono); font-size: 10px; color: var(--gray-700); text-transform: uppercase; margin-bottom: 6px; }
+  .mk-acc-item .v { font-size: 18px; font-weight: 700; font-family: var(--font-mono); }
+  .mk-acc-item .v.neon { color: #c084fc; }
+
+  /* ===== MOCKUP: BUSINESS CARD ===== */
+  .mk-card { padding: 0; }
+  .mk-card-hero { padding: 56px 40px; text-align: center; border-bottom: 1px solid var(--gray-800); }
+  .mk-card-avatar {
+    width: 80px; height: 80px; border-radius: 50%; margin: 0 auto 20px;
+    background: linear-gradient(135deg, var(--gray-700), var(--gray-900));
+    display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700;
+    border: 1px solid var(--gray-700);
+  }
+  .mk-card-name { font-size: 28px; font-weight: 700; letter-spacing: -0.02em; margin-bottom: 6px; }
+  .mk-card-role { color: var(--gray-400); font-size: 15px; margin-bottom: 24px; }
+  .mk-card-socials { display: flex; gap: 12px; justify-content: center; }
+  .mk-card-soc { width: 40px; height: 40px; border: 1px solid var(--gray-700); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--gray-400); transition: all 0.2s; cursor: pointer; }
+  .mk-card-soc:hover { border-color: var(--white); color: var(--white); }
+  .mk-card-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--gray-800); }
+  .mk-card-cell { padding: 28px; border-right: 1px solid var(--gray-800); }
+  .mk-card-cell:last-child { border-right: none; }
+  .mk-card-cell h4 { font-size: 15px; font-weight: 600; margin-bottom: 6px; }
+  .mk-card-cell p { font-size: 12px; color: var(--gray-400); line-height: 1.5; }
+  .mk-card-contact { padding: 32px 40px; text-align: center; }
+  .mk-card-contact-btn { display: inline-block; background: var(--white); color: var(--black); padding: 13px 30px; border-radius: 3px; font-weight: 600; font-size: 14px; cursor: pointer; }
+
+  @media (max-width: 768px) {
+    .modal-overlay { padding: 12px; }
+    .modal { max-height: 92vh; }
+    .modal-title { font-size: 16px; }
+    .mk-arb-layout { grid-template-columns: 1fr; }
+    .mk-arb-side { flex-direction: row; flex-wrap: wrap; }
+    .mk-arb-side > div { flex: 1; min-width: 120px; }
+    .mk-tr { grid-template-columns: 1fr 1fr 0.8fr; font-size: 10px; gap: 6px; }
+    .mk-tr .mk-hide-m { display: none; }
+    .mk-calc { grid-template-columns: 1fr; gap: 24px; }
+    .mk-products { grid-template-columns: 1fr; }
+    .mk-game-account { grid-template-columns: 1fr 1fr; }
+    .mk-bot-stats { grid-template-columns: 1fr; }
+    .mk-bot-stat { border-right: none; border-bottom: 1px solid var(--gray-800); }
+    .mk-card-grid { grid-template-columns: 1fr; }
+    .mk-card-cell { border-right: none; border-bottom: 1px solid var(--gray-800); }
+  }
+
+</style>
+</head>
+<body>
+
+<div class="noise"></div>
+<div class="cursor-glow" id="cursorGlow"></div>
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+<div class="scroll-progress" id="scrollProgress"></div>
+
+<!-- NAV -->
+<nav id="nav">
+  <a href="#" class="nav-logo">
+    <svg class="nav-logo-icon" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <rect x="2" y="4" width="5" height="20" fill="white"/>
+      <path d="M9 4 H14 C20 4 24 8.5 24 14 C24 19.5 20 24 14 24 H9 Z" fill="white"/>
+      <rect x="17" y="4" width="7" height="3" fill="black"/>
+    </svg>
+    DipLogic
+  </a>
+  <ul class="nav-links">
+    <li><a href="#services">Услуги</a></li>
+    <li><a href="#process">Процесс</a></li>
+    <li><a href="#verify">Квалификация</a></li>
+    <li><a href="#why">Почему мы</a></li>
+  </ul>
+  <a href="https://t.me/DipLogic" class="nav-cta magnetic" target="_blank">Обсудить проект</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg-grid" id="heroGrid"></div>
+  <div class="hero-content" id="heroContent">
+    <div class="hero-badge">Открыты к новым проектам</div>
+    <h1 class="hero-title">
+      <span data-scramble data-line="0">Сайты,</span><br>
+      <span data-scramble data-line="1">которые</span><br>
+      <em data-scramble data-line="2">продают</em>
+    </h1>
+    <div class="hero-bottom">
+      <p class="hero-desc" data-scramble data-line="3">
+        Разрабатываем лендинги, визитки, интернет-магазины и приложения. Не шаблоны — работающие продукты под ваш бизнес.
+      </p>
+      <div class="hero-actions">
+        <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
+          Начать проект
+          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </a>
+        <span class="hero-scroll-hint">↓ scroll</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MARQUEE -->
+<div class="marquee-wrap">
+  <div class="marquee-track">
+    <span class="marquee-item">Лендинги <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Визитки <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Интернет-магазины <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Приложения <span class="marquee-dot"></span></span>
+    <span class="marquee-item">SEO-оптимизация <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Дизайн под ключ <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Быстрая загрузка <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Лендинги <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Визитки <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Интернет-магазины <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Приложения <span class="marquee-dot"></span></span>
+    <span class="marquee-item">SEO-оптимизация <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Дизайн под ключ <span class="marquee-dot"></span></span>
+    <span class="marquee-item">Быстрая загрузка <span class="marquee-dot"></span></span>
+  </div>
+</div>
+
+<!-- SERVICES -->
+<section class="services reveal" id="services">
+  <div class="services-header">
+    <h2 class="services-title">Что мы<br>делаем</h2>
+    <p class="services-intro">
+      Каждый проект — это диалог. Мы не просто верстаем макеты, мы вникаем в ваш бизнес и создаём инструмент, который решает реальные задачи.
+    </p>
+  </div>
+  <div class="services-grid">
+    <div class="service-card tilt" data-demo="landing">
+      <div class="service-num">01</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="4" y="8" width="40" height="32" rx="2"/>
+        <path d="M4 16h40"/>
+        <path d="M10 12h2M15 12h2"/>
+        <path d="M12 24h24M12 30h16"/>
+      </svg>
+      <div class="service-name">Лендинги</div>
+      <p class="service-desc">Одностраничники, которые конвертируют посетителей в клиентов. Чёткая структура, убедительный текст, правильные призывы к действию.</p>
+      <span class="service-arrow">
+        Открыть сайт
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </div>
+    <div class="service-card tilt" data-demo="card">
+      <div class="service-num">02</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="4" y="12" width="40" height="26" rx="2"/>
+        <circle cx="16" cy="25" r="5"/>
+        <path d="M26 22h10M26 28h6"/>
+      </svg>
+      <div class="service-name">Сайты-визитки</div>
+      <p class="service-desc">Профессиональное присутствие в сети. Расскажите о себе, своих услугах и контактах — просто и убедительно.</p>
+      <span class="service-arrow">
+        Смотреть демо
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </div>
+    <div class="service-card tilt" data-demo="shop">
+      <div class="service-num">03</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <path d="M6 10h36l-4 18H10L6 10Z"/>
+        <path d="M10 28l-2 8h32l-2-8"/>
+        <circle cx="18" cy="40" r="2"/>
+        <circle cx="32" cy="40" r="2"/>
+        <path d="M16 18h16M24 14v8"/>
+      </svg>
+      <div class="service-name">Интернет-магазины</div>
+      <p class="service-desc">Продавайте онлайн. Каталог, корзина, оплата, доставка — полный цикл от витрины до оформления заказа.</p>
+      <span class="service-arrow">
+        Смотреть демо
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </div>
+    <div class="service-card tilt" data-demo="app">
+      <div class="service-num">04</div>
+      <svg class="service-icon" viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.5">
+        <rect x="12" y="4" width="24" height="40" rx="3"/>
+        <path d="M20 8h8"/>
+        <circle cx="24" cy="39" r="1.5" fill="currentColor" stroke="none"/>
+        <path d="M18 18h12M18 24h8"/>
+      </svg>
+      <div class="service-name">Приложения</div>
+      <p class="service-desc">Мобильные и веб-приложения под ваши процессы. Удобный интерфейс, стабильная работа, масштабируемость.</p>
+      <span class="service-arrow">
+        Смотреть демо
+        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+          <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </span>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="process reveal" id="process">
+  <div class="section-label">Как мы работаем</div>
+  <h2 class="process-title">Четыре шага от идеи до запуска</h2>
+  <div class="process-steps">
+    <div class="process-step">
+      <div class="step-num">01</div>
+      <div class="step-title">Бриф</div>
+      <p class="step-desc">Разбираемся в вашем бизнесе, аудитории и целях. Фиксируем задачу письменно — без воды.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">02</div>
+      <div class="step-title">Дизайн</div>
+      <p class="step-desc">Создаём прототип и визуальную концепцию. Согласовываем с вами до старта разработки.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">03</div>
+      <div class="step-title">Разработка</div>
+      <p class="step-desc">Верстаем и программируем. Обновляем вас на каждом этапе. Никаких сюрпризов в конце.</p>
+    </div>
+    <div class="process-step">
+      <div class="step-num">04</div>
+      <div class="step-title">Запуск</div>
+      <p class="step-desc">Публикуем, проверяем, передаём. И остаёмся на связи — не исчезаем после оплаты.</p>
+    </div>
+  </div>
+</section>
+
+<!-- WHY -->
+<section class="why reveal" id="why">
+  <div class="why-inner">
+    <div>
+      <div class="section-label">Почему мы</div>
+      <h2 class="why-title">Не просто подрядчики</h2>
+    </div>
+    <div class="why-items">
+      <div class="why-item">
+        <div class="why-item-num">01</div>
+        <div>
+          <div class="why-item-title">Вникаем в бизнес</div>
+          <p class="why-item-desc">Не делаем «красиво ради красиво». Каждое решение — дизайн, текст, структура — работает на вашу цель. Будь то заявки, продажи или доверие.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-num">02</div>
+        <div>
+          <div class="why-item-title">Честные сроки</div>
+          <p class="why-item-desc">Называем дату и держим её. Если что-то меняется — говорим сразу, не в последний момент. Уважаем ваше время.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-num">03</div>
+        <div>
+          <div class="why-item-title">Без лишних посредников</div>
+          <p class="why-item-desc">Вы общаетесь напрямую с теми, кто делает проект. Никаких менеджеров, которые пересказывают ваши слова разработчикам.</p>
+        </div>
+      </div>
+      <div class="why-item">
+        <div class="why-item-num">04</div>
+        <div>
+          <div class="why-item-title">Поддержка после сдачи</div>
+          <p class="why-item-desc">Помогаем с правками, объясняем как всё работает, остаёмся доступными. Сдали проект — не пропали.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- VERIFY -->
+<section class="verify reveal" id="verify">
+  <div class="verify-inner">
+    <div class="verify-left">
+      <div class="section-label">Квалификация</div>
+      <h2 class="verify-headline">Подтверждённый профессионал</h2>
+      <p class="verify-text">
+        За дизайном стоит профильное образование по UI/UX и диплом международной академии. Подлинность не на словах — нажмите на карточку и сверьте номер прямо в официальном реестре STEP Computer Academy.
+      </p>
+    </div>
+
+    <div class="verify-card" id="verifyCard" role="button" tabindex="0"
+         title="Нажмите, чтобы проверить диплом в официальном реестре STEP">
+      <div class="verify-scan"></div>
+      <div class="verify-card-top">
+        <div class="verify-dots"><span></span><span></span><span></span></div>
+        verification · step-academy.cert
+      </div>
+      <div class="verify-body">
+        <div class="verify-row">
+          <span class="verify-key">Holder</span>
+          <span class="verify-val">Cherniakov Oleh</span>
+        </div>
+        <div class="verify-row">
+          <span class="verify-key">Программа</span>
+          <span class="verify-val">UI/UX Design</span>
+        </div>
+        <div class="verify-row">
+          <span class="verify-key">Академия</span>
+          <span class="verify-val">STEP Computer Academy</span>
+        </div>
+        <div class="verify-row">
+          <span class="verify-key">Оценка</span>
+          <span class="verify-val">Excellent</span>
+        </div>
+        <div class="verify-row">
+          <span class="verify-key">Выдан</span>
+          <span class="verify-val mono">11.05.2025 · Kyiv</span>
+        </div>
+
+        <div class="verify-code-block">
+          <div>
+            <div class="verify-code-label">Verification code</div>
+            <div class="verify-code-value" data-verify>KVV-017627</div>
+          </div>
+          <span class="verify-status">
+            <span class="verify-status-dot"></span>
+            VERIFIED
+          </span>
+        </div>
+
+        <div class="verify-cta-hint" id="verifyHint">
+          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+            <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+          Проверить в официальном реестре STEP
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS -->
+<section class="stats reveal">
+  <div class="stats-inner">
+    <div class="stat">
+      <div class="stat-num" data-target="14">0</div>
+      <div class="stat-label">Проектов запущено</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="7">0</div>
+      <div class="stat-label">Дней — средний срок лендинга</div>
+    </div>
+    <div class="stat">
+      <div class="stat-num" data-target="100">0</div>
+      <div class="stat-label">% клиентов возвращаются</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section reveal" id="contact">
+  <div class="cta-bg"></div>
+  <div class="cta-label">Начать сотрудничество</div>
+  <h2 class="cta-title">
+    Готовы обсудить<br>
+    <em>ваш проект?</em>
+  </h2>
+  <div class="cta-actions">
+    <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
+      Написать в Telegram
+      <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <a href="mailto:diplogic.2026@gmail.com" class="btn-secondary magnetic">
+      Написать на почту
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-logo">
+    <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+      <rect x="2" y="4" width="5" height="20" fill="white"/>
+      <path d="M9 4 H14 C20 4 24 8.5 24 14 C24 19.5 20 24 14 24 H9 Z" fill="white"/>
+      <rect x="17" y="4" width="7" height="3" fill="black"/>
+    </svg>
+    DipLogic
+  </div>
+  <div class="footer-links">
+    <a href="#services">Услуги</a>
+    <a href="#process">Процесс</a>
+    <a href="#why">О нас</a>
+    <a href="https://t.me/DipLogic" target="_blank">Telegram</a>
+    <a href="mailto:diplogic.2026@gmail.com">Email</a>
+  </div>
+  <div class="footer-copy">© 2025 DipLogic</div>
+</footer>
+
+<!-- ===== DEMO MODAL ===== -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <span class="modal-tag" id="modalTag">DEMO</span>
+        <span class="modal-title" id="modalTitle">Демо</span>
+      </div>
+      <button class="modal-close" id="modalClose" aria-label="Закрыть">
+        <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+          <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        </svg>
+      </button>
+    </div>
+    <div class="modal-body">
+
+      <!-- DEMO: ARBITRAGE DASHBOARD (app) -->
+      <div class="demo-frame" data-frame="app">
+        <div class="mk-arb">
+          <div class="mk-arb-top">
+            <div class="mk-arb-brand">
+              <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="5" height="20" fill="white"/><path d="M9 4 H14 C20 4 24 8.5 24 14 C24 19.5 20 24 14 24 H9 Z" fill="white"/><rect x="17" y="4" width="7" height="3" fill="black"/></svg>
+              SpreadScan
+            </div>
+            <span class="mk-arb-live"><span class="pulse"></span>LIVE · обновление 2s</span>
+          </div>
+          <div class="mk-arb-layout">
+            <div class="mk-arb-side">
+              <div>
+                <h4>Мин. спред</h4>
+                <div class="mk-filter-val" id="arbSpreadVal">2.5%</div>
+                <div class="mk-slider" id="arbSlider">
+                  <div class="mk-slider-fill" id="arbFill" style="width:25%"></div>
+                  <div class="mk-slider-knob" id="arbKnob" style="left:25%"></div>
+                </div>
+              </div>
+              <div>
+                <h4>Объём 24h</h4>
+                <div class="mk-toggle-row">
+                  <div class="mk-toggle on">&gt;100K</div>
+                  <div class="mk-toggle">&gt;1M</div>
+                </div>
+              </div>
+              <div>
+                <h4>Комиссия</h4>
+                <div class="mk-toggle-row">
+                  <div class="mk-toggle on" data-fee>Maker</div>
+                  <div class="mk-toggle" data-fee>Taker</div>
+                </div>
+              </div>
+            </div>
+            <div class="mk-arb-table" id="arbTable">
+              <div class="mk-tr head">
+                <span>Пара</span><span>Покупка</span><span>Продажа</span><span>Спред</span><span class="mk-hide-m">Сеть</span><span></span>
+              </div>
+              <!-- rows injected by JS -->
+            </div>
+          </div>
+        </div>
+        <div class="demo-caption"><span class="dot"></span>Интерактив: двигай ползунок спреда и жми «Сигнал». Данные обновляются в реальном времени.</div>
+      </div>
+
+      <!-- DEMO: BOT LANDING (landing) -->
+      <div class="demo-frame" data-frame="landing">
+        <div class="mk-bot">
+          <div class="mk-bot-hero">
+            <div class="mk-bot-eyebrow">Algorithmic Trading · Copy-trading</div>
+            <div class="mk-bot-h1">Ваш капитал работает<br>пока вы спите</div>
+            <p class="mk-bot-sub">Подключите счёт к проверенному торговому алгоритму. Прозрачная статистика, контроль рисков, ежемесячные выплаты.</p>
+            <span class="mk-bot-cta">Подключить счёт →</span>
+          </div>
+          <div class="mk-bot-stats">
+            <div class="mk-bot-stat"><div class="mk-bot-stat-num green">+8.4%</div><div class="mk-bot-stat-label">Средняя доходность / мес</div></div>
+            <div class="mk-bot-stat"><div class="mk-bot-stat-num red">−6.2%</div><div class="mk-bot-stat-label">Макс. просадка</div></div>
+            <div class="mk-bot-stat"><div class="mk-bot-stat-num" id="botUsers">1 240</div><div class="mk-bot-stat-label">Активных счетов</div></div>
+          </div>
+          <div class="mk-calc">
+            <div>
+              <h3>Калькулятор доходности</h3>
+              <p>Прикиньте потенциал вашего депозита за 12 месяцев при реинвестировании прибыли.</p>
+              <div class="mk-calc-label"><span>Стартовый депозит</span><b id="calcDep">$5 000</b></div>
+              <div class="mk-slider" id="calcSlider" style="margin-bottom:20px">
+                <div class="mk-slider-fill" id="calcFill" style="width:33%"></div>
+                <div class="mk-slider-knob" id="calcKnob" style="left:33%"></div>
+              </div>
+              <div class="mk-calc-label"><span>Срок</span><b>12 месяцев · 8.4%/мес</b></div>
+            </div>
+            <div class="mk-calc-result">
+              <div class="mk-calc-result-label">Прогноз через год</div>
+              <div class="mk-calc-result-val" id="calcResult">$13 100</div>
+              <div class="mk-calc-result-sub" id="calcProfit">прибыль +$8 100</div>
+            </div>
+          </div>
+          <div class="mk-ib">
+            <h3>Партнёрская программа (IB)</h3>
+            <div class="mk-ib-table">
+              <div class="mk-ib-tr head"><span>Уровень</span><span>Реферал</span><span>Рибейт со спреда</span></div>
+              <div class="mk-ib-tr"><span>Уровень 1</span><span>Прямые</span><b>40%</b></div>
+              <div class="mk-ib-tr"><span>Уровень 2</span><span>Сеть</span><b>15%</b></div>
+              <div class="mk-ib-tr"><span>Уровень 3</span><span>Глубина</span><b>5%</b></div>
+            </div>
+          </div>
+        </div>
+        <div class="demo-caption">
+          <span class="dot"></span>
+          Интерактив: двигай ползунок депозита — калькулятор пересчитывает прогноз вживую.
+          <a href="aura.html" target="_blank" class="demo-fullsite-btn">
+            Открыть реальный лендинг (AURA) →
+          </a>
+        </div>
+      </div>
+
+      <!-- DEMO: GAME STORE (shop) -->
+      <div class="demo-frame" data-frame="shop">
+        <div class="mk-game">
+          <div class="mk-game-hero">
+            <div class="mk-game-online"><span class="gd"></span>1 847 игроков онлайн</div>
+            <div class="mk-game-title">NEXUS REALMS</div>
+            <div class="mk-game-sub">Кастомный режим выживания · Сезон 4 уже идёт</div>
+          </div>
+          <div class="mk-game-store">
+            <h3>Магазин <span class="mk-cart-badge">🛒 Корзина: <b id="cartCount">0</b></span></h3>
+            <div class="mk-products">
+              <div class="mk-prod">
+                <span class="mk-prod-badge">-30%</span>
+                <div class="mk-prod-icon">👑</div>
+                <div class="mk-prod-name">VIP Пакет</div>
+                <div class="mk-prod-desc">Приоритетный вход, эксклюзивный чат, x2 к опыту на 30 дней.</div>
+                <div class="mk-prod-price"><span class="now">350₽</span><span class="old">500₽</span></div>
+                <button class="mk-buy" data-add>В корзину</button>
+              </div>
+              <div class="mk-prod">
+                <span class="mk-prod-badge">Хит</span>
+                <div class="mk-prod-icon">💰</div>
+                <div class="mk-prod-name">1000 Coins</div>
+                <div class="mk-prod-desc">Внутриигровая валюта для покупки предметов и бустов.</div>
+                <div class="mk-prod-price"><span class="now">199₽</span><span class="old">280₽</span></div>
+                <button class="mk-buy" data-add>В корзину</button>
+              </div>
+              <div class="mk-prod">
+                <span class="mk-prod-badge">NEW</span>
+                <div class="mk-prod-icon">⚔️</div>
+                <div class="mk-prod-name">Скин «Дракон»</div>
+                <div class="mk-prod-desc">Уникальный анимированный скин с эффектом пламени.</div>
+                <div class="mk-prod-price"><span class="now">420₽</span><span class="old">600₽</span></div>
+                <button class="mk-buy" data-add>В корзину</button>
+              </div>
+            </div>
+          </div>
+          <div class="mk-game-account">
+            <div class="mk-acc-item"><h5>Баланс</h5><div class="v neon">2 450 💰</div></div>
+            <div class="mk-acc-item"><h5>Статус</h5><div class="v">VIP</div></div>
+            <div class="mk-acc-item"><h5>Уровень</h5><div class="v">47</div></div>
+            <div class="mk-acc-item"><h5>Покупок</h5><div class="v">12</div></div>
+          </div>
+        </div>
+        <div class="demo-caption"><span class="dot"></span>Интерактив: добавляй товары в корзину — счётчик считает покупки.</div>
+      </div>
+
+      <!-- DEMO: BUSINESS CARD (card) -->
+      <div class="demo-frame" data-frame="card">
+        <div class="mk-card">
+          <div class="mk-card-hero">
+            <div class="mk-card-avatar">АП</div>
+            <div class="mk-card-name">Артём Петров</div>
+            <div class="mk-card-role">Частный юрист · Корпоративное право</div>
+            <div class="mk-card-socials">
+              <div class="mk-card-soc"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 5.5l-1.2 5.6c-.1.4-.3.5-.6.3l-1.7-1.3-.8.8c-.1.1-.2.2-.4.2l.1-1.9 3.3-3c.1-.1 0-.2-.2-.1L5.6 9.2 4 8.7c-.4-.1-.4-.4.1-.6l6.6-2.5c.3-.1.6.1.5.5z"/></svg></div>
+              <div class="mk-card-soc"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3zm1.5 5.5h-2v6h2v-6zm-1-1a1.1 1.1 0 100-2.2 1.1 1.1 0 000 2.2zm8.5 7v-3.3c0-1.8-1-2.6-2.3-2.6-1 0-1.5.6-1.7 1v-.9h-2v6h2V8.3c0-.6.4-1 .9-1s.9.4.9 1v3.2h2z"/></svg></div>
+              <div class="mk-card-soc"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 1.5c2.1 0 2.4 0 3.2.05.8.03 1.2.18 1.5.3.4.14.6.32.9.6.28.3.46.5.6.9.12.3.27.7.3 1.5.05.8.05 1.1.05 3.2s0 2.4-.05 3.2c-.03.8-.18 1.2-.3 1.5-.14.4-.32.6-.6.9-.3.28-.5.46-.9.6-.3.12-.7.27-1.5.3-.8.05-1.1.05-3.2.05s-2.4 0-3.2-.05c-.8-.03-1.2-.18-1.5-.3a2.5 2.5 0 01-.9-.6 2.5 2.5 0 01-.6-.9c-.12-.3-.27-.7-.3-1.5C1.5 10.4 1.5 10.1 1.5 8s0-2.4.05-3.2c.03-.8.18-1.2.3-1.5.14-.4.32-.6.6-.9.3-.28.5-.46.9-.6.3-.12.7-.27 1.5-.3C5.6 1.5 5.9 1.5 8 1.5zM8 4a4 4 0 100 8 4 4 0 000-8zm0 6.6a2.6 2.6 0 110-5.2 2.6 2.6 0 010 5.2zm4.1-6.8a.94.94 0 11-1.9 0 .94.94 0 011.9 0z"/></svg></div>
+            </div>
+          </div>
+          <div class="mk-card-grid">
+            <div class="mk-card-cell"><h4>Сделки M&A</h4><p>Сопровождение слияний и поглощений под ключ.</p></div>
+            <div class="mk-card-cell"><h4>Договоры</h4><p>Аудит и составление коммерческих контрактов.</p></div>
+            <div class="mk-card-cell"><h4>Споры</h4><p>Представительство в арбитражных судах.</p></div>
+          </div>
+          <div class="mk-card-contact">
+            <span class="mk-card-contact-btn">Записаться на консультацию</span>
+          </div>
+        </div>
+        <div class="demo-caption"><span class="dot"></span>Чистый сайт-визитка: имя, специализация, услуги, соцсети и кнопка связи.</div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+
+<script>
+  const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const isTouch = window.matchMedia('(hover: none)').matches;
+
+  // Cursor + glow
+  const cursor = document.getElementById('cursor');
+  const ring = document.getElementById('cursorRing');
+  const glow = document.getElementById('cursorGlow');
+  let mx = 0, my = 0, rx = 0, ry = 0, gx = 0, gy = 0;
+
+  document.addEventListener('mousemove', e => {
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
+  });
+
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
+    ring.style.left = rx + 'px';
+    ring.style.top = ry + 'px';
+    gx += (mx - gx) * 0.08;
+    gy += (my - gy) * 0.08;
+    glow.style.left = gx + 'px';
+    glow.style.top = gy + 'px';
+    requestAnimationFrame(animateCursor);
+  }
+  if (!isTouch) animateCursor();
+
+  document.querySelectorAll('a, button, .service-card').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hover'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
+  });
+
+  // Magnetic buttons
+  if (!isTouch && !reduceMotion) {
+    document.querySelectorAll('.magnetic').forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left - rect.width / 2;
+        const y = e.clientY - rect.top - rect.height / 2;
+        btn.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        btn.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
+      });
+      btn.addEventListener('mouseleave', () => {
+        btn.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        btn.style.transform = 'translate(0, 0)';
+      });
+    });
+  }
+
+  // Tilt cards
+  if (!isTouch && !reduceMotion) {
+    document.querySelectorAll('.tilt').forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
+        const px = (e.clientX - rect.left) / rect.width - 0.5;
+        const py = (e.clientY - rect.top) / rect.height - 0.5;
+        card.style.transform = `perspective(800px) rotateY(${px * 6}deg) rotateX(${-py * 6}deg)`;
+      });
+      card.addEventListener('mouseleave', () => {
+        card.style.transform = 'perspective(800px) rotateY(0) rotateX(0)';
+        card.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
+        setTimeout(() => card.style.transition = '', 500);
+      });
+    });
+  }
+
+  // Parallax hero
+  const heroGrid = document.getElementById('heroGrid');
+  const heroContent = document.getElementById('heroContent');
+  if (!reduceMotion) {
+    window.addEventListener('scroll', () => {
+      const y = window.scrollY;
+      if (y < window.innerHeight) {
+        heroGrid.style.transform = `translateY(${y * 0.4}px)`;
+        heroContent.style.transform = `translateY(${y * 0.2}px)`;
+        heroContent.style.opacity = 1 - (y / window.innerHeight) * 0.8;
+      }
+    }, { passive: true });
+  }
+
+  // Scramble text — построчно сверху вниз, весь цикл ~5 секунд
+  if (!reduceMotion) {
+    const chars = '!<>-_\\/[]{}—=+*^?#αβγδλσπ01';
+    const lines = [...document.querySelectorAll('[data-scramble]')]
+      .sort((a, b) => (+a.dataset.line) - (+b.dataset.line));
+
+    lines.forEach(el => { el.dataset.final = el.textContent.trim(); el.textContent = ''; });
+
+    const TOTAL = 3000;          // вся анимация ~3 сек
+    const startDelay = 400;
+    const perLine = TOTAL / lines.length;
+
+    lines.forEach((el, idx) => {
+      const finalText = el.dataset.final;
+      const duration = perLine * 0.9 + finalText.length * 4;
+      const startAt = startDelay + idx * perLine;
+      let startTime = null;
+
+      function tick(now) {
+        if (!startTime) startTime = now;
+        const elapsed = now - startTime;
+        const progress = Math.min(elapsed / duration, 1);
+        const revealed = Math.floor(progress * finalText.length);
+        let out = '';
+        for (let i = 0; i < finalText.length; i++) {
+          if (i < revealed || finalText[i] === ' ') out += finalText[i];
+          else out += chars[Math.floor(Math.random() * chars.length)];
+        }
+        el.textContent = out;
+        if (progress < 1) requestAnimationFrame(tick);
+        else el.textContent = finalText;
+      }
+      setTimeout(() => requestAnimationFrame(tick), startAt);
+    });
+  }
+
+  // Nav scroll + progress
+  const nav = document.getElementById('nav');
+  const progress = document.getElementById('scrollProgress');
+  window.addEventListener('scroll', () => {
+    nav.classList.toggle('scrolled', window.scrollY > 60);
+    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
+    progress.style.width = scrolled + '%';
+  }, { passive: true });
+
+  // Reveal
+  const observer = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+
+  // Verification code — прокрутка при появлении
+  const verifyEl = document.querySelector('[data-verify]');
+  if (verifyEl && !reduceMotion) {
+    const finalCode = verifyEl.textContent;
+    const vchars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-';
+    const vObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          let frame = 0;
+          const total = 30;
+          function run() {
+            const revealed = Math.floor((frame / total) * finalCode.length);
+            let out = '';
+            for (let i = 0; i < finalCode.length; i++) {
+              if (i < revealed || finalCode[i] === '-') out += finalCode[i];
+              else out += vchars[Math.floor(Math.random() * vchars.length)];
+            }
+            verifyEl.textContent = out;
+            if (frame < total) { frame++; requestAnimationFrame(run); }
+            else verifyEl.textContent = finalCode;
+          }
+          run();
+          vObs.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.6 });
+    vObs.observe(verifyEl);
+  }
+
+  // Verification card — клик открывает реестр + копирует номер
+  const verifyCard = document.getElementById('verifyCard');
+  const verifyHint = document.getElementById('verifyHint');
+  if (verifyCard) {
+    const REGISTRY_URL = 'https://diploma.itstep.org/';
+    const CODE = 'KVV-017627';
+    const hintDefault = verifyHint ? verifyHint.innerHTML : '';
+
+    async function doVerify() {
+      try {
+        await navigator.clipboard.writeText(CODE);
+        if (verifyHint) {
+          verifyHint.classList.add('copied');
+          verifyHint.innerHTML = '✓ Номер ' + CODE + ' скопирован — вставьте в поле';
+          setTimeout(() => {
+            verifyHint.classList.remove('copied');
+            verifyHint.innerHTML = hintDefault;
+          }, 4000);
+        }
+      } catch (err) { /* буфер недоступен — просто откроем реестр */ }
+      window.open(REGISTRY_URL, '_blank', 'noopener');
+    }
+
+    verifyCard.addEventListener('click', doVerify);
+    verifyCard.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doVerify(); }
+    });
+  }
+
+  // Вращение карточки сертификата по мере скролла
+  if (verifyCard && !reduceMotion) {
+    let cardTilt = 0;
+    function rotateCard() {
+      const rect = verifyCard.getBoundingClientRect();
+      const vh = window.innerHeight;
+      // прогресс прохождения карточки через вьюпорт: -1 .. 1
+      const center = rect.top + rect.height / 2;
+      const progress = (center - vh / 2) / vh;   // 0 когда по центру экрана
+      cardTilt = progress * 22;                   // максимум ~22deg наклона
+      verifyCard.style.transform =
+        `perspective(1000px) rotateY(${cardTilt}deg) rotateX(${progress * -6}deg)`;
+    }
+    window.addEventListener('scroll', rotateCard, { passive: true });
+    rotateCard();
+  }
+
+  // Count up
+  function countUp(el) {
+    const target = parseInt(el.dataset.target);
+    let current = 0;
+    const step = target / 40;
+    const interval = setInterval(() => {
+      current += step;
+      if (current >= target) { el.textContent = target; clearInterval(interval); return; }
+      el.textContent = Math.floor(current);
+    }, 30);
+  }
+  const statsObs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.querySelectorAll('[data-target]').forEach(countUp);
+        statsObs.unobserve(e.target);
+      }
+    });
+  }, { threshold: 0.5 });
+  const statsEl = document.querySelector('.stats');
+  if (statsEl) statsObs.observe(statsEl);
+
+  // ===== DEMO MODAL =====
+  const overlay = document.getElementById('modalOverlay');
+  const modalClose = document.getElementById('modalClose');
+  const modalTitle = document.getElementById('modalTitle');
+  const modalTag = document.getElementById('modalTag');
+  const frames = document.querySelectorAll('.demo-frame');
+
+  const demoMeta = {
+    landing: { title: 'Лендинг торгового бота', tag: 'CASE · FINTECH' },
+    card:    { title: 'Сайт-визитка', tag: 'CASE · PERSONAL' },
+    shop:    { title: 'Донат-магазин игры', tag: 'CASE · GAMEDEV' },
+    app:     { title: 'Арбитражный дашборд', tag: 'CASE · CRYPTO' }
+  };
+
+  let lastFocus = null;
+
+  function openDemo(type) {
+    const meta = demoMeta[type];
+    if (!meta) return;
+    modalTitle.textContent = meta.title;
+    modalTag.textContent = meta.tag;
+    frames.forEach(f => f.classList.toggle('active', f.dataset.frame === type));
+    overlay.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    lastFocus = document.activeElement;
+    modalClose.focus();
+    if (type === 'app') initArb();
+    if (type === 'shop') resetCart();
+  }
+  function closeDemo() {
+    overlay.classList.remove('open');
+    document.body.style.overflow = '';
+    if (lastFocus) lastFocus.focus();
+  }
+
+  document.querySelectorAll('[data-demo]').forEach(card => {
+    card.addEventListener('click', () => {
+      if (card.dataset.demo === 'landing') {
+        window.open('aura.html', '_blank', 'noopener');
+      } else if (card.dataset.demo === 'card') {
+        window.open('../sitevisit/dist/index.html', '_blank', 'noopener');
+      } else if (card.dataset.demo === 'shop') {
+        window.open('../sitecard/index.html', '_blank', 'noopener');
+      } else if (card.dataset.demo === 'app') {
+        window.open('../appfit/index.html', '_blank', 'noopener');
+      } else {
+        openDemo(card.dataset.demo);
+      }
+    });
+  });
+  modalClose.addEventListener('click', closeDemo);
+  overlay.addEventListener('click', e => { if (e.target === overlay) closeDemo(); });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape' && overlay.classList.contains('open')) closeDemo(); });
+
+  // ---- Arbitrage table ----
+  const pairs = [
+    ['BTC/USDT','MEXC','BingX'], ['ETH/USDT','Gate','Binance'], ['SOL/USDT','Bitget','OKX'],
+    ['TON/USDT','MEXC','Bybit'], ['XRP/USDT','KuCoin','Binance'], ['DOGE/USDT','Gate','MEXC'],
+    ['ARB/USDT','BingX','OKX'], ['AVAX/USDT','Bitget','Bybit'], ['LINK/USDT','MEXC','Gate'],
+    ['ADA/USDT','KuCoin','OKX'], ['MATIC/USDT','Binance','BingX'], ['DOT/USDT','Bybit','MEXC']
+  ];
+  let minSpread = 2.5;
+  let arbTimer = null;
+
+  function spreadClass(v) { return v >= 5 ? 'hi' : 'mid'; }
+  function buildArbRows() {
+    const table = document.getElementById('arbTable');
+    if (!table) return;
+    table.querySelectorAll('.mk-tr.row').forEach(r => r.remove());
+    pairs.forEach(p => {
+      const spread = (Math.random() * 12 + 0.5);
+      if (spread < minSpread) return;
+      const netClosed = Math.random() < 0.18;
+      const row = document.createElement('div');
+      row.className = 'mk-tr row';
+      row.innerHTML =
+        `<span class="mk-pair">${p[0]}</span>`+
+        `<span class="mk-exch">${p[1]}</span>`+
+        `<span class="mk-exch">${p[2]}</span>`+
+        `<span class="mk-spread ${spreadClass(spread)}">+${spread.toFixed(2)}%</span>`+
+        `<span class="mk-hide-m"><span class="mk-net ${netClosed?'closed':''}"><span class="nd"></span>${netClosed?'Закрыт':'Открыт'}</span></span>`+
+        `<span><button class="mk-sig-btn">⚡ Сигнал</button></span>`;
+      table.appendChild(row);
+    });
+    table.querySelectorAll('.mk-sig-btn').forEach(b => {
+      b.addEventListener('click', () => {
+        b.classList.add('sent'); b.textContent = '✓ Отправлен';
+        setTimeout(() => { b.classList.remove('sent'); b.textContent = '⚡ Сигнал'; }, 2000);
+      });
+    });
+  }
+  function initArb() {
+    buildArbRows();
+    clearInterval(arbTimer);
+    arbTimer = setInterval(() => { if (overlay.classList.contains('open')) buildArbRows(); }, 2500);
+  }
+
+  // Arb slider
+  (function() {
+    const slider = document.getElementById('arbSlider');
+    if (!slider) return;
+    const knob = document.getElementById('arbKnob');
+    const fill = document.getElementById('arbFill');
+    const val = document.getElementById('arbSpreadVal');
+    let dragging = false;
+    function setFromX(clientX) {
+      const rect = slider.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      knob.style.left = pct + '%'; fill.style.width = pct + '%';
+      minSpread = (pct / 100 * 15);
+      val.textContent = minSpread.toFixed(1) + '%';
+      buildArbRows();
+    }
+    slider.addEventListener('mousedown', e => { dragging = true; setFromX(e.clientX); });
+    window.addEventListener('mousemove', e => { if (dragging) setFromX(e.clientX); });
+    window.addEventListener('mouseup', () => dragging = false);
+    slider.addEventListener('touchstart', e => { setFromX(e.touches[0].clientX); }, {passive:true});
+    slider.addEventListener('touchmove', e => { setFromX(e.touches[0].clientX); }, {passive:true});
+  })();
+
+  // Fee toggles
+  document.querySelectorAll('[data-fee]').forEach(t => {
+    t.addEventListener('click', () => {
+      document.querySelectorAll('[data-fee]').forEach(x => x.classList.remove('on'));
+      t.classList.add('on');
+    });
+  });
+  document.querySelectorAll('.mk-toggle:not([data-fee])').forEach(t => {
+    t.addEventListener('click', () => {
+      const sibs = t.parentElement.querySelectorAll('.mk-toggle');
+      sibs.forEach(x => x.classList.remove('on'));
+      t.classList.add('on');
+    });
+  });
+
+  // ---- Bot calculator ----
+  (function() {
+    const slider = document.getElementById('calcSlider');
+    if (!slider) return;
+    const knob = document.getElementById('calcKnob');
+    const fill = document.getElementById('calcFill');
+    const dep = document.getElementById('calcDep');
+    const res = document.getElementById('calcResult');
+    const profit = document.getElementById('calcProfit');
+    const MIN = 1000, MAX = 50000, RATE = 0.084;
+    let dragging = false;
+    function fmt(n) { return '$' + Math.round(n).toLocaleString('ru-RU').replace(/,/g,' '); }
+    function setFromX(clientX) {
+      const rect = slider.getBoundingClientRect();
+      let pct = ((clientX - rect.left) / rect.width) * 100;
+      pct = Math.max(0, Math.min(100, pct));
+      knob.style.left = pct + '%'; fill.style.width = pct + '%';
+      const deposit = MIN + (pct/100) * (MAX - MIN);
+      const final = deposit * Math.pow(1 + RATE, 12);
+      dep.textContent = fmt(deposit);
+      res.textContent = fmt(final);
+      profit.textContent = 'прибыль +' + fmt(final - deposit);
+    }
+    slider.addEventListener('mousedown', e => { dragging = true; setFromX(e.clientX); });
+    window.addEventListener('mousemove', e => { if (dragging) setFromX(e.clientX); });
+    window.addEventListener('mouseup', () => dragging = false);
+    slider.addEventListener('touchstart', e => { setFromX(e.touches[0].clientX); }, {passive:true});
+    slider.addEventListener('touchmove', e => { setFromX(e.touches[0].clientX); }, {passive:true});
+  })();
+
+  // ---- Game cart ----
+  let cartCount = 0;
+  function resetCart() {
+    cartCount = 0;
+    const c = document.getElementById('cartCount');
+    if (c) c.textContent = '0';
+    document.querySelectorAll('.mk-buy').forEach(b => { b.classList.remove('added'); b.textContent = 'В корзину'; });
+  }
+  document.querySelectorAll('[data-add]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      cartCount++;
+      const c = document.getElementById('cartCount');
+      if (c) c.textContent = cartCount;
+      btn.classList.add('added'); btn.textContent = '✓ Добавлено';
+      setTimeout(() => { btn.classList.remove('added'); btn.textContent = 'В корзину'; }, 1500);
+    });
+  });
+</script>
+</body>
+</html>
