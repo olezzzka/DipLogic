@@ -474,16 +474,17 @@ function mu() {
   }
 }
 
-let lastWidth = window.innerWidth;
-let lastHeight = window.innerHeight;
+let lastWidth = 0;
+let lastHeight = 0;
 
 function qo() {
   if (!mi) return;
   const widthChanged = window.innerWidth !== lastWidth;
   const heightChanged = Math.abs(window.innerHeight - lastHeight) > 100;
   if (widthChanged || heightChanged) {
-    mi.width = window.innerWidth;
-    mi.height = window.innerHeight;
+    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    mi.width = window.innerWidth * dpr;
+    mi.height = window.innerHeight * dpr;
     lastWidth = window.innerWidth;
     lastHeight = window.innerHeight;
   }
