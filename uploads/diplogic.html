@@ -6,6 +6,8 @@
 <title>DipLogic — Сайты, которые работают</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -415,10 +417,28 @@
     z-index: 5;
     pointer-events: none;
   }
+  .reviews-lines-svg {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 1;
+    overflow: visible;
+  }
+  .review-shoot-line {
+    fill: none;
+    stroke: url(#line-gradient);
+    stroke-width: 1.5px;
+    stroke-linecap: round;
+    opacity: 0;
+  }
   .review-bubble {
     position: absolute;
-    top: 0;
-    left: 0;
+    top: 50%;
+    left: 50%;
     width: 250px;
     padding: 14px 16px;
     background: rgba(13, 13, 15, 0.45);
@@ -430,32 +450,9 @@
     font-family: var(--font-sans);
     pointer-events: auto;
     opacity: 0;
-    transform: translate(-50%, -50%) scale(0.2);
-    animation: 
-      emitFromSphere 1.4s cubic-bezier(0.16, 1, 0.3, 1) var(--delay) forwards,
-      floatBubble 6s ease-in-out calc(var(--delay) + 1.4s) infinite alternate;
-    transition: border-color 0.3s, transform 0.3s, background-color 0.3s;
+    transform: translate(calc(var(--rx) - 50%), calc(var(--ry) - 50% + var(--float-y, 0px))) scale(var(--bubble-scale, 0.1));
+    transition: border-color 0.3s, background-color 0.3s;
     box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-  }
-  .review-bubble:hover {
-    border-color: rgba(255, 255, 255, 0.15);
-    background: rgba(13, 13, 15, 0.7);
-    transform: translate(var(--rx), var(--ry)) scale(1.05) !important;
-  }
-  @keyframes emitFromSphere {
-    0% {
-      opacity: 0;
-      transform: translate(-50%, -50%) scale(0.2);
-    }
-    50% { opacity: 0.5; }
-    100% {
-      opacity: 1;
-      transform: translate(var(--rx), var(--ry)) scale(1);
-    }
-  }
-  @keyframes floatBubble {
-    0% { transform: translate(var(--rx), var(--ry)) translateY(0px); }
-    100% { transform: translate(var(--rx), var(--ry)) translateY(-8px); }
   }
   .review-header {
     display: flex;
@@ -575,6 +572,7 @@
     justify-content: center;
     gap: 20px;
     width: 100%;
+    margin-top: 56px;
   }
   .btn-primary svg { transition: transform 0.2s; }
   .btn-primary:hover svg { transform: translateX(4px); }
@@ -1477,7 +1475,8 @@
 
   @media (min-width: 901px) {
     /* Only slide in horizontally on desktop if inside horizontal track */
-    .horizontal-track > .reveal:not(.revealed) .reveal-content .service-card {
+    .horizontal-track > .reveal:not(.revealed) .reveal-content .service-card,
+    .horizontal-track > .reveal:not(.revealed) .reveal-content .process-step {
       transform: translateX(60px) scale(0.97);
     }
   }
@@ -1950,9 +1949,10 @@
     }
     
     /* 2. Services Section */
-    .services {
-      width: 100vw;
+    .horizontal-track > section.services {
+      width: fit-content;
       border-left: none;
+      padding-right: 150px !important;
     }
     .services .reveal-content,
     .process .reveal-content {
@@ -1994,9 +1994,10 @@
     }
     
     /* 3. Process Section */
-    .process {
-      width: 100vw;
+    .horizontal-track > section.process {
+      width: fit-content;
       border-left: none;
+      padding-right: 550px !important;
     }
     .process-header {
       width: 400px;
@@ -2144,9 +2145,27 @@
       flex-shrink: 0;
     }
     .verify-card {
-      width: 780px;
+      width: 920px;
       aspect-ratio: 16 / 9;
       flex-shrink: 0;
+    }
+    .verify-card .verify-val {
+      font-size: 18px;
+    }
+    .verify-card .verify-key {
+      font-size: 13px;
+    }
+    .verify-card .verify-code-value {
+      font-size: 26px;
+    }
+    .verify-card .verify-code-label {
+      font-size: 12px;
+    }
+    .verify-card .verify-status {
+      font-size: 14px;
+    }
+    .verify-card .verify-cta-hint {
+      font-size: 13px;
     }
     .verify-content-grid {
       display: grid;
@@ -2200,6 +2219,17 @@
       background: rgba(8, 8, 8, 0.4);
       backdrop-filter: blur(10px);
     }
+  }
+
+  /* Prevent CSS transitions from conflicting with GSAP ScrollTrigger animations */
+  body.gsap-active .reveal-content > *,
+  body.gsap-active .service-card,
+  body.gsap-active .process-step,
+  body.gsap-active .why-item,
+  body.gsap-active .verify-card,
+  body.gsap-active .verify-left,
+  body.gsap-active #processLineFill {
+    transition: none !important;
   }
 
 </style>
@@ -2258,37 +2288,49 @@
             </svg>
           </a>
         </div>
-        <!-- Floating Reviews (emitted from 3D sphere) -->
-        <div class="hero-reviews">
-          <div class="review-bubble" style="--rx: -280px; --ry: -140px; --delay: 1.0s;">
-            <div class="review-header">
-              <span class="review-avatar">А</span>
-              <span class="review-user">Артём Петров</span>
-            </div>
-            <div class="review-text">Быстрый запуск за 2 дня. Результат супер!</div>
-          </div>
-          <div class="review-bubble" style="--rx: 280px; --ry: -160px; --delay: 1.6s;">
-            <div class="review-header">
-              <span class="review-avatar">М</span>
-              <span class="review-user">Мария Громова</span>
-            </div>
-            <div class="review-text">Конверсия выросла в 2 раза после редизайна.</div>
-          </div>
-          <div class="review-bubble" style="--rx: -260px; --ry: 160px; --delay: 2.2s;">
-            <div class="review-header">
-              <span class="review-avatar">Д</span>
-              <span class="review-user">Денис Кравцов</span>
-            </div>
-            <div class="review-text">Чистейший код, бесшовная интеграция с API.</div>
-          </div>
-          <div class="review-bubble" style="--rx: 290px; --ry: 130px; --delay: 2.8s;">
-            <div class="review-header">
-              <span class="review-avatar">К</span>
-              <span class="review-user">Кирилл Соколов</span>
-            </div>
-            <div class="review-text">UX продуман до мелочей. Заказы сданы в срок.</div>
-          </div>
+      </div>
+    </div>
+
+    <!-- Floating Reviews (emitted from 3D sphere) -->
+    <div class="hero-reviews" id="heroReviews">
+      <svg class="reviews-lines-svg" id="reviewsLinesSvg">
+        <defs>
+          <linearGradient id="line-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="rgba(255, 255, 255, 0.02)" />
+            <stop offset="50%" stop-color="rgba(255, 255, 255, 0.4)" />
+            <stop offset="100%" stop-color="rgba(255, 255, 255, 0.8)" />
+          </linearGradient>
+        </defs>
+      </svg>
+      <div class="review-bubble" style="--rx: -26vw; --ry: -24vh; --delay: 1.0;">
+        <div class="review-header">
+          <span class="review-avatar">А</span>
+          <span class="review-user">Артём Петров</span>
         </div>
+        <div class="review-text">Быстрый запуск за 2 дня. Результат супер!</div>
+      </div>
+      <div class="review-bubble" style="--rx: 26vw; --ry: -22vh; --delay: 1.6;">
+        <div class="review-header">
+          <span class="review-avatar">М</span>
+          <span class="review-user">Мария Громова</span>
+        </div>
+        <div class="review-text">Конверсия выросла в 2 раза после редизайна.</div>
+      </div>
+      <div class="review-bubble" style="--rx: -24vw; --ry: 16vh; --delay: 2.2;">
+        <div class="review-header">
+          <span class="review-avatar">Д</span>
+          <span class="review-user">Денис Кравцов</span>
+        </div>
+        <div class="review-text">Чистейший код, бесшовная интеграция с API.</div>
+      </div>
+      <div class="review-bubble" style="--rx: 24vw; --ry: 18vh; --delay: 2.8;">
+        <div class="review-header">
+          <span class="review-avatar">К</span>
+          <span class="review-user">Кирилл Соколов</span>
+        </div>
+        <div class="review-text">UX продуман до мелочей. Заказы сданы в срок.</div>
+      </div>
+    </div>
 
     <!-- MARQUEE -->
     <div class="marquee-wrap">
@@ -2382,9 +2424,6 @@
   </div>
   </div>
 </section>
-    </div>
-  </div>
-</div>
 
 <!-- PROCESS -->
 <section class="process reveal" id="process">
@@ -2419,6 +2458,9 @@
   </div>
   </div>
 </section>
+    </div>
+  </div>
+</div>
 
 <!-- WHY -->
 <section class="why reveal" id="why">
@@ -2931,129 +2973,498 @@
     });
   }
 
-  // Nav scroll + progress & Horizontal Scroll Translation
-  const nav = document.getElementById('nav');
-  const progress = document.getElementById('scrollProgress');
-  const scrollContainer = document.getElementById('scrollContainer');
-
-  function updateScrollProgress() {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const scrolledPercent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
-    progress.style.width = scrolledPercent + '%';
-    nav.classList.toggle('scrolled', window.scrollY > 60);
+  // Trigger hero elements immediately
+  if (!reduceMotion) {
+    document.querySelectorAll('.hero [data-scramble]').forEach((el, idx) => {
+      runScramble(el, 400 + idx * 250);
+    });
   }
-  
-  // Scroll-linked interactive animations
+
+  // 1. Add gsap-active class to body to disable conflicting CSS transitions
+  document.body.classList.add('gsap-active');
+
+  // Register ScrollTrigger plugin
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Setup scroll progress bar
+  const progress = document.getElementById('scrollProgress');
+  if (progress) {
+    gsap.to(progress, {
+      width: "100%",
+      ease: "none",
+      scrollTrigger: {
+        trigger: document.documentElement,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true
+      }
+    });
+  }
+
+  // Setup navigation scrolled background
+  const nav = document.getElementById('nav');
+  if (nav) {
+    ScrollTrigger.create({
+      start: "top -60px",
+      onToggle: self => nav.classList.toggle('scrolled', self.isActive)
+    });
+  }
+
+  // Define GSAP matchMedia
+  let mm = gsap.matchMedia();
+
+  const wrapper = document.getElementById('horizontalScrollWrapper');
+  const track = document.getElementById('horizontalTrack');
   const servicesSection = document.getElementById('services');
   const processSection = document.getElementById('process');
   const whySection = document.getElementById('why');
   const verifySection = document.getElementById('verify');
-  
+  const verifyCard = document.getElementById('verifyCard');
+  const contactSection = document.getElementById('contact');
+
   const serviceCards = document.querySelectorAll('.service-card');
   const processSteps = document.querySelectorAll('.process-step');
   const processLineFill = document.getElementById('processLineFill');
   const whyItems = document.querySelectorAll('.why-item');
-  const verifyCard = document.getElementById('verifyCard');
 
-  function animateScrollLinked() {
-    if (window.innerWidth <= 900 || reduceMotion) return;
-    
-    const winWidth = window.innerWidth;
+  // Desktop horizontal + vertical layout scroll triggers
+  mm.add("(min-width: 901px)", () => {
+    if (wrapper && track) {
+      // Recalculate wrapper height on every refresh (handles dynamic resizing, fonts loading, etc.)
+      ScrollTrigger.addEventListener("refreshInit", () => {
+        const maxTranslate = track.scrollWidth - window.innerWidth;
+        wrapper.style.height = (maxTranslate + window.innerHeight) + 'px';
+      });
 
-    // 1. Services Parallax Cards Spread (staggered fan out)
-    if (servicesSection) {
-      const rect = servicesSection.getBoundingClientRect();
-      if (rect.left < winWidth && rect.right > 0) {
-        serviceCards.forEach((card, index) => {
-          if (card.matches(':hover')) return; // Let mouse hover tilt take precedence
-          const factor = (index + 1) * 0.12;
-          const translate = Math.max(0, rect.left) * factor;
-          card.style.transform = `translate3d(${translate}px, 0, 0)`;
+      // 1. Horizontal Scroll Tween
+      const scrollTween = gsap.to(track, {
+        x: () => -(track.scrollWidth - window.innerWidth),
+        ease: "none",
+        scrollTrigger: {
+          trigger: wrapper,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+          invalidateOnRefresh: true
+        }
+      });
+
+      // 2. Parallax Hero Background Grid & Content
+      const heroGrid = document.getElementById('heroGrid');
+      const heroContent = document.getElementById('heroContent');
+      if (heroGrid) {
+        gsap.to(heroGrid, {
+          x: -window.innerWidth * 0.35,
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapper,
+            start: "top top",
+            end: () => `+=${window.innerWidth}`,
+            scrub: true
+          }
         });
       }
-    }
+      if (heroContent) {
+        gsap.to(heroContent, {
+          x: -window.innerWidth * 0.2,
+          opacity: 0.1,
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapper,
+            start: "top top",
+            end: () => `+=${window.innerWidth}`,
+            scrub: true
+          }
+        });
+      }
 
-    // 2. Process Line Drawing & Steps Float (bound to vertical scroll)
-    if (processSection) {
-      const rect = processSection.getBoundingClientRect();
-      const vh = window.innerHeight;
-      if (rect.top < vh && rect.bottom > 0) {
-        const progress = Math.max(0, Math.min(1, (vh - rect.top) / vh));
+      // 3. Services Section scroll-driven card reveals
+      if (servicesSection && serviceCards.length > 0) {
+        serviceCards.forEach((card) => {
+          gsap.fromTo(card, 
+            { 
+              opacity: 0, 
+              scale: 0.82, 
+              y: 80, 
+              rotationY: 20, 
+              rotationX: 8,
+              transformPerspective: 1000,
+              transformOrigin: "center bottom",
+              clipPath: "inset(0 100% 0 0)",
+              filter: "blur(8px)"
+            },
+            {
+              opacity: 1, 
+              scale: 1, 
+              y: 0, 
+              rotationY: 0, 
+              rotationX: 0,
+              clipPath: "inset(0 0% 0 0)",
+              filter: "blur(0px)",
+              ease: "sine.out",
+              scrollTrigger: {
+                trigger: card,
+                containerAnimation: scrollTween,
+                start: "left 95%",
+                end: "left 70%",
+                scrub: 0.3
+              }
+            }
+          );
+        });
+
+        ScrollTrigger.create({
+          trigger: servicesSection,
+          containerAnimation: scrollTween,
+          start: "left 80%",
+          onEnter: () => {
+            servicesSection.classList.add('visible');
+            servicesSection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+              runScramble(el, idx * 250);
+            });
+          }
+        });
+      }
+
+      // 4. Process Section scroll-driven steps reveals & line drawing
+      if (processSection && processSteps.length > 0) {
+        // Line fill progress
         if (processLineFill) {
-          processLineFill.style.transform = `scaleX(${progress})`;
+          gsap.set(processLineFill, { scaleX: 0 });
+          gsap.to(processLineFill, {
+            scaleX: 1,
+            ease: "none",
+            scrollTrigger: {
+              trigger: processSection,
+              containerAnimation: scrollTween,
+              start: "left 90%",
+              end: "left 20%",
+              scrub: true
+            }
+          });
         }
 
-        processSteps.forEach((step, index) => {
-          if (step.matches(':hover')) return;
-          const factor = (index + 1) * 0.08;
-          const translate = Math.max(0, rect.top) * factor;
-          step.style.transform = `translate3d(0, ${translate}px, 0)`;
+        // Steps staggered reveal
+        processSteps.forEach((step) => {
+          gsap.fromTo(step, 
+            { 
+              opacity: 0, 
+              scale: 0.85, 
+              y: 60, 
+              rotationY: -18, 
+              rotationZ: -3,
+              transformPerspective: 1000,
+              transformOrigin: "left center",
+              clipPath: "inset(100% 0 0 0)",
+              filter: "blur(6px)"
+            },
+            {
+              opacity: 1, 
+              scale: 1, 
+              y: 0, 
+              rotationY: 0, 
+              rotationZ: 0,
+              clipPath: "inset(0% 0 0 0)",
+              filter: "blur(0px)",
+              ease: "sine.out",
+              scrollTrigger: {
+                trigger: step,
+                containerAnimation: scrollTween,
+                start: "left 95%",
+                end: "left 75%",
+                scrub: 0.3
+              }
+            }
+          );
+        });
+
+        ScrollTrigger.create({
+          trigger: processSection,
+          containerAnimation: scrollTween,
+          start: "left 80%",
+          onEnter: () => {
+            processSection.classList.add('visible');
+            processSection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+              runScramble(el, idx * 250);
+            });
+          }
+        });
+      }
+
+      // 5. Why Section scroll-driven staggered reveals
+      if (whySection && whyItems.length > 0) {
+        gsap.fromTo(whyItems, 
+          { 
+            opacity: 0, 
+            y: 90, 
+            scale: 0.88, 
+            rotationX: 18,
+            transformPerspective: 1000,
+            filter: "blur(8px)" 
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            rotationX: 0,
+            filter: "blur(0px)",
+            stagger: 0.15,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: whySection,
+              start: "top 85%",
+              end: "top 45%",
+              scrub: 0.5
+            }
+          }
+        );
+
+        ScrollTrigger.create({
+          trigger: whySection,
+          start: "top 75%",
+          onEnter: () => {
+            whySection.classList.add('visible');
+            whySection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+              runScramble(el, idx * 250);
+            });
+          }
+        });
+      }
+
+      // 6. Verify Section reveals & 3D tilt
+      if (verifySection) {
+        const verifyLeft = verifySection.querySelector('.verify-left');
+        if (verifyLeft) {
+          gsap.fromTo(verifyLeft,
+            { opacity: 0, x: -80, filter: "blur(8px)" },
+            {
+              opacity: 1,
+              x: 0,
+              filter: "blur(0px)",
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: verifySection,
+                start: "top 85%",
+                end: "top 50%",
+                scrub: 0.5
+              }
+            }
+          );
+        }
+
+        if (verifyCard) {
+          const verifyTimeline = gsap.timeline({
+            scrollTrigger: {
+              trigger: verifySection,
+              start: "top 85%",
+              end: "bottom top",
+              scrub: 0.5,
+              onEnter: () => {
+                verifySection.classList.add('visible');
+                triggerVerificationCodeScramble();
+                triggerStatsCountUp();
+              }
+            }
+          });
+
+          // Phase 1: Entrance reveal (fast unroll & fade-in)
+          verifyTimeline.fromTo(verifyCard,
+            { 
+              opacity: 0, 
+              scale: 0.9, 
+              filter: "blur(8px)", 
+              clipPath: "inset(0 100% 0 0)",
+              rotationY: 25,
+              rotationX: 12,
+              transformPerspective: 1000
+            },
+            {
+              opacity: 1,
+              scale: 1,
+              filter: "blur(0px)",
+              clipPath: "inset(0 0% 0 0)",
+              rotationY: -8,
+              rotationX: 3,
+              duration: 1,
+              ease: "power2.out"
+            }
+          );
+
+          // Phase 2: Continuous 3D tilt as scrolling past
+          verifyTimeline.to(verifyCard, {
+            rotationY: -26,
+            rotationX: -6,
+            scale: 0.98,
+            duration: 2,
+            ease: "none"
+          });
+        }
+      }
+
+      // 7. Contact Section reveal
+      if (contactSection) {
+        const content = contactSection.querySelector('.reveal-content');
+        if (content) {
+          gsap.fromTo(content,
+            { opacity: 0, scale: 0.92, y: 100, filter: "blur(10px)" },
+            {
+              opacity: 1,
+              scale: 1,
+              y: 0,
+              filter: "blur(0px)",
+              ease: "power2.out",
+              scrollTrigger: {
+                trigger: contactSection,
+                start: "top 90%",
+                end: "top 60%",
+                scrub: 0.5,
+                onEnter: () => contactSection.classList.add('visible')
+              }
+            }
+          );
+        }
+      }
+    }
+  });
+
+  // Mobile stacked vertical reveals
+  mm.add("(max-width: 900px)", () => {
+    // Reset horizontal wrapper heights
+    if (wrapper) wrapper.style.height = 'auto';
+    if (track) track.style.transform = 'none';
+
+    // 1. Services Section vertical reveals
+    if (servicesSection && serviceCards.length > 0) {
+      gsap.set(serviceCards, { opacity: 0, y: 40, filter: "blur(6px)" });
+      gsap.to(serviceCards, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: servicesSection,
+          start: "top 80%"
+        }
+      });
+      ScrollTrigger.create({
+        trigger: servicesSection,
+        start: "top 75%",
+        onEnter: () => {
+          servicesSection.classList.add('visible');
+          servicesSection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+            runScramble(el, idx * 250);
+          });
+        }
+      });
+    }
+
+    // 2. Process Section vertical reveals
+    if (processSection && processSteps.length > 0) {
+      gsap.set(processSteps, { opacity: 0, y: 40, filter: "blur(6px)" });
+      gsap.to(processSteps, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: processSection,
+          start: "top 80%"
+        }
+      });
+      ScrollTrigger.create({
+        trigger: processSection,
+        start: "top 75%",
+        onEnter: () => {
+          processSection.classList.add('visible');
+          processSection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+            runScramble(el, idx * 250);
+          });
+        }
+      });
+    }
+
+    // 3. Why Section vertical reveals
+    if (whySection && whyItems.length > 0) {
+      gsap.set(whyItems, { opacity: 0, y: 40, filter: "blur(6px)" });
+      gsap.to(whyItems, {
+        opacity: 1,
+        y: 0,
+        filter: "blur(0px)",
+        stagger: 0.1,
+        duration: 0.8,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: whySection,
+          start: "top 80%"
+        }
+      });
+      ScrollTrigger.create({
+        trigger: whySection,
+        start: "top 75%",
+        onEnter: () => {
+          whySection.classList.add('visible');
+          whySection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+            runScramble(el, idx * 250);
+          });
+        }
+      });
+    }
+
+    // 4. Verify Section vertical reveals
+    if (verifySection) {
+      const verifyLeft = verifySection.querySelector('.verify-left');
+      const verifyElements = [];
+      if (verifyLeft) verifyElements.push(verifyLeft);
+      if (verifyCard) verifyElements.push(verifyCard);
+      
+      if (verifyElements.length > 0) {
+        gsap.set(verifyElements, { opacity: 0, y: 40, filter: "blur(6px)" });
+        gsap.to(verifyElements, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          stagger: 0.15,
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: verifySection,
+            start: "top 80%",
+            onEnter: () => {
+              verifySection.classList.add('visible');
+              triggerVerificationCodeScramble();
+              triggerStatsCountUp();
+            }
+          }
         });
       }
     }
 
-    // 3. Why Us Cards Orbit (bound to vertical scroll)
-    if (whySection) {
-      const rect = whySection.getBoundingClientRect();
-      const vh = window.innerHeight;
-      if (rect.top < vh && rect.bottom > 0) {
-        whyItems.forEach((item, index) => {
-          if (item.matches(':hover')) return;
-          const factor = (index + 1) * 0.1;
-          const translate = Math.max(0, rect.top) * factor;
-          const rotate = Math.min(10, Math.max(0, rect.top) * 0.02);
-          item.style.transform = `translate3d(0, ${translate}px, 0) rotateX(${rotate}deg)`;
+    // 5. Contact Section vertical reveal
+    if (contactSection) {
+      const content = contactSection.querySelector('.reveal-content');
+      if (content) {
+        gsap.set(content, { opacity: 0, y: 40, filter: "blur(6px)" });
+        gsap.to(content, {
+          opacity: 1,
+          y: 0,
+          filter: "blur(0px)",
+          duration: 0.8,
+          ease: "power3.out",
+          scrollTrigger: {
+            trigger: contactSection,
+            start: "top 80%",
+            onEnter: () => contactSection.classList.add('visible')
+          }
         });
       }
     }
-  }
-  
-  const wrapper = document.getElementById('horizontalScrollWrapper');
-  const track = document.getElementById('horizontalTrack');
-
-  function setHorizontalScrollHeight() {
-    if (window.innerWidth > 900 && wrapper && track) {
-      const maxTranslate = track.scrollWidth - window.innerWidth;
-      wrapper.style.height = (maxTranslate + window.innerHeight) + 'px';
-    } else if (wrapper) {
-      wrapper.style.height = 'auto';
-    }
-  }
-
-  function handleScrollAndParallax() {
-    updateScrollProgress();
-    
-    if (window.innerWidth > 900 && wrapper && track) {
-      const rect = wrapper.getBoundingClientRect();
-      const scrolled = -rect.top;
-      const maxTranslate = track.scrollWidth - window.innerWidth;
-      const translate = Math.max(0, Math.min(maxTranslate, scrolled));
-      track.style.transform = `translate3d(${-translate}px, 0, 0)`;
-    }
-    
-    updateParallax();
-    animateScrollLinked();
-    checkReveals();
-  }
-
-  // Bind events
-  window.addEventListener('scroll', handleScrollAndParallax, { passive: true });
-  window.addEventListener('resize', () => {
-    setHorizontalScrollHeight();
-    handleScrollAndParallax();
   });
-  window.addEventListener('load', () => {
-    setHorizontalScrollHeight();
-    handleScrollAndParallax();
-  });
-  
-  // Initial setup
-  setTimeout(() => {
-    setHorizontalScrollHeight();
-    handleScrollAndParallax();
-  }, 100);
 
-  // Anchor links horizontal / vertical smooth scrolls
+  // 6. Anchor links horizontal / vertical smooth scrolls using browser smooth scroll
   document.querySelectorAll('nav a, footer a').forEach(anchor => {
     anchor.addEventListener('click', function(e) {
       const href = this.getAttribute('href');
@@ -3065,11 +3476,10 @@
           let targetY = 0;
           
           if (isDesktop) {
-            if (wrapper && track && (target.id === 'services' || target.classList.contains('hero'))) {
-              // Target is in horizontal scroll part
+            if (wrapper && track && (target.id === 'services' || target.id === 'process' || target.classList.contains('hero'))) {
+              // Calculate correct scroll offset inside pinned track
               targetY = wrapper.offsetTop + target.offsetLeft;
             } else {
-              // Target is in normal vertical part
               targetY = target.offsetTop;
             }
           } else {
@@ -3120,99 +3530,13 @@
     document.querySelectorAll('[data-target]').forEach(countUp);
   }
 
-  // Reveal on scroll (lazy dynamic assembly)
-  function checkReveals() {
-    const winWidth = window.innerWidth;
-    const isDesktop = winWidth > 900;
-    
-    // We trigger animations later:
-    // On desktop:
-    // - For horizontal track sections: when the section's left edge < 25vw
-    // - For vertical page sections: when the section's top edge < 65vh
-    // On mobile: when the section's top edge < 55vh
-    const isVisible = isDesktop 
-      ? (sec => {
-          const rect = sec.getBoundingClientRect();
-          if (sec.closest('.horizontal-track')) {
-            return rect.left < winWidth * 0.25;
-          } else {
-            return rect.top < window.innerHeight * 0.65;
-          }
-        })
-      : (sec => {
-          const rect = sec.getBoundingClientRect();
-          return rect.top < window.innerHeight * 0.55;
-        });
-
-    document.querySelectorAll('.reveal').forEach(sec => {
-      if (isVisible(sec)) {
-        if (!sec.classList.contains('visible')) {
-          sec.classList.add('visible');
-          
-          // Trigger scramble animations inside this section
-          sec.querySelectorAll('[data-scramble]').forEach((el, idx) => {
-            runScramble(el, idx * 250);
-          });
-          
-          // Synchronized late triggers for the verify section
-          if (sec.id === 'verify') {
-            triggerVerificationCodeScramble();
-            triggerStatsCountUp();
-          }
-          
-          // Add revealed class after animations complete to clear transition delays
-          setTimeout(() => {
-            sec.classList.add('revealed');
-          }, 2500);
-        }
-      }
-    });
-  }
-
-  // Verification card — клик открывает реестр + копирует номер
-  const verifyHint = document.getElementById('verifyHint');
-  if (verifyCard) {
-    const REGISTRY_URL = 'https://diploma.itstep.org/';
-    const CODE = 'KVY-017627';
-    const hintDefault = verifyHint ? verifyHint.innerHTML : '';
-
-    async function doVerify() {
-      try {
-        await navigator.clipboard.writeText(CODE);
-        if (verifyHint) {
-          verifyHint.classList.add('copied');
-          verifyHint.innerHTML = '✓ Номер ' + CODE + ' скопирован — вставьте в поле';
-          setTimeout(() => {
-            verifyHint.classList.remove('copied');
-            verifyHint.innerHTML = hintDefault;
-          }, 4000);
-        }
-      } catch (err) { /* буфер недоступен — просто откроем реестр */ }
-      window.open(REGISTRY_URL, '_blank', 'noopener');
-    }
-
-    verifyCard.addEventListener('click', doVerify);
-    verifyCard.addEventListener('keydown', e => {
-      if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); doVerify(); }
-    });
-  }
-
-  // Вращение карточки сертификата по мере скролла
-  if (verifyCard && !reduceMotion) {
-    let cardTilt = 0;
-    function rotateCard() {
-      const rect = verifyCard.getBoundingClientRect();
-      const vh = window.innerHeight;
-      // прогресс прохождения карточки через вьюпорт: -1 .. 1
-      const center = rect.top + rect.height / 2;
-      const progress = (center - vh / 2) / vh;   // 0 когда по центру экрана
-      cardTilt = progress * 22;                   // максимум ~22deg наклона
-      verifyCard.style.transform =
-        `perspective(1000px) rotateY(${cardTilt}deg) rotateX(${progress * -6}deg)`;
-    }
-    window.addEventListener('scroll', rotateCard, { passive: true });
-    rotateCard();
-  }
+  // Refresh ScrollTrigger to calculate offsets correctly on load
+  window.addEventListener('load', () => {
+    ScrollTrigger.refresh();
+  });
+  setTimeout(() => {
+    ScrollTrigger.refresh();
+  }, 300);
 
   // Count up
   function countUp(el) {
@@ -3827,6 +4151,112 @@
       requestAnimationFrame(rotate);
     }
     requestAnimationFrame(rotate);
+  })();
+
+  // ---- 3D Sphere Reviews Shooting Animation ----
+  (function() {
+    const reviewsContainer = document.getElementById('heroReviews');
+    const svg = document.getElementById('reviewsLinesSvg');
+    if (!reviewsContainer || !svg) return;
+
+    const bubbles = reviewsContainer.querySelectorAll('.review-bubble');
+
+    function initShoot() {
+      const cx = window.innerWidth / 2;
+      const cy = window.innerHeight / 2;
+
+      bubbles.forEach(bubble => {
+        const rxStr = (bubble.style.getPropertyValue('--rx') || '0vw').trim();
+        const ryStr = (bubble.style.getPropertyValue('--ry') || '0vh').trim();
+        const delay = parseFloat(bubble.style.getPropertyValue('--delay') || '1');
+
+        const rxVal = parseFloat(rxStr);
+        const ryVal = parseFloat(ryStr);
+
+        const txOffset = (window.innerWidth * rxVal) / 100;
+        const tyOffset = (window.innerHeight * ryVal) / 100;
+
+        const tx = cx + txOffset;
+        const ty = cy + tyOffset;
+
+        const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+        line.setAttribute('x1', cx);
+        line.setAttribute('y1', cy);
+        line.setAttribute('x2', cx);
+        line.setAttribute('y2', cy);
+        line.setAttribute('class', 'review-shoot-line');
+        svg.appendChild(line);
+
+        gsap.set(bubble, {
+          "--rx": "0vw",
+          "--ry": "0vh",
+          "--bubble-scale": 0.1,
+          "--float-y": "0px",
+          opacity: 0,
+          filter: "blur(6px)"
+        });
+
+        const tl = gsap.timeline({ delay: delay });
+
+        tl.to(line, {
+          opacity: 0.8,
+          attr: { x2: tx, y2: ty },
+          duration: 0.45,
+          ease: "power2.out"
+        }, 0);
+
+        tl.to(bubble, {
+          "--rx": rxStr,
+          "--ry": ryStr,
+          "--bubble-scale": 1,
+          opacity: 1,
+          filter: "blur(0px)",
+          duration: 0.85,
+          ease: "power4.out"
+        }, 0.08);
+
+        tl.to(line, {
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.in",
+          onComplete: () => line.remove()
+        }, 0.45);
+
+        tl.add(() => {
+          gsap.to(bubble, {
+            "--float-y": "-8px",
+            duration: 3,
+            repeat: -1,
+            yoyo: true,
+            ease: "sine.inOut"
+          });
+        });
+
+        bubble.addEventListener('mouseenter', () => {
+          gsap.to(bubble, {
+            "--bubble-scale": 1.05,
+            borderColor: "rgba(255, 255, 255, 0.15)",
+            backgroundColor: "rgba(13, 13, 15, 0.7)",
+            duration: 0.3,
+            overwrite: "auto"
+          });
+        });
+
+        bubble.addEventListener('mouseleave', () => {
+          gsap.to(bubble, {
+            "--bubble-scale": 1.0,
+            borderColor: "rgba(255, 255, 255, 0.05)",
+            backgroundColor: "rgba(13, 13, 15, 0.45)",
+            duration: 0.3,
+            overwrite: "auto"
+          });
+        });
+      });
+    }
+
+    window.addEventListener('load', () => {
+      setTimeout(initShoot, 100);
+    });
   })();
 </script>
 
