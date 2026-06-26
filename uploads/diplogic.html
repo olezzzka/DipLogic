@@ -38,6 +38,21 @@
     --btn-sec-border: rgba(255, 255, 255, 0.05);
     --btn-sec-border-hover: rgba(255, 255, 255, 0.25);
     --btn-sec-spotlight: radial-gradient(80px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.12) 0%, transparent 100%);
+
+    /* CARDS DEFAULT DESIGN (Obsidian Tech) */
+    --card-bg: linear-gradient(180deg, #131315 0%, #0c0c0d 100%);
+    --card-border: rgba(255, 255, 255, 0.04);
+    --card-border-hover: rgba(255, 255, 255, 0.15);
+    --card-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+    --card-shadow-hover: 0 8px 30px rgba(0, 0, 0, 0.7);
+    --card-spotlight-border: radial-gradient(180px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.12) 0%, transparent 60%);
+    --card-spotlight-bg: radial-gradient(150px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.02) 0%, transparent 70%);
+
+    /* ACCENTS & GRAPHICS */
+    --theme-accent: #ffffff;
+    --theme-accent-rgb: 255, 255, 255;
+    --grid-color: rgba(255, 255, 255, 0.05);
+    --cursor-glow-bg: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
   }
 
   /* CYBER GLOW DESIGN OVERRIDES */
@@ -55,6 +70,21 @@
     --btn-sec-border: rgba(6, 182, 212, 0.1);
     --btn-sec-border-hover: rgba(6, 182, 212, 0.3);
     --btn-sec-spotlight: radial-gradient(100px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(6, 182, 212, 0.15) 0%, transparent 100%);
+
+    /* CARDS */
+    --card-bg: #0a0a0d;
+    --card-border: rgba(139, 92, 246, 0.1);
+    --card-border-hover: rgba(6, 182, 212, 0.3);
+    --card-shadow: 0 0 10px rgba(139, 92, 246, 0.02);
+    --card-shadow-hover: 0 0 30px rgba(139, 92, 246, 0.08), 0 0 15px rgba(6, 182, 212, 0.04);
+    --card-spotlight-border: radial-gradient(200px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(167, 139, 250, 0.25) 0%, rgba(34, 211, 238, 0.15) 50%, transparent 100%);
+    --card-spotlight-bg: radial-gradient(180px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(139, 92, 246, 0.04) 0%, transparent 70%);
+
+    /* ACCENTS & GRAPHICS */
+    --theme-accent: #a78bfa;
+    --theme-accent-rgb: 167, 139, 250;
+    --grid-color: rgba(139, 92, 246, 0.08);
+    --cursor-glow-bg: radial-gradient(circle, rgba(139, 92, 246, 0.08) 0%, rgba(6, 182, 212, 0.04) 40%, transparent 70%);
   }
 
   /* GLASSMORPHIC FROST DESIGN OVERRIDES */
@@ -73,6 +103,21 @@
     --btn-sec-border: rgba(255, 255, 255, 0.04);
     --btn-sec-border-hover: rgba(255, 255, 255, 0.2);
     --btn-sec-spotlight: radial-gradient(80px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.08) 0%, transparent 100%);
+
+    /* CARDS */
+    --card-bg: rgba(255, 255, 255, 0.015);
+    --card-border: rgba(255, 255, 255, 0.04);
+    --card-border-hover: rgba(255, 255, 255, 0.2);
+    --card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+    --card-shadow-hover: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
+    --card-spotlight-border: radial-gradient(150px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.25) 0%, transparent 70%);
+    --card-spotlight-bg: radial-gradient(150px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.03) 0%, transparent 70%);
+
+    /* ACCENTS & GRAPHICS */
+    --theme-accent: #f5f5f5;
+    --theme-accent-rgb: 245, 245, 245;
+    --grid-color: rgba(255, 255, 255, 0.08);
+    --cursor-glow-bg: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 60%);
   }
 
   html {
@@ -189,7 +234,7 @@
     pointer-events: none;
     z-index: 1;
     transform: translate(-50%, -50%);
-    background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 60%);
+    background: var(--cursor-glow-bg);
     mix-blend-mode: screen;
   }
 
@@ -532,32 +577,91 @@
 
   .services-grid {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    border: 1px solid var(--gray-800);
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
   }
+  
   .service-card {
     padding: 48px;
-    border-right: 1px solid var(--gray-800);
-    border-bottom: 1px solid var(--gray-800);
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    border-radius: 12px;
     position: relative;
     overflow: hidden;
-    transition: background 0.3s;
     transform-style: preserve-3d;
     will-change: transform;
     cursor: pointer;
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    transition: 
+      transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), 
+      border-color 0.3s ease, 
+      box-shadow 0.3s ease, 
+      background-color 0.3s ease;
   }
-  .service-card:nth-child(2n) { border-right: none; }
-  .service-card:nth-last-child(-n+2) { border-bottom: none; }
-  .service-card::after {
+  
+  /* Bento column spans */
+  .service-card:nth-child(1),
+  .service-card:nth-child(4) {
+    grid-column: span 2;
+  }
+  .service-card:nth-child(2),
+  .service-card:nth-child(3) {
+    grid-column: span 1;
+  }
+  
+  @media (max-width: 900px) {
+    .services-grid {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+    .service-card {
+      grid-column: span 1 !important;
+      padding: 32px;
+    }
+  }
+
+  /* CARD SPOTLIGHTS FOR ALL CARDS */
+  .service-card::before, .verify-card::before, .process-step::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--card-spotlight-border);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 2;
+  }
+
+  .service-card::after, .verify-card::after, .process-step::after {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--gray-900);
-    opacity: 0;
-    transition: opacity 0.3s;
+    border-radius: inherit;
+    background: var(--card-spotlight-bg);
     pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: -1;
   }
-  .service-card:hover::after { opacity: 1; }
+
+  @media (hover: hover) and (pointer: fine) {
+    .service-card:hover::before, .verify-card:hover::before, .process-step:hover::before,
+    .service-card:hover::after, .verify-card:hover::after, .process-step:hover::after {
+      opacity: 1;
+    }
+    .service-card:hover, .verify-card:hover, .process-step:hover {
+      border-color: transparent;
+      box-shadow: var(--card-shadow-hover);
+    }
+  }
+
   .service-card > * { position: relative; z-index: 1; transform: translateZ(20px); }
 
   .service-num {
@@ -569,7 +673,8 @@
   .service-icon {
     width: 52px; height: 52px;
     margin-bottom: 24px;
-    color: var(--white);
+    color: var(--theme-accent);
+    transition: color 0.3s;
   }
   .service-name {
     font-size: 28px;
@@ -606,14 +711,28 @@
   .process-steps {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: 0;
-    border-top: 1px solid var(--gray-800);
+    gap: 20px;
   }
   .process-step {
-    padding: 48px 40px;
-    border-right: 1px solid var(--gray-800);
+    padding: 40px 32px;
+    position: relative;
+    border-radius: 12px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    transition: 
+      border-color 0.3s ease, 
+      box-shadow 0.3s ease, 
+      background-color 0.3s ease;
   }
-  .process-step:last-child { border-right: none; }
+  @media (max-width: 900px) {
+    .process-steps {
+      grid-template-columns: 1fr;
+      gap: 16px;
+    }
+  }
   .step-num {
     font-family: var(--font-mono);
     font-size: 13px;
@@ -701,20 +820,23 @@
   }
   /* Verification card — терминал проверки */
   .verify-card {
-    border: 1px solid var(--gray-700);
-    border-radius: 4px;
-    background: linear-gradient(160deg, var(--gray-900), var(--black));
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
+    background: var(--card-bg);
     overflow: hidden;
     position: relative;
     cursor: pointer;
-    transition: border-color 0.3s, box-shadow 0.3s;
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    transition: 
+      border-color 0.3s ease, 
+      box-shadow 0.3s ease, 
+      background-color 0.3s ease,
+      transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
     transform-style: preserve-3d;
     will-change: transform;
   }
-  .verify-card:hover,
   .verify-card:focus-visible {
-    border-color: var(--gray-400);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
     outline: none;
   }
   .verify-cta-hint {
@@ -1223,12 +1345,14 @@
     width: 100%;
     max-width: 1080px;
     max-height: 88vh;
-    background: var(--black);
-    border: 1px solid var(--gray-700);
-    border-radius: 8px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 12px;
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
     will-change: transform, opacity;
   }
   .modal-head {
@@ -1236,26 +1360,26 @@
     align-items: center;
     justify-content: space-between;
     padding: 20px 28px;
-    border-bottom: 1px solid var(--gray-800);
+    border-bottom: 1px solid var(--card-border);
     flex-shrink: 0;
   }
   .modal-head-left { display: flex; align-items: center; gap: 14px; }
   .modal-tag {
     font-family: var(--font-mono);
     font-size: 11px;
-    color: var(--gray-700);
+    color: var(--gray-400);
     letter-spacing: 0.08em;
     text-transform: uppercase;
     padding: 4px 10px;
-    border: 1px solid var(--gray-800);
-    border-radius: 2px;
+    border: 1px solid var(--card-border);
+    border-radius: 4px;
   }
   .modal-title { font-size: 19px; font-weight: 600; letter-spacing: -0.02em; }
   .modal-close {
     width: 38px; height: 38px;
-    border: 1px solid var(--gray-700);
+    border: 1px solid var(--card-border);
     background: transparent;
-    border-radius: 3px;
+    border-radius: 6px;
     color: var(--gray-400);
     cursor: pointer;
     display: flex;
@@ -2675,7 +2799,9 @@
       ctx.beginPath();
       ctx.moveTo(p1.projX, p1.projY);
       ctx.lineTo(p2.projX, p2.projY);
-      ctx.strokeStyle = `rgba(255, 255, 255, ${Math.max(0.01, Math.min(0.5, alpha))})`;
+      
+      const accentRgb = getComputedStyle(document.body).getPropertyValue('--theme-accent-rgb') || '255, 255, 255';
+      ctx.strokeStyle = `rgba(${accentRgb}, ${Math.max(0.01, Math.min(0.5, alpha))})`;
       ctx.lineWidth = 0.8;
       ctx.stroke();
     }
@@ -2821,7 +2947,8 @@
       currentForce += (mouseForce - currentForce) * 0.08;
       
       ctx.clearRect(0, 0, width, height);
-      ctx.strokeStyle = 'rgba(255, 255, 255, 0.07)';
+      const gridColor = getComputedStyle(document.body).getPropertyValue('--grid-color') || 'rgba(255, 255, 255, 0.07)';
+      ctx.strokeStyle = gridColor;
       ctx.lineWidth = 1;
       
       // Draw vertical lines
@@ -2952,27 +3079,27 @@
 <script>
   // Unified mouse spotlight tracking and magnetic effect
   if (!isTouch) {
-    const buttons = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary');
-    buttons.forEach(btn => {
-      btn.addEventListener('mousemove', e => {
-        const rect = btn.getBoundingClientRect();
+    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card');
+    cards.forEach(card => {
+      card.addEventListener('mousemove', e => {
+        const rect = card.getBoundingClientRect();
         const x = e.clientX - rect.left;
         const y = e.clientY - rect.top;
         
-        btn.style.setProperty('--mouse-x', x + 'px');
-        btn.style.setProperty('--mouse-y', y + 'px');
+        card.style.setProperty('--mouse-x', x + 'px');
+        card.style.setProperty('--mouse-y', y + 'px');
 
-        if (btn.classList.contains('magnetic') && !reduceMotion) {
+        if (card.classList.contains('magnetic') && !reduceMotion) {
           const mx = x - rect.width / 2;
           const my = y - rect.height / 2;
-          btn.style.setProperty('--magnetic-x', `${mx * 0.15}px`);
-          btn.style.setProperty('--magnetic-y', `${my * 0.15}px`);
+          card.style.setProperty('--magnetic-x', `${mx * 0.15}px`);
+          card.style.setProperty('--magnetic-y', `${my * 0.15}px`);
         }
       });
 
-      btn.addEventListener('mouseleave', () => {
-        btn.style.setProperty('--magnetic-x', '0px');
-        btn.style.setProperty('--magnetic-y', '0px');
+      card.addEventListener('mouseleave', () => {
+        card.style.setProperty('--magnetic-x', '0px');
+        card.style.setProperty('--magnetic-y', '0px');
       });
     });
   }
