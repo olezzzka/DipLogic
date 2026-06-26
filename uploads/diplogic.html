@@ -324,40 +324,66 @@
     to { opacity: 1; transform: translateY(0); }
   }
 
-  /* MARQUEE */
+  /* 3D CYLINDER CAROUSEL */
   .marquee-wrap {
     border-top: 1px solid var(--gray-800);
     border-bottom: 1px solid var(--gray-800);
-    padding: 18px 0;
+    padding: 36px 0;
     overflow: hidden;
-    white-space: nowrap;
+    background: var(--black);
     position: relative;
     z-index: 2;
-    background: var(--black);
-  }
-  .marquee-track {
-    display: inline-flex;
-    animation: marquee 20s linear infinite;
-  }
-  .marquee-track:hover { animation-play-state: paused; }
-  .marquee-item {
-    display: inline-flex;
+    display: flex;
+    justify-content: center;
     align-items: center;
-    gap: 24px;
-    padding: 0 40px;
-    font-size: 15px;
+    perspective: 1200px;
+    height: 130px;
+  }
+  .cylinder-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform-style: preserve-3d;
+  }
+  .cylinder-track {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    width: 220px;
+    height: 48px;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+  .cylinder-item {
+    position: absolute;
+    width: 220px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(8, 8, 8, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    color: var(--gray-300);
     font-family: var(--font-mono);
-    color: var(--gray-400);
-    letter-spacing: 0.06em;
+    font-size: 13px;
     text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border-radius: 4px;
+    backface-visibility: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4);
+    will-change: transform;
   }
-  .marquee-dot {
-    width: 4px; height: 4px;
-    background: var(--gray-700);
+  .cylinder-item::before {
+    content: '';
+    width: 5px; height: 5px;
+    background: var(--white);
     border-radius: 50%;
-    flex-shrink: 0;
+    margin-right: 12px;
+    box-shadow: 0 0 8px var(--white);
   }
-  @keyframes marquee { from { transform: translateX(0) } to { transform: translateX(-50%) } }
 
   /* SECTION */
   section { padding: 130px 48px; position: relative; z-index: 2; background: var(--black); }
@@ -836,15 +862,36 @@
     font-family: var(--font-mono);
   }
 
-  /* REVEAL */
+  /* REVEAL & TECH BORDER-DRAW */
   .reveal {
     opacity: 0;
-    transform: translateY(32px);
-    transition: opacity 0.7s ease, transform 0.7s ease;
+    transition: opacity 1s cubic-bezier(0.16, 1, 0.3, 1);
+    position: relative;
   }
   .reveal.visible {
     opacity: 1;
-    transform: translateY(0);
+  }
+  .reveal::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 1px;
+    background: var(--gray-800);
+    transition: width 1.2s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  .reveal.visible::before {
+    width: 100%;
+  }
+
+  .reveal-content {
+    clip-path: inset(0 100% 0 0);
+    transition: clip-path 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.2s;
+  }
+  .reveal.visible .reveal-content {
+    clip-path: inset(0 0 0 0);
   }
 
   /* MOBILE */
@@ -900,10 +947,8 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    transform: translateY(30px) scale(0.98);
-    transition: transform 0.4s cubic-bezier(0.2, 0.9, 0.3, 1);
+    will-change: transform, opacity;
   }
-  .modal-overlay.open .modal { transform: translateY(0) scale(1); }
   .modal-head {
     display: flex;
     align-items: center;
@@ -1269,27 +1314,15 @@
 
 <!-- MARQUEE -->
 <div class="marquee-wrap">
-  <div class="marquee-track">
-    <span class="marquee-item">Лендинги <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Визитки <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Интернет-магазины <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Приложения <span class="marquee-dot"></span></span>
-    <span class="marquee-item">SEO-оптимизация <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Дизайн под ключ <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Быстрая загрузка <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Лендинги <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Визитки <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Интернет-магазины <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Приложения <span class="marquee-dot"></span></span>
-    <span class="marquee-item">SEO-оптимизация <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Дизайн под ключ <span class="marquee-dot"></span></span>
-    <span class="marquee-item">Быстрая загрузка <span class="marquee-dot"></span></span>
+  <div class="cylinder-container" id="cylinderContainer">
+    <div class="cylinder-track" id="cylinderTrack"></div>
   </div>
 </div>
 
 <!-- SERVICES -->
 <section class="services reveal" id="services">
-  <div class="services-header">
+  <div class="reveal-content">
+    <div class="services-header">
     <h2 class="services-title">Что мы<br>делаем</h2>
     <p class="services-intro">
       Каждый проект — это диалог. Мы не просто верстаем макеты, мы вникаем в ваш бизнес и создаём инструмент, который решает реальные задачи.
@@ -1365,11 +1398,13 @@
       </span>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- PROCESS -->
 <section class="process reveal" id="process">
-  <div class="section-label">Как мы работаем</div>
+  <div class="reveal-content">
+    <div class="section-label">Как мы работаем</div>
   <h2 class="process-title">Четыре шага от идеи до запуска</h2>
   <div class="process-steps">
     <div class="process-step">
@@ -1393,11 +1428,13 @@
       <p class="step-desc">Публикуем, проверяем, передаём. И остаёмся на связи — не исчезаем после оплаты.</p>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- WHY -->
 <section class="why reveal" id="why">
-  <div class="why-inner">
+  <div class="reveal-content">
+    <div class="why-inner">
     <div>
       <div class="section-label">Почему мы</div>
       <h2 class="why-title">Не просто подрядчики</h2>
@@ -1433,11 +1470,13 @@
       </div>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- VERIFY -->
 <section class="verify reveal" id="verify">
-  <div class="verify-inner">
+  <div class="reveal-content">
+    <div class="verify-inner">
     <div class="verify-left">
       <div class="section-label">Квалификация</div>
       <h2 class="verify-headline">Подтверждённый профессионал</h2>
@@ -1495,11 +1534,13 @@
       </div>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- STATS -->
 <section class="stats reveal">
-  <div class="stats-inner">
+  <div class="reveal-content">
+    <div class="stats-inner">
     <div class="stat">
       <div class="stat-num" data-target="14">0</div>
       <div class="stat-label">Проектов запущено</div>
@@ -1513,11 +1554,13 @@
       <div class="stat-label">% возврат средств при срыве дедлайнов</div>
     </div>
   </div>
+  </div>
 </section>
 
 <!-- CTA -->
 <section class="cta-section reveal" id="contact">
-  <div class="cta-bg"></div>
+  <div class="reveal-content">
+    <div class="cta-bg"></div>
   <div class="cta-label">Начать сотрудничество</div>
   <h2 class="cta-title">
     Готовы обсудить<br>
@@ -1533,6 +1576,7 @@
     <a href="mailto:diplogic.2026@gmail.com" class="btn-secondary magnetic">
       Написать на почту
     </a>
+  </div>
   </div>
 </section>
 
@@ -1841,39 +1885,58 @@
     }, { passive: true });
   }
 
-  // Scramble text — построчно сверху вниз, весь цикл ~5 секунд
+  // Binary Decrypt Animation — построчное дешифрование слева направо
   if (!reduceMotion) {
-    const chars = '!<>-_\\/[]{}—=+*^?#αβγδλσπ01';
     const lines = [...document.querySelectorAll('[data-scramble]')]
       .sort((a, b) => (+a.dataset.line) - (+b.dataset.line));
 
-    lines.forEach(el => { el.dataset.final = el.textContent.trim(); el.textContent = ''; });
+    lines.forEach(el => {
+      el.dataset.final = el.textContent.trim();
+      el.textContent = '';
+    });
 
-    const TOTAL = 3000;          // вся анимация ~3 сек
     const startDelay = 400;
-    const perLine = TOTAL / lines.length;
+    const perLine = 500;
+    const lockSpeed = 35;
+    const binaryChars = '01█_#[]+*';
 
     lines.forEach((el, idx) => {
-      const finalText = el.dataset.final;
-      const duration = perLine * 0.9 + finalText.length * 4;
       const startAt = startDelay + idx * perLine;
       let startTime = null;
 
       function tick(now) {
         if (!startTime) startTime = now;
         const elapsed = now - startTime;
-        const progress = Math.min(elapsed / duration, 1);
-        const revealed = Math.floor(progress * finalText.length);
+
+        if (elapsed < startAt) {
+          requestAnimationFrame(tick);
+          return;
+        }
+
+        const activeTime = elapsed - startAt;
+        const finalText = el.dataset.final;
+        const length = finalText.length;
         let out = '';
-        for (let i = 0; i < finalText.length; i++) {
-          if (i < revealed || finalText[i] === ' ') out += finalText[i];
-          else out += chars[Math.floor(Math.random() * chars.length)];
+        let allLocked = true;
+
+        for (let i = 0; i < length; i++) {
+          const lockTime = i * lockSpeed;
+          if (activeTime >= lockTime || finalText[i] === ' ') {
+            out += finalText[i];
+          } else {
+            allLocked = false;
+            out += binaryChars[Math.floor(Math.random() * binaryChars.length)];
+          }
         }
         el.textContent = out;
-        if (progress < 1) requestAnimationFrame(tick);
-        else el.textContent = finalText;
+
+        if (!allLocked) {
+          requestAnimationFrame(tick);
+        } else {
+          el.textContent = finalText;
+        }
       }
-      setTimeout(() => requestAnimationFrame(tick), startAt);
+      requestAnimationFrame(tick);
     });
   }
 
@@ -1993,6 +2056,7 @@
 
   // ===== DEMO MODAL =====
   const overlay = document.getElementById('modalOverlay');
+  const modalEl = document.querySelector('.modal');
   const modalClose = document.getElementById('modalClose');
   const modalTitle = document.getElementById('modalTitle');
   const modalTag = document.getElementById('modalTag');
@@ -2006,39 +2070,87 @@
   };
 
   let lastFocus = null;
+  let activeCard = null;
 
-  function openDemo(type) {
+  function openDemo(type, card) {
     const meta = demoMeta[type];
     if (!meta) return;
+    activeCard = card;
+    
     modalTitle.textContent = meta.title;
     modalTag.textContent = meta.tag;
     frames.forEach(f => f.classList.toggle('active', f.dataset.frame === type));
-    overlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
+    
     lastFocus = document.activeElement;
-    modalClose.focus();
+
     if (type === 'app') initArb();
     if (type === 'shop') resetCart();
+
+    // FLIP First: Card dimensions before animation
+    const firstRect = card.getBoundingClientRect();
+
+    // Show overlay background
+    overlay.classList.add('open');
+
+    // FLIP Last: Modal dimensions
+    const lastRect = modalEl.getBoundingClientRect();
+
+    // FLIP Invert: Calculate transform difference
+    const deltaX = firstRect.left - lastRect.left;
+    const deltaY = firstRect.top - lastRect.top;
+    const deltaW = firstRect.width / lastRect.width;
+    const deltaH = firstRect.height / lastRect.height;
+
+    // Apply inverted transform instantly
+    modalEl.style.transformOrigin = 'top left';
+    modalEl.style.transition = 'none';
+    modalEl.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${deltaW}, ${deltaH})`;
+    modalEl.style.opacity = '0.3';
+
+    // Trigger repaint
+    modalEl.offsetHeight;
+
+    // FLIP Play: Animate back to original screen layout
+    modalEl.style.transition = 'transform 0.65s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease';
+    modalEl.style.transform = 'none';
+    modalEl.style.opacity = '1';
+    
+    document.body.style.overflow = 'hidden';
+    modalClose.focus();
   }
+
   function closeDemo() {
+    if (!activeCard) {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      return;
+    }
+
+    const firstRect = activeCard.getBoundingClientRect();
+    const lastRect = modalEl.getBoundingClientRect();
+
+    const deltaX = firstRect.left - lastRect.left;
+    const deltaY = firstRect.top - lastRect.top;
+    const deltaW = firstRect.width / lastRect.width;
+    const deltaH = firstRect.height / lastRect.height;
+
+    modalEl.style.transition = 'transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.4s ease';
+    modalEl.style.transform = `translate(${deltaX}px, ${deltaY}px) scale(${deltaW}, ${deltaH})`;
+    modalEl.style.opacity = '0.3';
     overlay.classList.remove('open');
-    document.body.style.overflow = '';
-    if (lastFocus) lastFocus.focus();
+
+    setTimeout(() => {
+      modalEl.style.transform = 'none';
+      modalEl.style.opacity = '1';
+      document.body.style.overflow = '';
+      if (lastFocus) lastFocus.focus();
+      activeCard = null;
+    }, 500);
   }
 
   document.querySelectorAll('[data-demo]').forEach(card => {
     card.addEventListener('click', () => {
-      if (card.dataset.demo === 'landing') {
-        window.open('aura.html', '_blank', 'noopener');
-      } else if (card.dataset.demo === 'card') {
-        window.open('../sitevisit/dist/index.html', '_blank', 'noopener');
-      } else if (card.dataset.demo === 'shop') {
-        window.open('../sitecard/index.html', '_blank', 'noopener');
-      } else if (card.dataset.demo === 'app') {
-        window.open('../appfit/index.html', '_blank', 'noopener');
-      } else {
-        openDemo(card.dataset.demo);
-      }
+      openDemo(card.dataset.demo, card);
     });
   });
   modalClose.addEventListener('click', closeDemo);
@@ -2475,6 +2587,62 @@
     }
     
     requestAnimationFrame(render);
+  })();
+
+  // ---- 3D Cylinder Carousel ----
+  (function() {
+    const track = document.getElementById('cylinderTrack');
+    if (!track) return;
+
+    const items = [
+      'Лендинги', 'Визитки', 'Интернет-магазины', 'Приложения', 
+      'SEO-оптимизация', 'Дизайн под ключ', 'Быстрая загрузка', 
+      'UI/UX дизайн', 'Веб-разработка', 'Интеграции API', 
+      'Аналитика', 'Поддержка'
+    ];
+
+    const n = items.length;
+    let radius = window.innerWidth < 768 ? 220 : 380;
+
+    function buildCylinder() {
+      track.innerHTML = '';
+      items.forEach((item, i) => {
+        const div = document.createElement('div');
+        div.className = 'cylinder-item';
+        div.textContent = item;
+        const angle = i * (360 / n);
+        div.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+        track.appendChild(div);
+      });
+    }
+
+    function handleResize() {
+      radius = window.innerWidth < 768 ? 220 : 380;
+      buildCylinder();
+    }
+
+    window.addEventListener('resize', handleResize);
+    buildCylinder();
+
+    let rotationY = 0;
+    const targetSpeed = 0.06; // continuous speed
+    let scrollVelocity = 0;
+    let lastScroll = window.scrollY;
+
+    window.addEventListener('scroll', () => {
+      const currentScroll = window.scrollY;
+      const diff = currentScroll - lastScroll;
+      scrollVelocity += diff * 0.02; // speed impulse on scroll
+      lastScroll = currentScroll;
+    }, { passive: true });
+
+    function rotate() {
+      scrollVelocity *= 0.94; // friction
+      rotationY += (targetSpeed + scrollVelocity);
+      track.style.transform = `rotateY(${-rotationY}deg)`;
+      requestAnimationFrame(rotate);
+    }
+    requestAnimationFrame(rotate);
   })();
 </script>
 </body>
