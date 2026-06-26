@@ -2150,7 +2150,15 @@
 
   document.querySelectorAll('[data-demo]').forEach(card => {
     card.addEventListener('click', () => {
-      openDemo(card.dataset.demo, card);
+      if (card.dataset.demo === 'landing') {
+        window.open('aura.html', '_blank', 'noopener');
+      } else if (card.dataset.demo === 'card') {
+        window.open('../sitevisit/dist/index.html', '_blank', 'noopener');
+      } else if (card.dataset.demo === 'shop') {
+        window.open('../sitecard/index.html', '_blank', 'noopener');
+      } else if (card.dataset.demo === 'app') {
+        window.open('../appfit/index.html', '_blank', 'noopener');
+      }
     });
   });
   modalClose.addEventListener('click', closeDemo);
