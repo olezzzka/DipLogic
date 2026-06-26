@@ -20,6 +20,59 @@
     --accent: #ffffff;
     --font-sans: 'Outfit', sans-serif;
     --font-mono: 'JetBrains Mono', monospace;
+
+    /* BUTTONS DEFAULT DESIGN (Obsidian Tech) */
+    --btn-bg: linear-gradient(180deg, #161618 0%, #0d0d0e 100%);
+    --btn-border-base: rgba(255, 255, 255, 0.1);
+    --btn-border-hover: rgba(255, 255, 255, 0.35);
+    --btn-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 1px 2px rgba(0, 0, 0, 0.4), 0 4px 20px rgba(0, 0, 0, 0.5);
+    --btn-shadow-hover: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 20px rgba(255, 255, 255, 0.08);
+    --btn-spotlight-color: rgba(255, 255, 255, 0.06);
+    --btn-spotlight-border: radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.05) 55%, transparent 100%);
+    --btn-shimmer: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.08) 45%, rgba(255, 255, 255, 0.15) 50%, rgba(255, 255, 255, 0.08) 55%, transparent 65%) -200% 0 / 200% 100% no-repeat;
+    --btn-text-color: var(--white);
+    --btn-scale-active: 0.96;
+    --btn-blur: 0px;
+
+    --btn-sec-bg: rgba(255, 255, 255, 0.02);
+    --btn-sec-border: rgba(255, 255, 255, 0.05);
+    --btn-sec-border-hover: rgba(255, 255, 255, 0.25);
+    --btn-sec-spotlight: radial-gradient(80px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.12) 0%, transparent 100%);
+  }
+
+  /* CYBER GLOW DESIGN OVERRIDES */
+  body.theme-btn-cyber {
+    --btn-bg: #09090b;
+    --btn-border-base: rgba(139, 92, 246, 0.15);
+    --btn-border-hover: rgba(139, 92, 246, 0.4);
+    --btn-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 0 10px rgba(139, 92, 246, 0.05);
+    --btn-shadow-hover: 0 0 25px rgba(139, 92, 246, 0.25), 0 0 10px rgba(6, 182, 212, 0.15);
+    --btn-spotlight-color: radial-gradient(100px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(139, 92, 246, 0.12) 0%, rgba(6, 182, 212, 0.08) 50%, transparent 100%);
+    --btn-spotlight-border: radial-gradient(120px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(167, 139, 250, 0.35) 0%, rgba(34, 211, 238, 0.25) 50%, transparent 100%);
+    --btn-shimmer: linear-gradient(110deg, transparent 35%, rgba(139, 92, 246, 0.12) 45%, rgba(6, 182, 212, 0.2) 50%, rgba(139, 92, 246, 0.12) 55%, transparent 65%) -200% 0 / 200% 100% no-repeat;
+
+    --btn-sec-bg: #09090b;
+    --btn-sec-border: rgba(6, 182, 212, 0.1);
+    --btn-sec-border-hover: rgba(6, 182, 212, 0.3);
+    --btn-sec-spotlight: radial-gradient(100px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(6, 182, 212, 0.15) 0%, transparent 100%);
+  }
+
+  /* GLASSMORPHIC FROST DESIGN OVERRIDES */
+  body.theme-btn-glass {
+    --btn-bg: rgba(255, 255, 255, 0.03);
+    --btn-border-base: rgba(255, 255, 255, 0.08);
+    --btn-border-hover: rgba(255, 255, 255, 0.35);
+    --btn-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+    --btn-shadow-hover: inset 0 1.5px 0 rgba(255, 255, 255, 0.2), 0 0 15px rgba(255, 255, 255, 0.1);
+    --btn-spotlight-color: rgba(255, 255, 255, 0.06);
+    --btn-spotlight-border: radial-gradient(90px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 50%, transparent 100%);
+    --btn-shimmer: linear-gradient(110deg, transparent 35%, rgba(255, 255, 255, 0.05) 45%, rgba(255, 255, 255, 0.18) 50%, rgba(255, 255, 255, 0.05) 55%, transparent 65%) -200% 0 / 200% 100% no-repeat;
+    --btn-blur: 12px;
+
+    --btn-sec-bg: rgba(255, 255, 255, 0.01);
+    --btn-sec-border: rgba(255, 255, 255, 0.04);
+    --btn-sec-border-hover: rgba(255, 255, 255, 0.2);
+    --btn-sec-spotlight: radial-gradient(80px circle at var(--mouse-x, 0px) var(--mouse-y, 0px), rgba(255, 255, 255, 0.08) 0%, transparent 100%);
   }
 
   html {
@@ -194,19 +247,87 @@
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--white); }
-  .nav-cta {
-    background: var(--white);
-    color: var(--black);
-    padding: 12px 26px;
-    border-radius: 2px;
-    font-size: 16px;
-    font-weight: 600;
+  .btn-primary, .nav-cta {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    background: var(--btn-bg);
+    background-clip: padding-box;
+    color: var(--btn-text-color) !important;
+    padding: 18px 36px;
+    border: 1px solid transparent;
+    font-size: 17px;
+    font-weight: 500;
     text-decoration: none;
-    transition: opacity 0.2s;
-    letter-spacing: 0.01em;
-    display: inline-block;
+    border-radius: 6px;
+    box-shadow: var(--btn-shadow);
+    letter-spacing: -0.01em;
+    will-change: transform;
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    
+    transform: translate(var(--magnetic-x, 0px), var(--magnetic-y, 0px)) scale(var(--btn-scale, 1));
+    transition: 
+      transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), 
+      border-color 0.3s ease, 
+      background-color 0.3s ease, 
+      box-shadow 0.3s ease;
   }
-  .nav-cta:hover { opacity: 0.85; }
+  
+  .nav-cta {
+    padding: 12px 26px;
+    font-size: 16px;
+    letter-spacing: 0.01em;
+  }
+
+  .btn-primary::before, .nav-cta::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--btn-spotlight-border);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 2;
+  }
+
+  .btn-primary::after, .nav-cta::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: var(--btn-spotlight-color);
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: -1;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .btn-primary:hover::before, .nav-cta:hover::before,
+    .btn-primary:hover::after, .nav-cta:hover::after {
+      opacity: 1;
+    }
+    .btn-primary:hover, .nav-cta:hover {
+      box-shadow: var(--btn-shadow-hover);
+      background-image: var(--btn-shimmer), var(--btn-bg);
+      animation: button-shimmer-sweep 1.8s infinite linear;
+    }
+  }
+
+  .btn-primary:active, .nav-cta:active {
+    --btn-scale: var(--btn-scale-active);
+    transition: transform 0.08s ease-out !important;
+  }
 
   /* HERO */
   .hero {
@@ -294,22 +415,6 @@
     align-items: flex-end;
     gap: 16px;
   }
-  .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--white);
-    color: var(--black);
-    padding: 18px 36px;
-    font-size: 17px;
-    font-weight: 600;
-    text-decoration: none;
-    border-radius: 2px;
-    transition: opacity 0.2s;
-    letter-spacing: -0.01em;
-    will-change: transform;
-  }
-  .btn-primary:hover { opacity: 0.88; }
   .btn-primary svg { transition: transform 0.2s; }
   .btn-primary:hover svg { transform: translateX(4px); }
   .hero-scroll-hint {
@@ -811,20 +916,197 @@
     position: relative;
   }
   .btn-secondary {
+    position: relative;
+    z-index: 1;
+    overflow: hidden;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 8px;
-    border: 1px solid var(--gray-700);
-    color: var(--gray-400);
+    background: var(--btn-sec-bg);
+    color: var(--gray-300) !important;
     padding: 18px 36px;
+    border: 1px solid var(--btn-sec-border);
     font-size: 17px;
     font-weight: 500;
     text-decoration: none;
-    border-radius: 2px;
-    transition: border-color 0.2s, color 0.2s;
+    border-radius: 6px;
     will-change: transform;
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    
+    transform: translate(var(--magnetic-x, 0px), var(--magnetic-y, 0px)) scale(var(--btn-scale, 1));
+    transition: 
+      transform 0.35s cubic-bezier(0.23, 1, 0.32, 1), 
+      border-color 0.3s ease, 
+      background-color 0.3s ease, 
+      box-shadow 0.3s ease, 
+      color 0.3s ease;
   }
-  .btn-secondary:hover { border-color: var(--gray-400); color: var(--white); }
+  .btn-secondary::before {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--btn-sec-spotlight);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    z-index: 2;
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .btn-secondary:hover::before {
+      opacity: 1;
+    }
+    .btn-secondary:hover {
+      border-color: var(--btn-sec-border-hover);
+      color: var(--white) !important;
+      background-image: var(--btn-shimmer), var(--btn-sec-bg);
+      animation: button-shimmer-sweep 1.8s infinite linear;
+    }
+  }
+  .btn-secondary:active {
+    --btn-scale: var(--btn-scale-active);
+    transition: transform 0.08s ease-out !important;
+  }
+
+  @keyframes button-shimmer-sweep {
+    0% { background-position: -200% 0, 0 0; }
+    100% { background-position: 200% 0, 0 0; }
+  }
+
+  /* CUSTOMIZER WIDGET styles */
+  .customizer-widget {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    z-index: 99999;
+    font-family: var(--font-sans);
+  }
+  .customizer-toggle {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: rgba(18, 18, 20, 0.85);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--white);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer !important;
+    transition: transform 0.3s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .customizer-toggle:hover {
+    transform: rotate(30deg) scale(1.05);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+  .customizer-toggle:active {
+    transform: scale(0.95);
+  }
+  
+  .customizer-panel {
+    position: absolute;
+    bottom: 65px;
+    right: 0;
+    width: 260px;
+    background: rgba(10, 10, 12, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 12px;
+    padding: 16px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    opacity: 0;
+    transform: translateY(10px) scale(0.95);
+    pointer-events: none;
+    transition: opacity 0.3s cubic-bezier(0.23, 1, 0.32, 1), transform 0.3s cubic-bezier(0.23, 1, 0.32, 1);
+    transform-origin: bottom right;
+  }
+  .customizer-panel.open {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: all;
+  }
+  .customizer-header h4 {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--white);
+    margin-bottom: 4px;
+    letter-spacing: -0.01em;
+  }
+  .customizer-header p {
+    font-size: 11px;
+    color: var(--gray-400);
+    margin-bottom: 16px;
+  }
+  .customizer-options {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .customizer-option {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(255, 255, 255, 0.03);
+    cursor: pointer !important;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray-400);
+    transition: all 0.2s ease;
+  }
+  .customizer-option:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+    color: var(--white);
+  }
+  .customizer-option.active {
+    background: rgba(255, 255, 255, 0.06);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--white);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  }
+  
+  .customizer-option .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    transition: transform 0.2s;
+  }
+  .customizer-option.active .dot {
+    transform: scale(1.2);
+  }
+  .dot.obsidian {
+    background: linear-gradient(135deg, #888, #222);
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.2);
+  }
+  .dot.cyber {
+    background: linear-gradient(135deg, #a78bfa, #22d3ee);
+    box-shadow: 0 0 6px rgba(139, 92, 246, 0.6);
+  }
+  .dot.glass {
+    background: linear-gradient(135deg, rgba(255,255,255,0.8), rgba(255,255,255,0.1));
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .customizer-widget, .customizer-widget *, .customizer-option {
+      cursor: auto !important;
+    }
+    .customizer-toggle, .customizer-toggle * {
+      cursor: pointer !important;
+    }
+  }
 
   /* FOOTER */
   footer {
@@ -1832,27 +2114,10 @@
   }
   if (!isTouch) animateCursor();
 
-  document.querySelectorAll('a, button, .service-card').forEach(el => {
+  document.querySelectorAll('a, button, .service-card, .customizer-option, .customizer-toggle').forEach(el => {
     el.addEventListener('mouseenter', () => ring.classList.add('hover'));
     el.addEventListener('mouseleave', () => ring.classList.remove('hover'));
   });
-
-  // Magnetic buttons
-  if (!isTouch && !reduceMotion) {
-    document.querySelectorAll('.magnetic').forEach(btn => {
-      btn.addEventListener('mousemove', e => {
-        const rect = btn.getBoundingClientRect();
-        const x = e.clientX - rect.left - rect.width / 2;
-        const y = e.clientY - rect.top - rect.height / 2;
-        btn.style.transition = 'transform 0.2s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        btn.style.transform = `translate(${x * 0.12}px, ${y * 0.12}px)`;
-      });
-      btn.addEventListener('mouseleave', () => {
-        btn.style.transition = 'transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1)';
-        btn.style.transform = 'translate(0, 0)';
-      });
-    });
-  }
 
   // Tilt cards
   if (!isTouch && !reduceMotion) {
@@ -2651,6 +2916,113 @@
       requestAnimationFrame(rotate);
     }
     requestAnimationFrame(rotate);
+  })();
+</script>
+
+<!-- INTERACTIVE STYLE CUSTOMIZER -->
+<div class="customizer-widget" id="customizerWidget">
+  <button class="customizer-toggle" id="customizerToggle" aria-label="Кастомизировать дизайн">
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M12 8C14.2091 8 16 9.79086 16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </button>
+  <div class="customizer-panel" id="customizerPanel">
+    <div class="customizer-header">
+      <h4>Дизайн кнопок</h4>
+      <p>Выбери стиль кнопок для всего сайта</p>
+    </div>
+    <div class="customizer-options">
+      <div class="customizer-option active" data-style="obsidian">
+        <span class="dot obsidian"></span>
+        <span>Obsidian Tech</span>
+      </div>
+      <div class="customizer-option" data-style="cyber">
+        <span class="dot cyber"></span>
+        <span>Cyber Glow</span>
+      </div>
+      <div class="customizer-option" data-style="glass">
+        <span class="dot glass"></span>
+        <span>Glass Frost</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Unified mouse spotlight tracking and magnetic effect
+  if (!isTouch) {
+    const buttons = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary');
+    buttons.forEach(btn => {
+      btn.addEventListener('mousemove', e => {
+        const rect = btn.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        
+        btn.style.setProperty('--mouse-x', x + 'px');
+        btn.style.setProperty('--mouse-y', y + 'px');
+
+        if (btn.classList.contains('magnetic') && !reduceMotion) {
+          const mx = x - rect.width / 2;
+          const my = y - rect.height / 2;
+          btn.style.setProperty('--magnetic-x', `${mx * 0.15}px`);
+          btn.style.setProperty('--magnetic-y', `${my * 0.15}px`);
+        }
+      });
+
+      btn.addEventListener('mouseleave', () => {
+        btn.style.setProperty('--magnetic-x', '0px');
+        btn.style.setProperty('--magnetic-y', '0px');
+      });
+    });
+  }
+
+  // ---- Interactive Customizer Panel ----
+  (function() {
+    const toggle = document.getElementById('customizerToggle');
+    const panel = document.getElementById('customizerPanel');
+    const options = document.querySelectorAll('.customizer-option');
+
+    // Toggle panel
+    toggle.addEventListener('click', e => {
+      e.stopPropagation();
+      panel.classList.toggle('open');
+    });
+
+    // Close panel on document click
+    document.addEventListener('click', () => {
+      panel.classList.remove('open');
+    });
+
+    panel.addEventListener('click', e => {
+      e.stopPropagation();
+    });
+
+    // Load initial preference
+    const savedStyle = localStorage.getItem('diplogic-button-style') || 'obsidian';
+    applyStyle(savedStyle);
+
+    options.forEach(opt => {
+      opt.addEventListener('click', () => {
+        const style = opt.getAttribute('data-style');
+        applyStyle(style);
+        localStorage.setItem('diplogic-button-style', style);
+      });
+    });
+
+    function applyStyle(style) {
+      document.body.classList.remove('theme-btn-obsidian', 'theme-btn-cyber', 'theme-btn-glass');
+      if (style !== 'obsidian') {
+        document.body.classList.add(`theme-btn-${style}`);
+      }
+      options.forEach(opt => {
+        if (opt.getAttribute('data-style') === style) {
+          opt.classList.add('active');
+        } else {
+          opt.classList.remove('active');
+        }
+      });
+    }
   })();
 </script>
 </body>
