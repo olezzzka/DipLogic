@@ -22,7 +22,14 @@
     --font-mono: 'Space Mono', monospace;
   }
 
-  html { scroll-behavior: smooth; }
+  html {
+    scroll-behavior: smooth;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  html::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, Opera */
+  }
 
   body {
     background: var(--black);
@@ -33,6 +40,11 @@
     overflow-x: hidden;
     cursor: none;
     position: relative;
+    -ms-overflow-style: none;  /* IE and Edge */
+    scrollbar-width: none;  /* Firefox */
+  }
+  body::-webkit-scrollbar {
+    display: none;             /* Chrome, Safari, Opera */
   }
 
   /* NOISE TEXTURE */
@@ -49,32 +61,65 @@
   /* CURSOR */
   .cursor {
     position: fixed;
-    width: 10px;
-    height: 10px;
-    background: white;
-    border-radius: 50%;
+    width: 6px;
+    height: 14px;
+    background: var(--white);
     pointer-events: none;
     z-index: 10010;
     transform: translate(-50%, -50%);
-    transition: transform 0.1s ease;
     mix-blend-mode: difference;
+    animation: cursorBlink 1s infinite steps(2, start);
   }
+  .cursor.moving {
+    animation: none;
+    opacity: 1;
+  }
+  @keyframes cursorBlink {
+    to { visibility: hidden; }
+  }
+
   .cursor-ring {
     position: fixed;
-    width: 36px;
-    height: 36px;
-    border: 1px solid rgba(255,255,255,0.4);
-    border-radius: 50%;
+    width: 32px;
+    height: 32px;
+    border: 1px solid rgba(255,255,255,0.25);
     pointer-events: none;
     z-index: 10009;
     transform: translate(-50%, -50%);
     transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .cursor-ring.hover {
-    width: 60px;
-    height: 60px;
+    width: 44px;
+    height: 44px;
     border-color: rgba(255,255,255,0.8);
+    background: rgba(255,255,255,0.05);
   }
+
+  /* Coordinates */
+  .cursor-coords {
+    position: absolute;
+    left: 24px;
+    top: 14px;
+    font-family: monospace;
+    font-size: 8px;
+    color: rgba(255, 255, 255, 0.4);
+    letter-spacing: 0.05em;
+    pointer-events: none;
+    white-space: nowrap;
+    transition: color 0.3s ease, border-color 0.3s ease;
+    background: rgba(8, 8, 8, 0.6);
+    padding: 2px 4px;
+    border-radius: 2px;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  .cursor-ring.hover .cursor-coords {
+    color: rgba(255, 255, 255, 0.8);
+    border-color: rgba(255, 255, 255, 0.3);
+  }
+
   /* AMBIENT GLOW */
   .cursor-glow {
     position: fixed;
@@ -1164,7 +1209,9 @@
 <div class="noise"></div>
 <div class="cursor-glow" id="cursorGlow"></div>
 <div class="cursor" id="cursor"></div>
-<div class="cursor-ring" id="cursorRing"></div>
+<div class="cursor-ring" id="cursorRing">
+  <div class="cursor-coords" id="cursorCoords">X:0 Y:0</div>
+</div>
 <div class="scroll-progress" id="scrollProgress"></div>
 
 <!-- NAV -->
@@ -1699,12 +1746,21 @@
   const cursor = document.getElementById('cursor');
   const ring = document.getElementById('cursorRing');
   const glow = document.getElementById('cursorGlow');
+  const coords = document.getElementById('cursorCoords');
   let mx = 0, my = 0, rx = 0, ry = 0, gx = 0, gy = 0;
+  let moveTimer;
 
   document.addEventListener('mousemove', e => {
     mx = e.clientX; my = e.clientY;
     cursor.style.left = mx + 'px';
     cursor.style.top = my + 'px';
+    
+    // Stop blink on move
+    cursor.classList.add('moving');
+    clearTimeout(moveTimer);
+    moveTimer = setTimeout(() => {
+      cursor.classList.remove('moving');
+    }, 150);
   });
 
   function animateCursor() {
@@ -1712,6 +1768,11 @@
     ry += (my - ry) * 0.12;
     ring.style.left = rx + 'px';
     ring.style.top = ry + 'px';
+    
+    if (coords) {
+      coords.textContent = `X:${Math.round(rx)} Y:${Math.round(ry)}`;
+    }
+    
     gx += (mx - gx) * 0.08;
     gy += (my - gy) * 0.08;
     glow.style.left = gx + 'px';
