@@ -1393,36 +1393,40 @@
     position: relative;
   }
 
-  /* Animating vertical left section dividers on desktop, horizontal top borders on mobile */
+  /* Default reveal border (horizontal top border) for vertical scrolling sections (desktop and mobile) */
   .reveal::before {
     content: '';
     position: absolute;
     top: 0;
-    left: 0;
-    width: 1px;
-    height: 0%;
-    background: linear-gradient(180deg, transparent, var(--card-border-hover), transparent);
-    transition: height 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--card-border-hover), transparent);
+    transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1);
     z-index: 3;
   }
   
   .reveal.visible::before {
-    height: 100%;
+    width: 100%;
+    height: 1px;
   }
 
-  @media (max-width: 900px) {
-    /* Top horizontal border for mobile vertical stacking */
-    .reveal::before {
-      left: 50%;
-      transform: translateX(-50%);
-      width: 0%;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--card-border-hover), transparent);
-      transition: width 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+  @media (min-width: 901px) {
+    /* Left vertical border for horizontal sections on desktop */
+    .horizontal-track > .reveal::before {
+      left: 0;
+      top: 0;
+      transform: none;
+      width: 1px;
+      height: 0%;
+      background: linear-gradient(180deg, transparent, var(--card-border-hover), transparent);
+      transition: height 1.8s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 3;
     }
-    .reveal.visible::before {
-      width: 100%;
-      height: 1px;
+    .horizontal-track > .reveal.visible::before {
+      height: 100%;
+      width: 1px;
     }
   }
 
@@ -1445,11 +1449,11 @@
   }
 
   @media (min-width: 901px) {
-    /* Slide in from the right on desktop to match horizontal scroll direction */
-    .reveal-content > * {
+    /* Slide in from the right on desktop to match horizontal scroll direction (only for horizontal track) */
+    .horizontal-track > .reveal .reveal-content > * {
       transform: translateX(45px);
     }
-    .reveal.visible .reveal-content > * {
+    .horizontal-track > .reveal.visible .reveal-content > * {
       transform: translateX(0);
     }
   }
@@ -1472,11 +1476,9 @@
   }
 
   @media (min-width: 901px) {
-    .reveal:not(.revealed) .reveal-content .service-card,
-    .reveal:not(.revealed) .reveal-content .process-step,
-    .reveal:not(.revealed) .reveal-content .why-item,
-    .reveal:not(.revealed) .reveal-content .verify-card {
-      transform: translateX(60px) scale(0.97); /* slides in horizontally on desktop */
+    /* Only slide in horizontally on desktop if inside horizontal track */
+    .horizontal-track > .reveal:not(.revealed) .reveal-content .service-card {
+      transform: translateX(60px) scale(0.97);
     }
   }
 
@@ -1880,37 +1882,46 @@
   /* ========================================== */
   @media (min-width: 901px) {
     body {
-      overflow: hidden;
+      overflow-x: hidden;
+      overflow-y: auto;
     }
     
-    /* Horizontal Page Wrapper */
-    .horizontal-scroll-container {
+    .horizontal-scroll-wrapper {
+      position: relative;
+      width: 100%;
+    }
+    .sticky-container {
+      position: sticky;
+      top: 0;
+      height: 100vh;
+      overflow: hidden;
+      width: 100%;
+    }
+    .horizontal-track {
       display: flex;
       flex-direction: row;
-      width: 100vw;
-      height: 100vh;
-      overflow-x: auto;
-      overflow-y: hidden;
-      scroll-behavior: auto;
-      -webkit-overflow-scrolling: touch;
+      height: 100%;
+      width: fit-content;
+      will-change: transform;
       background: var(--page-bg);
       transition: background-color 0.5s ease;
     }
-    .horizontal-scroll-container::-webkit-scrollbar {
-      display: none;
-    }
     
-    /* Global Section Settings */
-    .horizontal-scroll-container > section {
+    .horizontal-track > section,
+    section {
       flex-shrink: 0;
+      width: 100vw;
       height: 100vh;
       position: relative;
       overflow: hidden;
-      padding: 100px 100px 0; /* Add top padding to clear fixed navigation header */
+      padding: 100px 100px 0;
       display: flex;
       align-items: center;
-      background: transparent; /* Let container background shine through */
+      background: var(--black);
       border-top: none;
+    }
+    .horizontal-track > section {
+      background: transparent;
     }
     
     /* 1. Hero Section */
@@ -1940,8 +1951,8 @@
     
     /* 2. Services Section */
     .services {
-      width: fit-content;
-      border-left: 1px solid var(--card-border);
+      width: 100vw;
+      border-left: none;
     }
     .services .reveal-content,
     .process .reveal-content {
@@ -1984,8 +1995,8 @@
     
     /* 3. Process Section */
     .process {
-      width: fit-content;
-      border-left: 1px solid var(--card-border);
+      width: 100vw;
+      border-left: none;
     }
     .process-header {
       width: 400px;
@@ -2040,9 +2051,9 @@
     
     /* 4. Why Us Section */
     .why {
-      width: fit-content;
+      width: 100vw;
       gap: 80px;
-      border-left: 1px solid var(--card-border);
+      border-left: none;
     }
     .why-header {
       width: 400px;
@@ -2116,9 +2127,9 @@
     
     /* 5. Verify & Stats Section */
     .verify {
-      width: fit-content;
+      width: 100vw;
       gap: 80px;
-      border-left: 1px solid var(--card-border);
+      border-left: none;
     }
     .verify-inner {
       display: flex;
@@ -2133,7 +2144,7 @@
       flex-shrink: 0;
     }
     .verify-card {
-      width: 780px; /* Increased width to take up more space and fit 16:9 nicely */
+      width: 780px;
       aspect-ratio: 16 / 9;
       flex-shrink: 0;
     }
@@ -2166,12 +2177,13 @@
     /* 6. CTA & Footer Section */
     .cta-section {
       width: 100vw;
+      height: 100vh;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
-      border-left: 1px solid var(--card-border);
-      padding: 0 48px 120px;
+      border-left: none;
+      padding: 100px 48px 100px;
     }
     footer {
       position: absolute;
@@ -2222,8 +2234,10 @@
 </nav>
 
 <!-- HERO -->
-<div class="horizontal-scroll-container" id="scrollContainer">
-  <section class="hero">
+<div class="horizontal-scroll-wrapper" id="horizontalScrollWrapper">
+  <div class="sticky-container" id="stickyContainer">
+    <div class="horizontal-track" id="horizontalTrack">
+      <section class="hero">
     <canvas class="hero-bg-grid" id="heroGrid"></canvas>
     <div class="hero-content" id="heroContent">
       <div class="hero-badge">Открыты к новым проектам</div>
@@ -2368,6 +2382,9 @@
   </div>
   </div>
 </section>
+    </div>
+  </div>
+</div>
 
 <!-- PROCESS -->
 <section class="process reveal" id="process">
@@ -2569,7 +2586,6 @@
     <div class="footer-copy">© 2025 DipLogic</div>
   </footer>
 </section>
-</div>
 
 <!-- ===== DEMO MODAL ===== -->
 <div class="modal-overlay" id="modalOverlay">
@@ -2832,18 +2848,21 @@
   function updateParallax() {
     if (reduceMotion) return;
     
-    if (window.innerWidth > 900 && scrollContainer) {
-      const x = scrollContainer.scrollLeft;
+    if (window.innerWidth > 900) {
+      const wrapper = document.getElementById('horizontalScrollWrapper');
+      if (!wrapper) return;
+      const rect = wrapper.getBoundingClientRect();
+      const x = Math.max(0, -rect.top); // current horizontal scroll
       if (x < window.innerWidth) {
-        heroGrid.style.transform = `translateX(${-x * 0.35}px)`;
-        heroContent.style.transform = `translateX(${-x * 0.2}px)`;
+        heroGrid.style.transform = `translate3d(${-x * 0.35}px, 0, 0)`;
+        heroContent.style.transform = `translate3d(${-x * 0.2}px, 0, 0)`;
         heroContent.style.opacity = 1 - (x / window.innerWidth) * 0.9;
       }
     } else {
       const y = window.scrollY;
       if (y < window.innerHeight) {
-        heroGrid.style.transform = `translateY(${y * 0.4}px)`;
-        heroContent.style.transform = `translateY(${y * 0.2}px)`;
+        heroGrid.style.transform = `translate3d(0, ${y * 0.4}px, 0)`;
+        heroContent.style.transform = `translate3d(0, ${y * 0.2}px, 0)`;
         heroContent.style.opacity = 1 - (y / window.innerHeight) * 0.8;
       }
     }
@@ -2918,21 +2937,12 @@
   const scrollContainer = document.getElementById('scrollContainer');
 
   function updateScrollProgress() {
-    let scrolledPercent = 0;
-    if (window.innerWidth > 900 && scrollContainer) {
-      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
-      scrolledPercent = maxScroll > 0 ? (scrollContainer.scrollLeft / maxScroll) * 100 : 0;
-      nav.classList.toggle('scrolled', scrollContainer.scrollLeft > 60);
-    } else {
-      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-      scrolledPercent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
-      nav.classList.toggle('scrolled', window.scrollY > 60);
-    }
+    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+    const scrolledPercent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
     progress.style.width = scrolledPercent + '%';
+    nav.classList.toggle('scrolled', window.scrollY > 60);
   }
   
-  window.addEventListener('scroll', updateScrollProgress, { passive: true });
-
   // Scroll-linked interactive animations
   const servicesSection = document.getElementById('services');
   const processSection = document.getElementById('process');
@@ -2958,17 +2968,17 @@
           if (card.matches(':hover')) return; // Let mouse hover tilt take precedence
           const factor = (index + 1) * 0.12;
           const translate = Math.max(0, rect.left) * factor;
-          card.style.transform = `translateX(${translate}px) translateZ(0)`;
+          card.style.transform = `translate3d(${translate}px, 0, 0)`;
         });
       }
     }
 
-    // 2. Process Line Drawing & Steps Float
+    // 2. Process Line Drawing & Steps Float (bound to vertical scroll)
     if (processSection) {
       const rect = processSection.getBoundingClientRect();
-      if (rect.left < winWidth && rect.right > 0) {
-        const totalScrollable = rect.width - winWidth;
-        const progress = totalScrollable > 0 ? Math.max(0, Math.min(1, -rect.left / totalScrollable)) : 0;
+      const vh = window.innerHeight;
+      if (rect.top < vh && rect.bottom > 0) {
+        const progress = Math.max(0, Math.min(1, (vh - rect.top) / vh));
         if (processLineFill) {
           processLineFill.style.transform = `scaleX(${progress})`;
         }
@@ -2976,120 +2986,104 @@
         processSteps.forEach((step, index) => {
           if (step.matches(':hover')) return;
           const factor = (index + 1) * 0.08;
-          const translate = Math.max(0, rect.left) * factor;
-          step.style.transform = `translateX(${translate}px) translateZ(0)`;
+          const translate = Math.max(0, rect.top) * factor;
+          step.style.transform = `translate3d(0, ${translate}px, 0)`;
         });
       }
     }
 
-    // 3. Why Us Cards Orbit
+    // 3. Why Us Cards Orbit (bound to vertical scroll)
     if (whySection) {
       const rect = whySection.getBoundingClientRect();
-      if (rect.left < winWidth && rect.right > 0) {
+      const vh = window.innerHeight;
+      if (rect.top < vh && rect.bottom > 0) {
         whyItems.forEach((item, index) => {
           if (item.matches(':hover')) return;
           const factor = (index + 1) * 0.1;
-          const translate = Math.max(0, rect.left) * factor;
-          const rotate = Math.min(10, Math.max(0, rect.left) * 0.02);
-          item.style.transform = `translateX(${translate}px) rotateY(${rotate}deg) translateZ(0)`;
+          const translate = Math.max(0, rect.top) * factor;
+          const rotate = Math.min(10, Math.max(0, rect.top) * 0.02);
+          item.style.transform = `translate3d(0, ${translate}px, 0) rotateX(${rotate}deg)`;
         });
-      }
-    }
-
-    // 4. Verify Card Parallax and 3D Rotation
-    if (verifySection) {
-      const rect = verifySection.getBoundingClientRect();
-      if (rect.left < winWidth && rect.right > 0) {
-        const translate = Math.max(0, rect.left) * 0.15;
-        const rotate = Math.min(8, Math.max(0, rect.left) * 0.015);
-        if (verifyCard && !verifyCard.matches(':hover')) {
-          verifyCard.style.transform = `perspective(1000px) translateX(${translate}px) rotateY(${-rotate}deg) translateZ(0)`;
-        }
       }
     }
   }
   
-  // Parallax and scroll progress attachment to horizontal container
-  if (scrollContainer) {
-    scrollContainer.addEventListener('scroll', () => {
-      updateScrollProgress();
-      updateParallax();
-      animateScrollLinked();
-      checkReveals();
-    }, { passive: true });
+  const wrapper = document.getElementById('horizontalScrollWrapper');
+  const track = document.getElementById('horizontalTrack');
+
+  function setHorizontalScrollHeight() {
+    if (window.innerWidth > 900 && wrapper && track) {
+      const maxTranslate = track.scrollWidth - window.innerWidth;
+      wrapper.style.height = (maxTranslate + window.innerHeight) + 'px';
+    } else if (wrapper) {
+      wrapper.style.height = 'auto';
+    }
+  }
+
+  function handleScrollAndParallax() {
+    updateScrollProgress();
     
-    // Initial call to align layout
+    if (window.innerWidth > 900 && wrapper && track) {
+      const rect = wrapper.getBoundingClientRect();
+      const scrolled = -rect.top;
+      const maxTranslate = track.scrollWidth - window.innerWidth;
+      const translate = Math.max(0, Math.min(maxTranslate, scrolled));
+      track.style.transform = `translate3d(${-translate}px, 0, 0)`;
+    }
+    
+    updateParallax();
     animateScrollLinked();
     checkReveals();
-    
-    // Smooth horizontal scrolling mouse wheel translation
-    let targetScrollLeft = 0;
-    let currentScrollLeft = 0;
-    let isScrolling = false;
-
-    targetScrollLeft = scrollContainer.scrollLeft;
-    currentScrollLeft = scrollContainer.scrollLeft;
-
-    scrollContainer.addEventListener('wheel', (e) => {
-      if (window.innerWidth > 900 && e.deltaY !== 0) {
-        e.preventDefault();
-        targetScrollLeft = Math.max(0, Math.min(
-          scrollContainer.scrollWidth - scrollContainer.clientWidth,
-          targetScrollLeft + e.deltaY * 0.95
-        ));
-
-        if (!isScrolling) {
-          isScrolling = true;
-          smoothScrollLoop();
-        }
-      }
-    }, { passive: false });
-
-    scrollContainer.addEventListener('scroll', () => {
-      if (!isScrolling) {
-        targetScrollLeft = scrollContainer.scrollLeft;
-        currentScrollLeft = scrollContainer.scrollLeft;
-      }
-    }, { passive: true });
-
-    function smoothScrollLoop() {
-      if (!isScrolling) return;
-      const diff = targetScrollLeft - currentScrollLeft;
-      if (Math.abs(diff) > 0.5) {
-        currentScrollLeft += diff * 0.12;
-        scrollContainer.scrollLeft = currentScrollLeft;
-        requestAnimationFrame(smoothScrollLoop);
-      } else {
-        scrollContainer.scrollLeft = targetScrollLeft;
-        currentScrollLeft = targetScrollLeft;
-        isScrolling = false;
-      }
-    }
-
-    // Anchor links horizontal / vertical smooth scrolls
-    document.querySelectorAll('nav a, footer a').forEach(anchor => {
-      anchor.addEventListener('click', function(e) {
-        const href = this.getAttribute('href');
-        if (href.startsWith('#')) {
-          e.preventDefault();
-          const target = document.querySelector(href === '#' ? '.hero' : href);
-          if (target) {
-            if (window.innerWidth > 900) {
-              scrollContainer.scrollTo({
-                left: target.offsetLeft,
-                behavior: 'smooth'
-              });
-            } else {
-              window.scrollTo({
-                top: target.offsetTop - 80,
-                behavior: 'smooth'
-              });
-            }
-          }
-        }
-      });
-    });
   }
+
+  // Bind events
+  window.addEventListener('scroll', handleScrollAndParallax, { passive: true });
+  window.addEventListener('resize', () => {
+    setHorizontalScrollHeight();
+    handleScrollAndParallax();
+  });
+  window.addEventListener('load', () => {
+    setHorizontalScrollHeight();
+    handleScrollAndParallax();
+  });
+  
+  // Initial setup
+  setTimeout(() => {
+    setHorizontalScrollHeight();
+    handleScrollAndParallax();
+  }, 100);
+
+  // Anchor links horizontal / vertical smooth scrolls
+  document.querySelectorAll('nav a, footer a').forEach(anchor => {
+    anchor.addEventListener('click', function(e) {
+      const href = this.getAttribute('href');
+      if (href && href.startsWith('#')) {
+        e.preventDefault();
+        const target = document.querySelector(href === '#' ? '.hero' : href);
+        if (target) {
+          const isDesktop = window.innerWidth > 900;
+          let targetY = 0;
+          
+          if (isDesktop) {
+            if (wrapper && track && (target.id === 'services' || target.classList.contains('hero'))) {
+              // Target is in horizontal scroll part
+              targetY = wrapper.offsetTop + target.offsetLeft;
+            } else {
+              // Target is in normal vertical part
+              targetY = target.offsetTop;
+            }
+          } else {
+            targetY = target.offsetTop - 80;
+          }
+          
+          window.scrollTo({
+            top: targetY,
+            behavior: 'smooth'
+          });
+        }
+      }
+    });
+  });
 
   // Verification code — прокрутка при появлении
   const verifyEl = document.querySelector('[data-verify]');
@@ -3130,13 +3124,20 @@
   function checkReveals() {
     const winWidth = window.innerWidth;
     const isDesktop = winWidth > 900;
+    
     // We trigger animations later:
-    // On desktop when the section is 75% on-screen (left edge < 25vw)
-    // On mobile when the section is 45% on-screen (top edge < 55vh)
+    // On desktop:
+    // - For horizontal track sections: when the section's left edge < 25vw
+    // - For vertical page sections: when the section's top edge < 65vh
+    // On mobile: when the section's top edge < 55vh
     const isVisible = isDesktop 
       ? (sec => {
           const rect = sec.getBoundingClientRect();
-          return rect.left < winWidth * 0.25;
+          if (sec.closest('.horizontal-track')) {
+            return rect.left < winWidth * 0.25;
+          } else {
+            return rect.top < window.innerHeight * 0.65;
+          }
         })
       : (sec => {
           const rect = sec.getBoundingClientRect();
@@ -3167,11 +3168,6 @@
       }
     });
   }
-
-  // Initial call and event listeners for window scroll/resize/load
-  window.addEventListener('load', checkReveals);
-  window.addEventListener('resize', checkReveals);
-  window.addEventListener('scroll', checkReveals, { passive: true });
 
   // Verification card — клик открывает реестр + копирует номер
   const verifyHint = document.getElementById('verifyHint');
