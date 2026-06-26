@@ -1448,28 +1448,68 @@
     }
   }
 
-  /* Custom stagger delays for grids and child items */
-  .reveal-content .services-header { transition-delay: 0.1s; }
-  .reveal-content .service-card:nth-child(1) { transition-delay: 0.2s; }
-  .reveal-content .service-card:nth-child(2) { transition-delay: 0.35s; }
-  .reveal-content .service-card:nth-child(3) { transition-delay: 0.5s; }
-  .reveal-content .service-card:nth-child(4) { transition-delay: 0.65s; }
+  /* Staggered card, process-step, why-item, verify-card, verify-log-card unrolling and entry */
+  .reveal:not(.revealed) .reveal-content .service-card,
+  .reveal:not(.revealed) .reveal-content .process-step,
+  .reveal:not(.revealed) .reveal-content .why-item,
+  .reveal:not(.revealed) .reveal-content .verify-card,
+  .reveal:not(.revealed) .reveal-content .verify-log-card {
+    opacity: 0;
+    transform: translateY(40px) scale(0.96);
+    filter: blur(8px);
+    clip-path: inset(0 100% 0 0); /* starts clipped from right (hidden) */
+    transition: 
+      opacity 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+      filter 1.2s cubic-bezier(0.16, 1, 0.3, 1),
+      clip-path 1.4s cubic-bezier(0.16, 1, 0.3, 1);
+    will-change: transform, opacity, filter, clip-path;
+  }
 
-  .reveal-content .process-header { transition-delay: 0.1s; }
-  .reveal-content .process-step:nth-child(1) { transition-delay: 0.2s; }
-  .reveal-content .process-step:nth-child(2) { transition-delay: 0.35s; }
-  .reveal-content .process-step:nth-child(3) { transition-delay: 0.5s; }
-  .reveal-content .process-step:nth-child(4) { transition-delay: 0.65s; }
+  @media (min-width: 901px) {
+    .reveal:not(.revealed) .reveal-content .service-card,
+    .reveal:not(.revealed) .reveal-content .process-step,
+    .reveal:not(.revealed) .reveal-content .why-item,
+    .reveal:not(.revealed) .reveal-content .verify-card,
+    .reveal:not(.revealed) .reveal-content .verify-log-card {
+      transform: translateX(60px) scale(0.97); /* slides in horizontally on desktop */
+    }
+  }
 
-  .reveal-content .why-header { transition-delay: 0.1s; }
-  .reveal-content .why-item:nth-child(1) { transition-delay: 0.2s; }
-  .reveal-content .why-item:nth-child(2) { transition-delay: 0.35s; }
-  .reveal-content .why-item:nth-child(3) { transition-delay: 0.5s; }
-  .reveal-content .why-item:nth-child(4) { transition-delay: 0.65s; }
+  /* Reveal visibility overrides when section is visible */
+  .reveal.visible .reveal-content .service-card,
+  .reveal.visible .reveal-content .process-step,
+  .reveal.visible .reveal-content .why-item,
+  .reveal.visible .reveal-content .verify-card,
+  .reveal.visible .reveal-content .verify-log-card {
+    opacity: 1;
+    transform: translate(0) scale(1);
+    filter: blur(0);
+    clip-path: inset(0 0 0 0); /* fully unrolled */
+  }
 
-  .reveal-content .verify-left { transition-delay: 0.1s; }
-  .reveal-content .verify-card { transition-delay: 0.3s; }
-  .reveal-content .verify-log-card { transition-delay: 0.5s; }
+  /* Custom stagger delays for grids and child items (cleared once .revealed is added) */
+  .reveal:not(.revealed) .reveal-content .services-header { transition-delay: 0.1s; }
+  .reveal:not(.revealed) .reveal-content .service-card:nth-child(1) { transition-delay: 0.2s; }
+  .reveal:not(.revealed) .reveal-content .service-card:nth-child(2) { transition-delay: 0.35s; }
+  .reveal:not(.revealed) .reveal-content .service-card:nth-child(3) { transition-delay: 0.5s; }
+  .reveal:not(.revealed) .reveal-content .service-card:nth-child(4) { transition-delay: 0.65s; }
+
+  .reveal:not(.revealed) .reveal-content .process-header { transition-delay: 0.1s; }
+  .reveal:not(.revealed) .reveal-content .process-step:nth-child(1) { transition-delay: 0.2s; }
+  .reveal:not(.revealed) .reveal-content .process-step:nth-child(2) { transition-delay: 0.35s; }
+  .reveal:not(.revealed) .reveal-content .process-step:nth-child(3) { transition-delay: 0.5s; }
+  .reveal:not(.revealed) .reveal-content .process-step:nth-child(4) { transition-delay: 0.65s; }
+
+  .reveal:not(.revealed) .reveal-content .why-header { transition-delay: 0.1s; }
+  .reveal:not(.revealed) .reveal-content .why-item:nth-child(1) { transition-delay: 0.2s; }
+  .reveal:not(.revealed) .reveal-content .why-item:nth-child(2) { transition-delay: 0.35s; }
+  .reveal:not(.revealed) .reveal-content .why-item:nth-child(3) { transition-delay: 0.5s; }
+  .reveal:not(.revealed) .reveal-content .why-item:nth-child(4) { transition-delay: 0.65s; }
+
+  .reveal:not(.revealed) .reveal-content .verify-left { transition-delay: 0.1s; }
+  .reveal:not(.revealed) .reveal-content .verify-card { transition-delay: 0.3s; }
+  .reveal:not(.revealed) .reveal-content .verify-log-card { transition-delay: 0.5s; }
 
   /* MOBILE */
   @media (max-width: 768px) {
@@ -2198,7 +2238,10 @@
 <section class="services reveal" id="services">
   <div class="reveal-content">
     <div class="services-header">
-    <h2 class="services-title">Что мы<br>делаем</h2>
+    <h2 class="services-title">
+      <span data-scramble data-line="1">Что мы</span><br>
+      <span data-scramble data-line="2">делаем</span>
+    </h2>
     <p class="services-intro">
       Каждый проект — это диалог. Мы не просто верстаем макеты, мы вникаем в ваш бизнес и создаём инструмент, который решает реальные задачи.
     </p>
@@ -2281,7 +2324,7 @@
   <div class="reveal-content">
     <div class="process-header">
       <div class="section-label">Как мы работаем</div>
-      <h2 class="process-title">Четыре шага от идеи до запуска</h2>
+      <h2 class="process-title" data-scramble data-line="1">Четыре шага от идеи до запуска</h2>
     </div>
     <div class="process-steps">
       <div class="process-line-bg"></div>
@@ -2316,7 +2359,7 @@
     <div class="why-inner">
       <div class="why-header">
         <div class="section-label">Почему мы</div>
-        <h2 class="why-title">Не просто подрядчики</h2>
+        <h2 class="why-title" data-scramble data-line="1">Не просто подрядчики</h2>
       </div>
       <div class="why-items">
       <div class="why-item">
@@ -2358,7 +2401,7 @@
     <div class="verify-inner">
       <div class="verify-left">
         <div class="section-label">Квалификация</div>
-        <h2 class="verify-headline">Подтверждённый профессионал</h2>
+        <h2 class="verify-headline" data-scramble data-line="1">Подтверждённый профессионал</h2>
         <p class="verify-text">
           За дизайном стоит профильное образование по UI/UX и диплом международной академии. Подлинность не на словах — нажмите на карточку и сверьте номер прямо в официальном реестре STEP Computer Academy.
         </p>
@@ -2769,57 +2812,65 @@
   }
 
   // Binary Decrypt Animation — построчное дешифрование слева направо
+  const scrambleElements = document.querySelectorAll('[data-scramble]');
   if (!reduceMotion) {
-    const lines = [...document.querySelectorAll('[data-scramble]')]
-      .sort((a, b) => (+a.dataset.line) - (+b.dataset.line));
-
-    lines.forEach(el => {
+    scrambleElements.forEach(el => {
       el.dataset.final = el.textContent.trim();
       el.textContent = '';
     });
+  }
 
-    const startDelay = 400;
-    const perLine = 500;
+  function runScramble(el, delay = 0) {
+    if (reduceMotion) {
+      el.textContent = el.dataset.final || el.textContent;
+      return;
+    }
+    if (el.dataset.scrambled === 'true') return;
+    el.dataset.scrambled = 'true';
+    
     const lockSpeed = 35;
     const binaryChars = '01█_#[]+*';
+    const finalText = el.dataset.final || '';
+    let startTime = null;
 
-    lines.forEach((el, idx) => {
-      const startAt = startDelay + idx * perLine;
-      let startTime = null;
+    function tick(now) {
+      if (!startTime) startTime = now;
+      const elapsed = now - startTime;
 
-      function tick(now) {
-        if (!startTime) startTime = now;
-        const elapsed = now - startTime;
+      if (elapsed < delay) {
+        requestAnimationFrame(tick);
+        return;
+      }
 
-        if (elapsed < startAt) {
-          requestAnimationFrame(tick);
-          return;
-        }
+      const activeTime = elapsed - delay;
+      const length = finalText.length;
+      let out = '';
+      let allLocked = true;
 
-        const activeTime = elapsed - startAt;
-        const finalText = el.dataset.final;
-        const length = finalText.length;
-        let out = '';
-        let allLocked = true;
-
-        for (let i = 0; i < length; i++) {
-          const lockTime = i * lockSpeed;
-          if (activeTime >= lockTime || finalText[i] === ' ') {
-            out += finalText[i];
-          } else {
-            allLocked = false;
-            out += binaryChars[Math.floor(Math.random() * binaryChars.length)];
-          }
-        }
-        el.textContent = out;
-
-        if (!allLocked) {
-          requestAnimationFrame(tick);
+      for (let i = 0; i < length; i++) {
+        const lockTime = i * lockSpeed;
+        if (activeTime >= lockTime || finalText[i] === ' ') {
+          out += finalText[i];
         } else {
-          el.textContent = finalText;
+          allLocked = false;
+          out += binaryChars[Math.floor(Math.random() * binaryChars.length)];
         }
       }
-      requestAnimationFrame(tick);
+      el.textContent = out;
+
+      if (!allLocked) {
+        requestAnimationFrame(tick);
+      } else {
+        el.textContent = finalText;
+      }
+    }
+    requestAnimationFrame(tick);
+  }
+
+  // Trigger hero elements immediately
+  if (!reduceMotion) {
+    document.querySelectorAll('.hero [data-scramble]').forEach((el, idx) => {
+      runScramble(el, 400 + idx * 250);
     });
   }
 
@@ -3003,9 +3054,23 @@
   // Reveal
   const observer = new IntersectionObserver(entries => {
     entries.forEach(e => {
-      if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); }
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        
+        // Trigger scramble animations inside this section
+        e.target.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+          runScramble(el, idx * 250);
+        });
+        
+        // Add revealed class after animations complete to clear transition delays
+        setTimeout(() => {
+          e.target.classList.add('revealed');
+        }, 2500);
+        
+        observer.unobserve(e.target);
+      }
     });
-  }, { threshold: 0.1 });
+  }, { threshold: 0.15 });
   document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
 
   // Verification code — прокрутка при появлении
