@@ -1118,6 +1118,45 @@
     .mk-card-cell { border-right: none; border-bottom: 1px solid var(--gray-800); }
   }
 
+  /* 3D Wireframe Canvas */
+  .hero-canvas-container {
+    position: absolute;
+    top: 50%;
+    right: 10%;
+    transform: translateY(-50%);
+    width: 600px;
+    height: 600px;
+    z-index: 1;
+    pointer-events: none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    animation: gridFade 2s ease 0.5s forwards;
+    background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, rgba(0,0,0,0) 70%);
+  }
+  #hero-3d-canvas {
+    width: 100%;
+    height: 100%;
+  }
+  @media (max-width: 1024px) {
+    .hero-canvas-container {
+      right: 2%;
+      width: 480px;
+      height: 480px;
+    }
+  }
+  @media (max-width: 768px) {
+    .hero-canvas-container {
+      top: 40%;
+      right: 50%;
+      transform: translate(50%, -50%);
+      width: 320px;
+      height: 320px;
+      opacity: 0.35;
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -2067,6 +2106,179 @@
       setTimeout(() => { btn.classList.remove('added'); btn.textContent = 'В корзину'; }, 1500);
     });
   });
+
+  // ---- 3D Sphere Renderer ----
+  (function() {
+    const canvas = document.createElement('canvas');
+    canvas.id = 'hero-3d-canvas';
+    
+    const container = document.createElement('div');
+    container.className = 'hero-canvas-container';
+    container.appendChild(canvas);
+    
+    const hero = document.querySelector('.hero');
+    if (hero) {
+      hero.insertBefore(container, hero.firstChild);
+    } else {
+      return;
+    }
+    
+    const ctx = canvas.getContext('2d');
+    let width = 0;
+    let height = 0;
+    
+    // Grid settings
+    const rings = 18; // latitude rings
+    const segments = 24; // longitude segments
+    const baseRadius = 155; // base sphere radius
+    const fov = 350; // camera FOV
+    
+    // Physics & Rotation
+    let rotX = 0.5;
+    let rotY = 0.5;
+    let targetRotX = 0.3;
+    let targetRotY = 0.3;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
+    let time = 0;
+    
+    // Track mouse on hero section
+    window.addEventListener('mousemove', (e) => {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      
+      // Calculate target rotation based on normalized mouse position
+      targetRotY = (mouseX / window.innerWidth - 0.5) * 1.5;
+      targetRotX = (mouseY / window.innerHeight - 0.5) * 1.5;
+    });
+    
+    function resize() {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      width = container.clientWidth;
+      height = container.clientHeight;
+      canvas.width = width * dpr;
+      canvas.height = height * dpr;
+      ctx.scale(dpr, dpr);
+    }
+    
+    window.addEventListener('resize', resize);
+    resize();
+    
+    // Point structure helper
+    class Point3D {
+      constructor(theta, phi) {
+        this.theta = theta;
+        this.phi = phi;
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+        this.projX = 0;
+        this.projY = 0;
+        this.projZ = 0;
+      }
+      
+      update(time) {
+        // Apply mathematical Perlin-like wave morphing
+        const wave = Math.sin(this.theta * 5 + time * 1.5) * Math.cos(this.phi * 5 - time * 1.2) * 12;
+        const radius = baseRadius + wave;
+        
+        // Calculate 3D sphere coordinate
+        const x3d = radius * Math.sin(this.theta) * Math.cos(this.phi);
+        const y3d = radius * Math.sin(this.theta) * Math.sin(this.phi);
+        const z3d = radius * Math.cos(this.theta);
+        
+        // Rotate around Y-axis
+        let x1 = x3d * Math.cos(rotY) - z3d * Math.sin(rotY);
+        let z1 = x3d * Math.sin(rotY) + z3d * Math.cos(rotY);
+        
+        // Rotate around X-axis
+        let y2 = y3d * Math.cos(rotX) - z1 * Math.sin(rotX);
+        let z2 = y3d * Math.sin(rotX) + z1 * Math.cos(rotX);
+        
+        // 3D perspective projection
+        const scale = fov / (fov + z2);
+        this.projX = width / 2 + x1 * scale;
+        this.projY = height / 2 + y2 * scale;
+        this.projZ = z2;
+      }
+    }
+    
+    // Generate points
+    const points = [];
+    for (let i = 0; i <= rings; i++) {
+      const theta = (i / rings) * Math.PI;
+      points[i] = [];
+      for (let j = 0; j < segments; j++) {
+        const phi = (j / segments) * 2 * Math.PI;
+        points[i][j] = new Point3D(theta, phi);
+      }
+    }
+    
+    function drawLine(p1, p2) {
+      // Depth cueing: fade lines in the background
+      const avgZ = (p1.projZ + p2.projZ) / 2;
+      const alpha = (1 - (avgZ + baseRadius) / (2 * baseRadius)) * 0.35 + 0.05;
+      
+      ctx.beginPath();
+      ctx.moveTo(p1.projX, p1.projY);
+      ctx.lineTo(p2.projX, p2.projY);
+      ctx.strokeStyle = `rgba(255, 255, 255, ${Math.max(0.01, Math.min(0.5, alpha))})`;
+      ctx.lineWidth = 0.8;
+      ctx.stroke();
+    }
+    
+    function animate() {
+      time += 0.01;
+      
+      // Smooth rotation interpolation (easing)
+      rotX += (targetRotX - rotX) * 0.06;
+      rotY += (targetRotY - rotY) * 0.06;
+      
+      // Auto-rotate if mouse is stationary
+      targetRotY += 0.002;
+      
+      ctx.clearRect(0, 0, width, height);
+      
+      // Update all points
+      for (let i = 0; i <= rings; i++) {
+        for (let j = 0; j < segments; j++) {
+          points[i][j].update(time);
+        }
+      }
+      
+      // Draw grid lines
+      for (let i = 0; i <= rings; i++) {
+        for (let j = 0; j < segments; j++) {
+          // Horizontal lines (circles)
+          const nextJ = (j + 1) % segments;
+          drawLine(points[i][j], points[i][nextJ]);
+          
+          // Vertical lines (connecting rings)
+          if (i < rings) {
+            drawLine(points[i][j], points[i + 1][j]);
+          }
+        }
+      }
+      
+      // Draw small tech dots on vertex junctions for deep cyber look
+      for (let i = 1; i < rings; i++) {
+        for (let j = 0; j < segments; j += 2) {
+          const p = points[i][j];
+          if (p.projZ < 20) { // Only draw dots on the front hemisphere for neatness
+            const alpha = (1 - (p.projZ + baseRadius) / (2 * baseRadius)) * 0.5;
+            ctx.beginPath();
+            ctx.arc(p.projX, p.projY, 1.5, 0, Math.PI * 2);
+            ctx.fillStyle = `rgba(255, 255, 255, ${alpha})`;
+            ctx.fill();
+          }
+        }
+      }
+      
+      requestAnimationFrame(animate);
+    }
+    
+    requestAnimationFrame(animate);
+  })();
 </script>
 </body>
 </html>
