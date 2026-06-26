@@ -404,6 +404,96 @@
   }
   @keyframes gridFade { to { opacity: 1; } }
 
+  /* FLOATING REVIEWS FROM SPHERE */
+  .hero-reviews {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 1px;
+    height: 1px;
+    z-index: 5;
+    pointer-events: none;
+  }
+  .review-bubble {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 250px;
+    padding: 14px 16px;
+    background: rgba(13, 13, 15, 0.45);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 12px;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: var(--white);
+    font-family: var(--font-sans);
+    pointer-events: auto;
+    opacity: 0;
+    transform: translate(-50%, -50%) scale(0.2);
+    animation: 
+      emitFromSphere 1.4s cubic-bezier(0.16, 1, 0.3, 1) var(--delay) forwards,
+      floatBubble 6s ease-in-out calc(var(--delay) + 1.4s) infinite alternate;
+    transition: border-color 0.3s, transform 0.3s, background-color 0.3s;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  }
+  .review-bubble:hover {
+    border-color: rgba(255, 255, 255, 0.15);
+    background: rgba(13, 13, 15, 0.7);
+    transform: translate(var(--rx), var(--ry)) scale(1.05) !important;
+  }
+  @keyframes emitFromSphere {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.2);
+    }
+    50% { opacity: 0.5; }
+    100% {
+      opacity: 1;
+      transform: translate(var(--rx), var(--ry)) scale(1);
+    }
+  }
+  @keyframes floatBubble {
+    0% { transform: translate(var(--rx), var(--ry)) translateY(0px); }
+    100% { transform: translate(var(--rx), var(--ry)) translateY(-8px); }
+  }
+  .review-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 6px;
+  }
+  .review-avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 600;
+    font-family: var(--font-sans);
+    color: var(--white);
+    text-transform: uppercase;
+  }
+  .review-user {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--white);
+  }
+  .review-text {
+    font-size: 12px;
+    color: var(--gray-400);
+    line-height: 1.4;
+  }
+  @media (max-width: 900px) {
+    .hero-reviews {
+      display: none;
+    }
+  }
+
   .hero-content {
     position: relative;
     z-index: 2;
@@ -488,13 +578,7 @@
   }
   .btn-primary svg { transition: transform 0.2s; }
   .btn-primary:hover svg { transform: translateX(4px); }
-  .hero-scroll-hint {
-    font-size: 13px;
-    font-family: var(--font-mono);
-    color: var(--gray-700);
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-  }
+
 
   @keyframes slideUp {
     to { opacity: 1; transform: translateY(0); }
@@ -1018,92 +1102,7 @@
     line-height: 1.4;
   }
 
-  /* Verification Ledger Logs */
-  .verify-log-card {
-    background: rgba(0, 0, 0, 0.2);
-    border: 1px dashed var(--card-border);
-    border-radius: 8px;
-    padding: 24px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    font-family: var(--font-mono);
-    font-size: 13px;
-    color: var(--gray-400);
-    box-shadow: var(--card-shadow);
-    backdrop-filter: blur(var(--btn-blur, 0px));
-    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
-    transition: border-color 0.3s, box-shadow 0.3s;
-    position: relative;
-    overflow: hidden;
-  }
-  .verify-log-card::before, .verify-log-card::after {
-    content: '';
-    position: absolute;
-    inset: -1px;
-    border-radius: inherit;
-    padding: 1px;
-    background: var(--card-spotlight-border);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    z-index: 2;
-  }
-  .verify-log-card::after {
-    inset: 0;
-    background: var(--card-spotlight-bg);
-    z-index: -1;
-  }
-  .verify-log-card:hover::before, .verify-log-card:hover::after {
-    opacity: 1;
-  }
-  .verify-log-card:hover {
-    border-color: transparent;
-    box-shadow: var(--card-shadow-hover);
-  }
-  .verify-log-top {
-    font-size: 11px;
-    color: var(--gray-500);
-    margin-bottom: 20px;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid var(--gray-800);
-    padding-bottom: 10px;
-  }
-  .verify-log-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #10b981;
-    animation: blink 1.5s infinite;
-  }
-  .verify-log-body {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    line-height: 1.4;
-  }
-  .visible .log-line {
-    opacity: 0;
-    transform: translateY(5px);
-    animation: logFadeIn 0.5s forwards;
-  }
-  .visible .log-line:nth-child(1) { animation-delay: 0.2s; }
-  .visible .log-line:nth-child(2) { animation-delay: 0.8s; }
-  .visible .log-line:nth-child(3) { animation-delay: 1.4s; }
-  .visible .log-line:nth-child(4) { animation-delay: 2.0s; }
-  .visible .log-line:nth-child(5) { animation-delay: 2.6s; }
-  .visible .log-line:nth-child(6) { animation-delay: 3.2s; }
 
-  @keyframes logFadeIn {
-    to { opacity: 1; transform: translateY(0); }
-  }
 
   /* CTA */
   .cta-section {
@@ -1137,9 +1136,15 @@
     font-weight: 700;
     letter-spacing: -0.04em;
     line-height: 0.95;
-    margin-bottom: 48px;
+    margin: 0 auto 48px;
     max-width: 860px;
     position: relative;
+  }
+  .cta-section .reveal-content {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
   }
   .cta-title em {
     font-style: normal;
@@ -1453,8 +1458,7 @@
   .reveal:not(.revealed) .reveal-content .service-card,
   .reveal:not(.revealed) .reveal-content .process-step,
   .reveal:not(.revealed) .reveal-content .why-item,
-  .reveal:not(.revealed) .reveal-content .verify-card,
-  .reveal:not(.revealed) .reveal-content .verify-log-card {
+  .reveal:not(.revealed) .reveal-content .verify-card {
     opacity: 0;
     transform: translateY(40px) scale(0.96);
     filter: blur(8px);
@@ -1471,8 +1475,7 @@
     .reveal:not(.revealed) .reveal-content .service-card,
     .reveal:not(.revealed) .reveal-content .process-step,
     .reveal:not(.revealed) .reveal-content .why-item,
-    .reveal:not(.revealed) .reveal-content .verify-card,
-    .reveal:not(.revealed) .reveal-content .verify-log-card {
+    .reveal:not(.revealed) .reveal-content .verify-card {
       transform: translateX(60px) scale(0.97); /* slides in horizontally on desktop */
     }
   }
@@ -1481,8 +1484,7 @@
   .reveal.visible .reveal-content .service-card,
   .reveal.visible .reveal-content .process-step,
   .reveal.visible .reveal-content .why-item,
-  .reveal.visible .reveal-content .verify-card,
-  .reveal.visible .reveal-content .verify-log-card {
+  .reveal.visible .reveal-content .verify-card {
     opacity: 1;
     transform: translate(0) scale(1);
     filter: blur(0);
@@ -1510,7 +1512,6 @@
 
   .reveal:not(.revealed) .reveal-content .verify-left { transition-delay: 0.1s; }
   .reveal:not(.revealed) .reveal-content .verify-card { transition-delay: 0.3s; }
-  .reveal:not(.revealed) .reveal-content .verify-log-card { transition-delay: 0.5s; }
 
   /* MOBILE */
   @media (max-width: 768px) {
@@ -1905,7 +1906,7 @@
       height: 100vh;
       position: relative;
       overflow: hidden;
-      padding: 0 100px;
+      padding: 100px 100px 0; /* Add top padding to clear fixed navigation header */
       display: flex;
       align-items: center;
       background: transparent; /* Let container background shine through */
@@ -2132,7 +2133,7 @@
       flex-shrink: 0;
     }
     .verify-card {
-      width: 640px;
+      width: 780px; /* Increased width to take up more space and fit 16:9 nicely */
       aspect-ratio: 16 / 9;
       flex-shrink: 0;
     }
@@ -2243,9 +2244,38 @@
             </svg>
           </a>
         </div>
-      </div>
-    </div>
-    
+        <!-- Floating Reviews (emitted from 3D sphere) -->
+        <div class="hero-reviews">
+          <div class="review-bubble" style="--rx: -280px; --ry: -140px; --delay: 1.0s;">
+            <div class="review-header">
+              <span class="review-avatar">А</span>
+              <span class="review-user">Артём Петров</span>
+            </div>
+            <div class="review-text">Быстрый запуск за 2 дня. Результат супер!</div>
+          </div>
+          <div class="review-bubble" style="--rx: 280px; --ry: -160px; --delay: 1.6s;">
+            <div class="review-header">
+              <span class="review-avatar">М</span>
+              <span class="review-user">Мария Громова</span>
+            </div>
+            <div class="review-text">Конверсия выросла в 2 раза после редизайна.</div>
+          </div>
+          <div class="review-bubble" style="--rx: -260px; --ry: 160px; --delay: 2.2s;">
+            <div class="review-header">
+              <span class="review-avatar">Д</span>
+              <span class="review-user">Денис Кравцов</span>
+            </div>
+            <div class="review-text">Чистейший код, бесшовная интеграция с API.</div>
+          </div>
+          <div class="review-bubble" style="--rx: 290px; --ry: 130px; --delay: 2.8s;">
+            <div class="review-header">
+              <span class="review-avatar">К</span>
+              <span class="review-user">Кирилл Соколов</span>
+            </div>
+            <div class="review-text">UX продуман до мелочей. Заказы сданы в срок.</div>
+          </div>
+        </div>
+
     <!-- MARQUEE -->
     <div class="marquee-wrap">
       <div class="cylinder-container" id="cylinderContainer">
@@ -2491,22 +2521,6 @@
               </div>
             </div>
           </div>
-        </div>
-      </div>
-
-      <!-- VERIFY LOGS -->
-      <div class="verify-log-card">
-        <div class="verify-log-top">
-          <span class="verify-log-dot"></span>
-          LEDGER STATUS: ACTIVE
-        </div>
-        <div class="verify-log-body">
-          <div class="log-line">> Connecting to step-academy.cert...</div>
-          <div class="log-line">> Certificate resolved: KVY-017627</div>
-          <div class="log-line">> Decrypting metadata signature...</div>
-          <div class="log-line success">> Signature: VALID (SHA-256)</div>
-          <div class="log-line success">> Status: Cherniakov Oleh is UI/UX Certified</div>
-          <div class="log-line">> Session secure (AES-256)</div>
         </div>
       </div>
     </div>
@@ -3077,21 +3091,60 @@
     });
   }
 
+  // Verification code — прокрутка при появлении
+  const verifyEl = document.querySelector('[data-verify]');
+  let verifyCodeScrambled = false;
+  function triggerVerificationCodeScramble() {
+    if (!verifyEl || reduceMotion || verifyCodeScrambled) return;
+    verifyCodeScrambled = true;
+    const finalCode = verifyEl.textContent;
+    const vchars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-';
+    let frame = 0;
+    const total = 30;
+    function run() {
+      const revealed = Math.floor((frame / total) * finalCode.length);
+      let out = '';
+      for (let i = 0; i < finalCode.length; i++) {
+        if (i < revealed || finalCode[i] === '-') out += finalCode[i];
+        else out += vchars[Math.floor(Math.random() * vchars.length)];
+      }
+      verifyEl.textContent = out;
+      if (frame < total) {
+        frame++;
+        requestAnimationFrame(run);
+      } else {
+        verifyEl.textContent = finalCode;
+      }
+    }
+    run();
+  }
+
+  let statsTriggered = false;
+  function triggerStatsCountUp() {
+    if (statsTriggered) return;
+    statsTriggered = true;
+    document.querySelectorAll('[data-target]').forEach(countUp);
+  }
+
   // Reveal on scroll (lazy dynamic assembly)
   function checkReveals() {
     const winWidth = window.innerWidth;
     const isDesktop = winWidth > 900;
-    // On desktop: section must scroll in 40% from screen right edge
-    // On mobile: section must scroll in 15% from screen bottom edge
-    const triggerOffset = isDesktop ? winWidth * 0.40 : window.innerHeight * 0.85;
+    // We trigger animations later:
+    // On desktop when the section is 75% on-screen (left edge < 25vw)
+    // On mobile when the section is 45% on-screen (top edge < 55vh)
+    const isVisible = isDesktop 
+      ? (sec => {
+          const rect = sec.getBoundingClientRect();
+          return rect.left < winWidth * 0.25;
+        })
+      : (sec => {
+          const rect = sec.getBoundingClientRect();
+          return rect.top < window.innerHeight * 0.55;
+        });
 
     document.querySelectorAll('.reveal').forEach(sec => {
-      const rect = sec.getBoundingClientRect();
-      const isVisible = isDesktop 
-        ? (rect.left < winWidth - triggerOffset)
-        : (rect.top < triggerOffset);
-
-      if (isVisible) {
+      if (isVisible(sec)) {
         if (!sec.classList.contains('visible')) {
           sec.classList.add('visible');
           
@@ -3099,6 +3152,12 @@
           sec.querySelectorAll('[data-scramble]').forEach((el, idx) => {
             runScramble(el, idx * 250);
           });
+          
+          // Synchronized late triggers for the verify section
+          if (sec.id === 'verify') {
+            triggerVerificationCodeScramble();
+            triggerStatsCountUp();
+          }
           
           // Add revealed class after animations complete to clear transition delays
           setTimeout(() => {
@@ -3113,35 +3172,6 @@
   window.addEventListener('load', checkReveals);
   window.addEventListener('resize', checkReveals);
   window.addEventListener('scroll', checkReveals, { passive: true });
-
-  // Verification code — прокрутка при появлении
-  const verifyEl = document.querySelector('[data-verify]');
-  if (verifyEl && !reduceMotion) {
-    const finalCode = verifyEl.textContent;
-    const vchars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-';
-    const vObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          let frame = 0;
-          const total = 30;
-          function run() {
-            const revealed = Math.floor((frame / total) * finalCode.length);
-            let out = '';
-            for (let i = 0; i < finalCode.length; i++) {
-              if (i < revealed || finalCode[i] === '-') out += finalCode[i];
-              else out += vchars[Math.floor(Math.random() * vchars.length)];
-            }
-            verifyEl.textContent = out;
-            if (frame < total) { frame++; requestAnimationFrame(run); }
-            else verifyEl.textContent = finalCode;
-          }
-          run();
-          vObs.unobserve(e.target);
-        }
-      });
-    }, { threshold: 0.6 });
-    vObs.observe(verifyEl);
-  }
 
   // Verification card — клик открывает реестр + копирует номер
   const verifyHint = document.getElementById('verifyHint');
@@ -3199,15 +3229,7 @@
       el.textContent = Math.floor(current);
     }, 30);
   }
-  const statsObs = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.querySelectorAll('[data-target]').forEach(countUp);
-        statsObs.unobserve(e.target);
-      }
-    });
-  }, { threshold: 0.3 });
-  if (verifySection) statsObs.observe(verifySection);
+
 
   // ===== DEMO MODAL =====
   const overlay = document.getElementById('modalOverlay');
@@ -3845,7 +3867,7 @@
 <script>
   // Unified mouse spotlight tracking and magnetic effect
   if (!isTouch) {
-    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card, .why-item, .verify-log-card');
+    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card, .why-item');
     cards.forEach(card => {
       card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
