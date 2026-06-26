@@ -990,33 +990,118 @@
   }
 
   /* STATS */
-  .stats {
-    background: var(--white);
-    color: var(--black);
-    border-top: 1px solid var(--gray-200);
-  }
   .stats-inner {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    border: 1px solid rgba(0,0,0,0.1);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 32px;
+    margin-top: 40px;
+    border: none;
   }
   .stat {
-    padding: 64px 48px;
-    border-right: 1px solid rgba(0,0,0,0.1);
+    padding: 0;
+    border: none;
+    flex: 1;
+    min-width: 120px;
   }
-  .stat:last-child { border-right: none; }
   .stat-num {
-    font-size: clamp(52px, 5.5vw, 88px);
+    font-size: clamp(32px, 4.5vw, 56px);
     font-weight: 700;
-    letter-spacing: -0.04em;
+    letter-spacing: -0.03em;
     line-height: 1;
-    margin-bottom: 12px;
+    color: var(--white);
     font-family: var(--font-mono);
   }
   .stat-label {
-    font-size: 16px;
-    color: #555;
-    font-weight: 400;
+    font-size: 13px;
+    color: var(--gray-400);
+    line-height: 1.4;
+  }
+
+  /* Verification Ledger Logs */
+  .verify-log-card {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px dashed var(--card-border);
+    border-radius: 8px;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    color: var(--gray-400);
+    box-shadow: var(--card-shadow);
+    backdrop-filter: blur(var(--btn-blur, 0px));
+    -webkit-backdrop-filter: blur(var(--btn-blur, 0px));
+    transition: border-color 0.3s, box-shadow 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+  .verify-log-card::before, .verify-log-card::after {
+    content: '';
+    position: absolute;
+    inset: -1px;
+    border-radius: inherit;
+    padding: 1px;
+    background: var(--card-spotlight-border);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    z-index: 2;
+  }
+  .verify-log-card::after {
+    inset: 0;
+    background: var(--card-spotlight-bg);
+    z-index: -1;
+  }
+  .verify-log-card:hover::before, .verify-log-card:hover::after {
+    opacity: 1;
+  }
+  .verify-log-card:hover {
+    border-color: transparent;
+    box-shadow: var(--card-shadow-hover);
+  }
+  .verify-log-top {
+    font-size: 11px;
+    color: var(--gray-500);
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid var(--gray-800);
+    padding-bottom: 10px;
+  }
+  .verify-log-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: #10b981;
+    animation: blink 1.5s infinite;
+  }
+  .verify-log-body {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    line-height: 1.4;
+  }
+  .visible .log-line {
+    opacity: 0;
+    transform: translateY(5px);
+    animation: logFadeIn 0.5s forwards;
+  }
+  .visible .log-line:nth-child(1) { animation-delay: 0.2s; }
+  .visible .log-line:nth-child(2) { animation-delay: 0.8s; }
+  .visible .log-line:nth-child(3) { animation-delay: 1.4s; }
+  .visible .log-line:nth-child(4) { animation-delay: 2.0s; }
+  .visible .log-line:nth-child(5) { animation-delay: 2.6s; }
+  .visible .log-line:nth-child(6) { animation-delay: 3.2s; }
+
+  @keyframes logFadeIn {
+    to { opacity: 1; transform: translateY(0); }
   }
 
   /* CTA */
@@ -1754,7 +1839,7 @@
     
     /* 2. Services Section */
     .services {
-      width: 220vw;
+      width: fit-content;
       gap: 80px;
       border-left: 1px solid var(--card-border);
     }
@@ -1791,7 +1876,7 @@
     
     /* 3. Process Section */
     .process {
-      width: 180vw;
+      width: fit-content;
       gap: 80px;
       border-left: 1px solid var(--card-border);
     }
@@ -1835,7 +1920,7 @@
     
     /* 4. Why Us Section */
     .why {
-      width: 170vw;
+      width: fit-content;
       gap: 80px;
       border-left: 1px solid var(--card-border);
     }
@@ -1911,7 +1996,7 @@
     
     /* 5. Verify & Stats Section */
     .verify {
-      width: 165vw;
+      width: fit-content;
       gap: 80px;
       border-left: 1px solid var(--card-border);
     }
@@ -2265,6 +2350,22 @@
             </svg>
             Проверить в официальном реестре STEP
           </div>
+        </div>
+      </div>
+
+      <!-- VERIFY LOGS -->
+      <div class="verify-log-card">
+        <div class="verify-log-top">
+          <span class="verify-log-dot"></span>
+          LEDGER STATUS: ACTIVE
+        </div>
+        <div class="verify-log-body">
+          <div class="log-line">> Connecting to step-academy.cert...</div>
+          <div class="log-line">> Certificate resolved: KVY-017627</div>
+          <div class="log-line">> Decrypting metadata signature...</div>
+          <div class="log-line success">> Signature: VALID (SHA-256)</div>
+          <div class="log-line success">> Status: Cherniakov Oleh is UI/UX Certified</div>
+          <div class="log-line">> Session secure (AES-256)</div>
         </div>
       </div>
     </div>
@@ -3486,7 +3587,7 @@
 <script>
   // Unified mouse spotlight tracking and magnetic effect
   if (!isTouch) {
-    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card, .why-item');
+    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card, .why-item, .verify-log-card');
     cards.forEach(card => {
       card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
