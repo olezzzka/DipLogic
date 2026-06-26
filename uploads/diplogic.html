@@ -732,8 +732,10 @@
     font-weight: 700;
     letter-spacing: -0.03em;
     line-height: 1;
-    margin-bottom: 80px;
     max-width: 640px;
+  }
+  .process-header {
+    margin-bottom: 80px;
   }
   .process-steps {
     display: grid;
@@ -1687,6 +1689,295 @@
     }
   }
 
+  /* ========================================== */
+  /* HORIZONTAL LAYOUT OVERRIDES (DESKTOP ONLY) */
+  /* ========================================== */
+  @media (min-width: 901px) {
+    body {
+      overflow: hidden;
+    }
+    
+    /* Horizontal Page Wrapper */
+    .horizontal-scroll-container {
+      display: flex;
+      flex-direction: row;
+      width: 100vw;
+      height: 100vh;
+      overflow-x: auto;
+      overflow-y: hidden;
+      scroll-snap-type: x mandatory;
+      scroll-behavior: auto;
+      -webkit-overflow-scrolling: touch;
+      background: var(--page-bg);
+      transition: background-color 0.5s ease;
+    }
+    .horizontal-scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+    
+    /* Global Section Settings */
+    .horizontal-scroll-container > section {
+      flex-shrink: 0;
+      height: 100vh;
+      position: relative;
+      overflow: hidden;
+      padding: 0 100px;
+      display: flex;
+      align-items: center;
+      background: transparent; /* Let container background shine through */
+      border-top: none;
+    }
+    
+    /* 1. Hero Section */
+    .hero {
+      width: 100vw;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 100px 24px 0 !important;
+    }
+    .hero-content {
+      margin: auto 0;
+    }
+    .hero .marquee-wrap {
+      width: calc(100% + 48px);
+      margin-left: -24px;
+      margin-right: -24px;
+      margin-top: auto;
+      border-left: none;
+      border-right: none;
+      border-top: 1px solid var(--card-border);
+      border-bottom: none;
+      background: transparent;
+      padding: 24px 0;
+      height: 110px;
+    }
+    
+    /* 2. Services Section */
+    .services {
+      width: 220vw;
+      scroll-snap-align: start;
+      gap: 80px;
+      border-left: 1px solid var(--card-border);
+    }
+    .services-header {
+      width: 420px;
+      flex-shrink: 0;
+      margin-bottom: 0;
+    }
+    .services-grid {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+      margin-top: 0;
+      height: auto;
+      align-items: stretch;
+      flex-grow: 1;
+    }
+    .service-card {
+      width: 380px;
+      height: 480px;
+      flex-shrink: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 40px;
+    }
+    .service-card:nth-child(1),
+    .service-card:nth-child(4) {
+      width: 520px;
+    }
+    .service-arrow {
+      margin-top: auto;
+    }
+    
+    /* 3. Process Section */
+    .process {
+      width: 180vw;
+      scroll-snap-align: start;
+      gap: 80px;
+      border-left: 1px solid var(--card-border);
+    }
+    .process-header {
+      width: 400px;
+      flex-shrink: 0;
+    }
+    .process-title {
+      margin-bottom: 0;
+    }
+    .process-steps {
+      display: flex;
+      flex-direction: row;
+      gap: 40px;
+      position: relative;
+      flex-grow: 1;
+      margin-top: 0;
+    }
+    .process-steps::before {
+      content: '';
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      right: 50px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--card-border) 0%, var(--theme-accent) 50%, var(--card-border) 100%);
+      opacity: 0.35;
+      z-index: 0;
+    }
+    .process-step {
+      width: 320px;
+      height: 380px;
+      flex-shrink: 0;
+      position: relative;
+      z-index: 1;
+      padding: 40px 32px;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+    }
+    
+    /* 4. Why Us Section */
+    .why {
+      width: 170vw;
+      scroll-snap-align: start;
+      gap: 80px;
+      border-left: 1px solid var(--card-border);
+    }
+    .why-header {
+      width: 400px;
+      flex-shrink: 0;
+    }
+    .why-inner {
+      display: flex;
+      flex-direction: row;
+      gap: 80px;
+      width: 100%;
+      align-items: center;
+    }
+    .why-title {
+      position: static;
+      top: auto;
+    }
+    .why-items {
+      display: flex;
+      flex-direction: row;
+      gap: 30px;
+      flex-grow: 1;
+    }
+    .why-item {
+      width: 310px;
+      height: 380px;
+      flex-shrink: 0;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 40px 32px;
+      box-shadow: var(--card-shadow);
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-start;
+      gap: 20px;
+      border-bottom: 1px solid var(--card-border);
+      transition: border-color 0.3s, box-shadow 0.3s, transform 0.3s;
+    }
+    .why-item::before, .why-item::after {
+      content: '';
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      padding: 1px;
+      background: var(--card-spotlight-border);
+      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      mask-composite: exclude;
+      pointer-events: none;
+      opacity: 0;
+      transition: opacity 0.35s ease;
+      z-index: 2;
+    }
+    .why-item::after {
+      inset: 0;
+      background: var(--card-spotlight-bg);
+      z-index: -1;
+    }
+    .why-item:hover::before, .why-item:hover::after {
+      opacity: 1;
+    }
+    .why-item:hover {
+      padding-left: 32px;
+      border-color: transparent;
+      box-shadow: var(--card-shadow-hover);
+      transform: translateY(-5px);
+    }
+    .why-item-num {
+      padding-top: 0;
+    }
+    
+    /* 5. Verify & Stats Section */
+    .verify {
+      width: 165vw;
+      scroll-snap-align: start;
+      gap: 80px;
+      border-left: 1px solid var(--card-border);
+    }
+    .verify-inner {
+      display: flex;
+      flex-direction: row;
+      gap: 80px;
+      width: 100%;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .verify-left {
+      width: 520px;
+      flex-shrink: 0;
+    }
+    .verify-card {
+      width: 480px;
+      flex-shrink: 0;
+    }
+    .stats-inner {
+      display: flex;
+      flex-direction: row;
+      gap: 32px;
+      margin-top: 40px;
+      border: none;
+    }
+    .stat {
+      padding: 0;
+      border: none;
+      flex: 1;
+    }
+    
+    /* 6. CTA & Footer Section */
+    .cta-section {
+      width: 100vw;
+      scroll-snap-align: start;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      border-left: 1px solid var(--card-border);
+      padding: 0 48px 120px;
+    }
+    footer {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 100px;
+      display: flex;
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+      padding: 0 80px;
+      border-top: 1px solid var(--card-border);
+      background: rgba(8, 8, 8, 0.4);
+      backdrop-filter: blur(10px);
+    }
+  }
+
 </style>
 </head>
 <body>
@@ -1719,38 +2010,39 @@
 </nav>
 
 <!-- HERO -->
-<section class="hero">
-  <canvas class="hero-bg-grid" id="heroGrid"></canvas>
-  <div class="hero-content" id="heroContent">
-    <div class="hero-badge">Открыты к новым проектам</div>
-    <h1 class="hero-title">
-      <span data-scramble data-line="0">Сайты,</span><br>
-      <span data-scramble data-line="1">которые</span><br>
-      <em data-scramble data-line="2">продают</em>
-    </h1>
-    <div class="hero-bottom">
-      <p class="hero-desc" data-scramble data-line="3">
-        Разрабатываем лендинги, визитки, интернет-магазины и приложения. Не шаблоны — работающие продукты под ваш бизнес.
-      </p>
-      <div class="hero-actions">
-        <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
-          Начать проект
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-            <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        </a>
-        <span class="hero-scroll-hint">↓ scroll</span>
+<div class="horizontal-scroll-container" id="scrollContainer">
+  <section class="hero">
+    <canvas class="hero-bg-grid" id="heroGrid"></canvas>
+    <div class="hero-content" id="heroContent">
+      <div class="hero-badge">Открыты к новым проектам</div>
+      <h1 class="hero-title">
+        <span data-scramble data-line="0">Сайты,</span><br>
+        <span data-scramble data-line="1">которые</span><br>
+        <em data-scramble data-line="2">продают</em>
+      </h1>
+      <div class="hero-bottom">
+        <p class="hero-desc" data-scramble data-line="3">
+          Разрабатываем лендинги, визитки, интернет-магазины и приложения. Не шаблоны — работающие продукты под ваш бизнес.
+        </p>
+        <div class="hero-actions">
+          <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
+            Начать проект
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+              <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </a>
+          <span class="hero-scroll-hint">↓ scroll</span>
+        </div>
       </div>
     </div>
-  </div>
-</section>
-
-<!-- MARQUEE -->
-<div class="marquee-wrap">
-  <div class="cylinder-container" id="cylinderContainer">
-    <div class="cylinder-track" id="cylinderTrack"></div>
-  </div>
-</div>
+    
+    <!-- MARQUEE -->
+    <div class="marquee-wrap">
+      <div class="cylinder-container" id="cylinderContainer">
+        <div class="cylinder-track" id="cylinderTrack"></div>
+      </div>
+    </div>
+  </section>
 
 <!-- SERVICES -->
 <section class="services reveal" id="services">
@@ -1837,9 +2129,11 @@
 <!-- PROCESS -->
 <section class="process reveal" id="process">
   <div class="reveal-content">
-    <div class="section-label">Как мы работаем</div>
-  <h2 class="process-title">Четыре шага от идеи до запуска</h2>
-  <div class="process-steps">
+    <div class="process-header">
+      <div class="section-label">Как мы работаем</div>
+      <h2 class="process-title">Четыре шага от идеи до запуска</h2>
+    </div>
+    <div class="process-steps">
     <div class="process-step">
       <div class="step-num">01</div>
       <div class="step-title">Бриф</div>
@@ -1868,11 +2162,11 @@
 <section class="why reveal" id="why">
   <div class="reveal-content">
     <div class="why-inner">
-    <div>
-      <div class="section-label">Почему мы</div>
-      <h2 class="why-title">Не просто подрядчики</h2>
-    </div>
-    <div class="why-items">
+      <div class="why-header">
+        <div class="section-label">Почему мы</div>
+        <h2 class="why-title">Не просто подрядчики</h2>
+      </div>
+      <div class="why-items">
       <div class="why-item">
         <div class="why-item-num">01</div>
         <div>
@@ -1910,83 +2204,77 @@
 <section class="verify reveal" id="verify">
   <div class="reveal-content">
     <div class="verify-inner">
-    <div class="verify-left">
-      <div class="section-label">Квалификация</div>
-      <h2 class="verify-headline">Подтверждённый профессионал</h2>
-      <p class="verify-text">
-        За дизайном стоит профильное образование по UI/UX и диплом международной академии. Подлинность не на словах — нажмите на карточку и сверьте номер прямо в официальном реестре STEP Computer Academy.
-      </p>
-    </div>
-
-    <div class="verify-card" id="verifyCard" role="button" tabindex="0"
-         title="Нажмите, чтобы проверить диплом в официальном реестре STEP">
-      <div class="verify-scan"></div>
-      <div class="verify-card-top">
-        <div class="verify-dots"><span></span><span></span><span></span></div>
-        verification · step-academy.cert
-      </div>
-      <div class="verify-body">
-        <div class="verify-row">
-          <span class="verify-key">Holder</span>
-          <span class="verify-val">Cherniakov Oleh</span>
-        </div>
-        <div class="verify-row">
-          <span class="verify-key">Программа</span>
-          <span class="verify-val">UI/UX Design</span>
-        </div>
-        <div class="verify-row">
-          <span class="verify-key">Академия</span>
-          <span class="verify-val">STEP Computer Academy</span>
-        </div>
-        <div class="verify-row">
-          <span class="verify-key">Оценка</span>
-          <span class="verify-val">Excellent</span>
-        </div>
-        <div class="verify-row">
-          <span class="verify-key">Выдан</span>
-          <span class="verify-val mono">11.05.2025 · Kyiv</span>
-        </div>
-
-        <div class="verify-code-block">
-          <div>
-            <div class="verify-code-label">Verification code</div>
-            <div class="verify-code-value" data-verify>KVY-017627</div>
+      <div class="verify-left">
+        <div class="section-label">Квалификация</div>
+        <h2 class="verify-headline">Подтверждённый профессионал</h2>
+        <p class="verify-text">
+          За дизайном стоит профильное образование по UI/UX и диплом международной академии. Подлинность не на словах — нажмите на карточку и сверьте номер прямо в официальном реестре STEP Computer Academy.
+        </p>
+        <div class="stats-inner">
+          <div class="stat">
+            <div class="stat-num" data-target="14">0</div>
+            <div class="stat-label">Проектов запущено</div>
           </div>
-          <span class="verify-status">
-            <span class="verify-status-dot"></span>
-            VERIFIED
-          </span>
+          <div class="stat">
+            <div class="stat-num" data-target="2">0</div>
+            <div class="stat-label">Дня — средний срок лендинга</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num" data-target="100">0</div>
+            <div class="stat-label">% возврат средств при срыве дедлайнов</div>
+          </div>
         </div>
+      </div>
 
-        <div class="verify-cta-hint" id="verifyHint">
-          <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
-            <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-          Проверить в официальном реестре STEP
+      <div class="verify-card" id="verifyCard" role="button" tabindex="0"
+           title="Нажмите, чтобы проверить диплом в официальном реестре STEP">
+        <div class="verify-scan"></div>
+        <div class="verify-card-top">
+          <div class="verify-dots"><span></span><span></span><span></span></div>
+          verification · step-academy.cert
+        </div>
+        <div class="verify-body">
+          <div class="verify-row">
+            <span class="verify-key">Holder</span>
+            <span class="verify-val">Cherniakov Oleh</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-key">Программа</span>
+            <span class="verify-val">UI/UX Design</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-key">Академия</span>
+            <span class="verify-val">STEP Computer Academy</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-key">Оценка</span>
+            <span class="verify-val">Excellent</span>
+          </div>
+          <div class="verify-row">
+            <span class="verify-key">Выдан</span>
+            <span class="verify-val mono">11.05.2025 · Kyiv</span>
+          </div>
+
+          <div class="verify-code-block">
+            <div>
+              <div class="verify-code-label">Verification code</div>
+              <div class="verify-code-value" data-verify>KVY-017627</div>
+            </div>
+            <span class="verify-status">
+              <span class="verify-status-dot"></span>
+              VERIFIED
+            </span>
+          </div>
+
+          <div class="verify-cta-hint" id="verifyHint">
+            <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
+              <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            Проверить в официальном реестре STEP
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  </div>
-</section>
-
-<!-- STATS -->
-<section class="stats reveal">
-  <div class="reveal-content">
-    <div class="stats-inner">
-    <div class="stat">
-      <div class="stat-num" data-target="14">0</div>
-      <div class="stat-label">Проектов запущено</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" data-target="2">0</div>
-      <div class="stat-label">Дня — средний срок лендинга</div>
-    </div>
-    <div class="stat">
-      <div class="stat-num" data-target="100">0</div>
-      <div class="stat-label">% возврат средств при срыве дедлайнов</div>
-    </div>
-  </div>
   </div>
 </section>
 
@@ -1994,44 +2282,45 @@
 <section class="cta-section reveal" id="contact">
   <div class="reveal-content">
     <div class="cta-bg"></div>
-  <div class="cta-label">Начать сотрудничество</div>
-  <h2 class="cta-title">
-    Готовы обсудить<br>
-    <em>ваш проект?</em>
-  </h2>
-  <div class="cta-actions">
-    <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
-      Написать в Telegram
-      <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-        <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <div class="cta-label">Начать сотрудничество</div>
+    <h2 class="cta-title">
+      Готовы обсудить<br>
+      <em>ваш проект?</em>
+    </h2>
+    <div class="cta-actions">
+      <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
+        Написать в Telegram
+        <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+          <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <a href="mailto:diplogic.2026@gmail.com" class="btn-secondary magnetic">
+        Написать на почту
+      </a>
+    </div>
+  </div>
+  
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
+        <rect x="2" y="4" width="5" height="20" fill="white"/>
+        <path d="M9 4 H14 C20 4 24 8.5 24 14 C24 19.5 20 24 14 24 H9 Z" fill="white"/>
+        <rect x="17" y="4" width="7" height="3" fill="black"/>
       </svg>
-    </a>
-    <a href="mailto:diplogic.2026@gmail.com" class="btn-secondary magnetic">
-      Написать на почту
-    </a>
-  </div>
-  </div>
+      DipLogic
+    </div>
+    <div class="footer-links">
+      <a href="#services">Услуги</a>
+      <a href="#process">Процесс</a>
+      <a href="#why">О нас</a>
+      <a href="https://t.me/DipLogic" target="_blank">Telegram</a>
+      <a href="mailto:diplogic.2026@gmail.com">Email</a>
+    </div>
+    <div class="footer-copy">© 2025 DipLogic</div>
+  </footer>
 </section>
-
-<!-- FOOTER -->
-<footer>
-  <div class="footer-logo">
-    <svg width="26" height="26" viewBox="0 0 28 28" fill="none">
-      <rect x="2" y="4" width="5" height="20" fill="white"/>
-      <path d="M9 4 H14 C20 4 24 8.5 24 14 C24 19.5 20 24 14 24 H9 Z" fill="white"/>
-      <rect x="17" y="4" width="7" height="3" fill="black"/>
-    </svg>
-    DipLogic
-  </div>
-  <div class="footer-links">
-    <a href="#services">Услуги</a>
-    <a href="#process">Процесс</a>
-    <a href="#why">О нас</a>
-    <a href="https://t.me/DipLogic" target="_blank">Telegram</a>
-    <a href="mailto:diplogic.2026@gmail.com">Email</a>
-  </div>
-  <div class="footer-copy">© 2025 DipLogic</div>
-</footer>
+</div>
 
 <!-- ===== DEMO MODAL ===== -->
 <div class="modal-overlay" id="modalOverlay">
@@ -2290,15 +2579,25 @@
   // Parallax hero
   const heroGrid = document.getElementById('heroGrid');
   const heroContent = document.getElementById('heroContent');
-  if (!reduceMotion) {
-    window.addEventListener('scroll', () => {
+  
+  function updateParallax() {
+    if (reduceMotion) return;
+    
+    if (window.innerWidth > 900 && scrollContainer) {
+      const x = scrollContainer.scrollLeft;
+      if (x < window.innerWidth) {
+        heroGrid.style.transform = `translateX(${-x * 0.35}px)`;
+        heroContent.style.transform = `translateX(${-x * 0.2}px)`;
+        heroContent.style.opacity = 1 - (x / window.innerWidth) * 0.9;
+      }
+    } else {
       const y = window.scrollY;
       if (y < window.innerHeight) {
         heroGrid.style.transform = `translateY(${y * 0.4}px)`;
         heroContent.style.transform = `translateY(${y * 0.2}px)`;
         heroContent.style.opacity = 1 - (y / window.innerHeight) * 0.8;
       }
-    }, { passive: true });
+    }
   }
 
   // Binary Decrypt Animation — построчное дешифрование слева направо
@@ -2356,14 +2655,102 @@
     });
   }
 
-  // Nav scroll + progress
+  // Nav scroll + progress & Horizontal Scroll Translation
   const nav = document.getElementById('nav');
   const progress = document.getElementById('scrollProgress');
-  window.addEventListener('scroll', () => {
-    nav.classList.toggle('scrolled', window.scrollY > 60);
-    const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-    progress.style.width = scrolled + '%';
-  }, { passive: true });
+  const scrollContainer = document.getElementById('scrollContainer');
+
+  function updateScrollProgress() {
+    let scrolledPercent = 0;
+    if (window.innerWidth > 900 && scrollContainer) {
+      const maxScroll = scrollContainer.scrollWidth - scrollContainer.clientWidth;
+      scrolledPercent = maxScroll > 0 ? (scrollContainer.scrollLeft / maxScroll) * 100 : 0;
+      nav.classList.toggle('scrolled', scrollContainer.scrollLeft > 60);
+    } else {
+      const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+      scrolledPercent = maxScroll > 0 ? (window.scrollY / maxScroll) * 100 : 0;
+      nav.classList.toggle('scrolled', window.scrollY > 60);
+    }
+    progress.style.width = scrolledPercent + '%';
+  }
+  
+  window.addEventListener('scroll', updateScrollProgress, { passive: true });
+  
+  // Parallax and scroll progress attachment to horizontal container
+  if (scrollContainer) {
+    scrollContainer.addEventListener('scroll', () => {
+      updateScrollProgress();
+      updateParallax();
+    }, { passive: true });
+    
+    // Smooth horizontal scrolling mouse wheel translation
+    let targetScrollLeft = 0;
+    let currentScrollLeft = 0;
+    let isScrolling = false;
+
+    targetScrollLeft = scrollContainer.scrollLeft;
+    currentScrollLeft = scrollContainer.scrollLeft;
+
+    scrollContainer.addEventListener('wheel', (e) => {
+      if (window.innerWidth > 900 && e.deltaY !== 0) {
+        e.preventDefault();
+        targetScrollLeft = Math.max(0, Math.min(
+          scrollContainer.scrollWidth - scrollContainer.clientWidth,
+          targetScrollLeft + e.deltaY * 0.95
+        ));
+
+        if (!isScrolling) {
+          isScrolling = true;
+          smoothScrollLoop();
+        }
+      }
+    }, { passive: false });
+
+    scrollContainer.addEventListener('scroll', () => {
+      if (!isScrolling) {
+        targetScrollLeft = scrollContainer.scrollLeft;
+        currentScrollLeft = scrollContainer.scrollLeft;
+      }
+    }, { passive: true });
+
+    function smoothScrollLoop() {
+      if (!isScrolling) return;
+      const diff = targetScrollLeft - currentScrollLeft;
+      if (Math.abs(diff) > 0.5) {
+        currentScrollLeft += diff * 0.12;
+        scrollContainer.scrollLeft = currentScrollLeft;
+        requestAnimationFrame(smoothScrollLoop);
+      } else {
+        scrollContainer.scrollLeft = targetScrollLeft;
+        currentScrollLeft = targetScrollLeft;
+        isScrolling = false;
+      }
+    }
+
+    // Anchor links horizontal / vertical smooth scrolls
+    document.querySelectorAll('nav a, footer a').forEach(anchor => {
+      anchor.addEventListener('click', function(e) {
+        const href = this.getAttribute('href');
+        if (href.startsWith('#')) {
+          e.preventDefault();
+          const target = document.querySelector(href === '#' ? '.hero' : href);
+          if (target) {
+            if (window.innerWidth > 900) {
+              scrollContainer.scrollTo({
+                left: target.offsetLeft,
+                behavior: 'smooth'
+              });
+            } else {
+              window.scrollTo({
+                top: target.offsetTop - 80,
+                behavior: 'smooth'
+              });
+            }
+          }
+        }
+      });
+    });
+  }
 
   // Reveal
   const observer = new IntersectionObserver(entries => {
@@ -2466,9 +2853,9 @@
         statsObs.unobserve(e.target);
       }
     });
-  }, { threshold: 0.5 });
-  const statsEl = document.querySelector('.stats');
-  if (statsEl) statsObs.observe(statsEl);
+  }, { threshold: 0.3 });
+  const verifySection = document.getElementById('verify');
+  if (verifySection) statsObs.observe(verifySection);
 
   // ===== DEMO MODAL =====
   const overlay = document.getElementById('modalOverlay');
@@ -3106,7 +3493,7 @@
 <script>
   // Unified mouse spotlight tracking and magnetic effect
   if (!isTouch) {
-    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card');
+    const cards = document.querySelectorAll('.nav-cta, .btn-primary, .btn-secondary, .service-card, .process-step, .verify-card, .why-item');
     cards.forEach(card => {
       card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
