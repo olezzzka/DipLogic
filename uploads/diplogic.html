@@ -737,6 +737,7 @@
   .process-header {
     margin-bottom: 80px;
   }
+  .process-line-bg, .process-line-fill { display: none; }
   .process-steps {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -1953,16 +1954,29 @@
       flex-grow: 1;
       margin-top: 0;
     }
-    .process-steps::before {
-      content: '';
+    .process-line-bg {
+      display: block;
       position: absolute;
       top: 50px;
       left: 50px;
       right: 50px;
       height: 2px;
-      background: linear-gradient(90deg, var(--card-border) 0%, var(--theme-accent) 50%, var(--card-border) 100%);
-      opacity: 0.35;
+      background: var(--card-border);
+      opacity: 0.25;
       z-index: 0;
+    }
+    .process-line-fill {
+      display: block;
+      position: absolute;
+      top: 50px;
+      left: 50px;
+      right: 50px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--card-border-hover), var(--theme-accent));
+      z-index: 0;
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.15s ease-out;
     }
     .process-step {
       width: 320px;
@@ -2270,7 +2284,9 @@
       <h2 class="process-title">Четыре шага от идеи до запуска</h2>
     </div>
     <div class="process-steps">
-    <div class="process-step">
+      <div class="process-line-bg"></div>
+      <div class="process-line-fill" id="processLineFill"></div>
+      <div class="process-step">
       <div class="step-num">01</div>
       <div class="step-title">Бриф</div>
       <p class="step-desc">Разбираемся в вашем бизнесе, аудитории и целях. Фиксируем задачу письменно — без воды.</p>
@@ -2827,13 +2843,93 @@
   }
   
   window.addEventListener('scroll', updateScrollProgress, { passive: true });
+
+  // Scroll-linked interactive animations
+  const servicesSection = document.getElementById('services');
+  const processSection = document.getElementById('process');
+  const whySection = document.getElementById('why');
+  const verifySection = document.getElementById('verify');
+  
+  const serviceCards = document.querySelectorAll('.service-card');
+  const processSteps = document.querySelectorAll('.process-step');
+  const processLineFill = document.getElementById('processLineFill');
+  const whyItems = document.querySelectorAll('.why-item');
+  const verifyCard = document.getElementById('verifyCard');
+
+  function animateScrollLinked() {
+    if (window.innerWidth <= 900 || reduceMotion) return;
+    
+    const winWidth = window.innerWidth;
+
+    // 1. Services Parallax Cards Spread (staggered fan out)
+    if (servicesSection) {
+      const rect = servicesSection.getBoundingClientRect();
+      if (rect.left < winWidth && rect.right > 0) {
+        serviceCards.forEach((card, index) => {
+          if (card.matches(':hover')) return; // Let mouse hover tilt take precedence
+          const factor = (index + 1) * 0.12;
+          const translate = Math.max(0, rect.left) * factor;
+          card.style.transform = `translateX(${translate}px) translateZ(0)`;
+        });
+      }
+    }
+
+    // 2. Process Line Drawing & Steps Float
+    if (processSection) {
+      const rect = processSection.getBoundingClientRect();
+      if (rect.left < winWidth && rect.right > 0) {
+        const totalScrollable = rect.width - winWidth;
+        const progress = totalScrollable > 0 ? Math.max(0, Math.min(1, -rect.left / totalScrollable)) : 0;
+        if (processLineFill) {
+          processLineFill.style.transform = `scaleX(${progress})`;
+        }
+
+        processSteps.forEach((step, index) => {
+          if (step.matches(':hover')) return;
+          const factor = (index + 1) * 0.08;
+          const translate = Math.max(0, rect.left) * factor;
+          step.style.transform = `translateX(${translate}px) translateZ(0)`;
+        });
+      }
+    }
+
+    // 3. Why Us Cards Orbit
+    if (whySection) {
+      const rect = whySection.getBoundingClientRect();
+      if (rect.left < winWidth && rect.right > 0) {
+        whyItems.forEach((item, index) => {
+          if (item.matches(':hover')) return;
+          const factor = (index + 1) * 0.1;
+          const translate = Math.max(0, rect.left) * factor;
+          const rotate = Math.min(10, Math.max(0, rect.left) * 0.02);
+          item.style.transform = `translateX(${translate}px) rotateY(${rotate}deg) translateZ(0)`;
+        });
+      }
+    }
+
+    // 4. Verify Card Parallax and 3D Rotation
+    if (verifySection) {
+      const rect = verifySection.getBoundingClientRect();
+      if (rect.left < winWidth && rect.right > 0) {
+        const translate = Math.max(0, rect.left) * 0.15;
+        const rotate = Math.min(8, Math.max(0, rect.left) * 0.015);
+        if (verifyCard && !verifyCard.matches(':hover')) {
+          verifyCard.style.transform = `perspective(1000px) translateX(${translate}px) rotateY(${-rotate}deg) translateZ(0)`;
+        }
+      }
+    }
+  }
   
   // Parallax and scroll progress attachment to horizontal container
   if (scrollContainer) {
     scrollContainer.addEventListener('scroll', () => {
       updateScrollProgress();
       updateParallax();
+      animateScrollLinked();
     }, { passive: true });
+    
+    // Initial call to align layout
+    animateScrollLinked();
     
     // Smooth horizontal scrolling mouse wheel translation
     let targetScrollLeft = 0;
