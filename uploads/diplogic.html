@@ -3038,7 +3038,6 @@
   }
 
   // Verification card — клик открывает реестр + копирует номер
-  const verifyCard = document.getElementById('verifyCard');
   const verifyHint = document.getElementById('verifyHint');
   if (verifyCard) {
     const REGISTRY_URL = 'https://diploma.itstep.org/';
@@ -3102,7 +3101,6 @@
       }
     });
   }, { threshold: 0.3 });
-  const verifySection = document.getElementById('verify');
   if (verifySection) statsObs.observe(verifySection);
 
   // ===== DEMO MODAL =====
