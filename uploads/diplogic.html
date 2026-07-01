@@ -1553,22 +1553,40 @@
   @media (max-width: 768px) {
     body { cursor: auto; font-size: 17px; }
     .cursor, .cursor-ring, .cursor-glow { display: none; }
-    nav { padding: 20px 24px; }
+    nav { padding: 18px 20px; }
     .nav-links { display: none; }
-    .hero { padding: 0 24px 64px; }
-    section { padding: 80px 24px; }
+    .nav-right { gap: 12px; }
+    .nav-cta { padding: 11px 16px; font-size: 14px; white-space: nowrap; }
+    .hero { padding: 104px 24px 56px; min-height: 100svh; }
+    .hero-title { font-size: clamp(44px, 13vw, 56px); line-height: 0.96; margin-bottom: 24px; }
+    .hero-desc { font-size: 16px; line-height: 1.55; }
+    .hero-actions { margin-top: 28px; }
+    .hero-badge { margin-bottom: 24px; }
+    section { padding: 78px 24px; }
     .services-header { grid-template-columns: 1fr; gap: 24px; }
     .services-grid { grid-template-columns: 1fr; }
-    .service-card { border-right: none !important; transform: none !important; }
-    .process-steps { grid-template-columns: 1fr 1fr; }
+    .services-title, .process-title, .why-title, .verify-headline { font-size: clamp(34px, 10vw, 42px); }
+    .services-intro, .verify-text { font-size: 16px; line-height: 1.6; }
+    .service-card { border-right: none !important; transform: none !important; padding: 32px 28px; min-height: auto; }
+    .process-header { margin-bottom: 36px; }
+    .process-steps { grid-template-columns: 1fr; gap: 14px; }
     .process-step:nth-child(2) { border-right: none; }
+    .process-step { padding: 28px 24px; }
     .why-inner { grid-template-columns: 1fr; gap: 48px; }
     .why-title { position: static; }
+    .why-item { grid-template-columns: 36px 1fr; gap: 16px; padding: 26px 0; }
     .stats-inner { grid-template-columns: 1fr; }
     .stat { border-right: none !important; border-bottom: 1px solid rgba(0,0,0,0.1); }
-    .cta-section { padding: 100px 24px; }
+    .verify-body { padding: 24px 20px; }
+    .verify-row { align-items: flex-start; flex-direction: column; gap: 8px; }
+    .verify-val { text-align: left; }
+    .verify-code-block { flex-direction: column; align-items: flex-start; }
+    .verify-cta-hint { align-items: flex-start; line-height: 1.45; }
+    .cta-section { padding: 96px 24px; }
+    .cta-bg { width: min(360px, 100vw); height: min(360px, 100vw); left: 50%; transform: translate(-50%, -50%) !important; }
+    .cta-title { font-size: clamp(38px, 11vw, 48px); line-height: 1; margin-bottom: 36px; }
     .cta-actions { flex-direction: column; width: 100%; }
-    .btn-primary, .btn-secondary { justify-content: center; }
+    .btn-primary, .btn-secondary { justify-content: center; width: 100%; max-width: 342px; padding: 16px 22px; }
     footer { flex-direction: column; gap: 24px; text-align: center; }
     .footer-links { flex-wrap: wrap; justify-content: center; }
   }
@@ -1856,20 +1874,37 @@
 
   @media (max-width: 768px) {
     .modal-overlay { padding: 12px; }
-    .modal { max-height: 92vh; }
+    .modal { max-height: 92svh; border-radius: 10px; }
+    .modal-head { padding: 16px; }
+    .modal-head-left { min-width: 0; gap: 10px; }
+    .modal-body { padding: 16px; }
+    .modal-tag { font-size: 10px; padding: 5px 8px; }
     .modal-title { font-size: 16px; }
+    .mk-arb { padding: 20px; }
+    .mk-arb-top { align-items: flex-start; flex-direction: column; gap: 12px; }
     .mk-arb-layout { grid-template-columns: 1fr; }
     .mk-arb-side { flex-direction: row; flex-wrap: wrap; }
     .mk-arb-side > div { flex: 1; min-width: 120px; }
-    .mk-tr { grid-template-columns: 1fr 1fr 0.8fr; font-size: 10px; gap: 6px; }
+    .mk-tr { grid-template-columns: 1fr 1fr 0.8fr; font-size: 10px; gap: 6px; padding: 12px 10px; }
+    .mk-tr span:nth-child(3), .mk-tr span:nth-child(6) { display: none; }
     .mk-tr .mk-hide-m { display: none; }
+    .mk-bot-hero { padding: 36px 22px; }
+    .mk-bot-h1 { font-size: clamp(28px, 9vw, 36px); }
     .mk-calc { grid-template-columns: 1fr; gap: 24px; }
+    .mk-calc, .mk-ib, .mk-game-store { padding: 28px 22px; }
+    .mk-calc-result-val { font-size: 34px; }
+    .mk-ib-tr { grid-template-columns: 1fr; gap: 4px; padding: 14px; }
     .mk-products { grid-template-columns: 1fr; }
+    .mk-game-hero { padding: 36px 22px; }
+    .mk-game-store h3 { align-items: flex-start; flex-direction: column; gap: 10px; }
     .mk-game-account { grid-template-columns: 1fr 1fr; }
     .mk-bot-stats { grid-template-columns: 1fr; }
-    .mk-bot-stat { border-right: none; border-bottom: 1px solid var(--gray-800); }
+    .mk-bot-stat { border-right: none; border-bottom: 1px solid var(--gray-800); padding: 22px; }
+    .mk-card-hero { padding: 42px 22px; }
     .mk-card-grid { grid-template-columns: 1fr; }
     .mk-card-cell { border-right: none; border-bottom: 1px solid var(--gray-800); }
+    .mk-card-contact { padding: 28px 22px; }
+    .demo-caption { font-size: 12px; line-height: 1.5; }
   }
 
   /* 3D Wireframe Canvas */
@@ -1902,13 +1937,41 @@
   }
   @media (max-width: 768px) {
     .hero-canvas-container {
-      top: 40%;
-      right: 50%;
-      transform: translate(50%, -50%);
-      width: 320px;
-      height: 320px;
-      opacity: 0.35;
+      top: 34%;
+      left: 50%;
+      right: auto;
+      transform: translate(-50%, -50%);
+      width: min(320px, 82vw);
+      height: min(320px, 82vw);
+      opacity: 0.24;
     }
+    .marquee-wrap { width: 100vw; height: 104px; padding: 24px 0; perspective: 700px; }
+    .cylinder-container { justify-content: flex-start; overflow: hidden; }
+    .cylinder-track {
+      justify-content: flex-start;
+      width: max-content;
+      height: 42px;
+      gap: 10px;
+      transform-style: flat;
+      animation: mobileChipsMarquee 24s linear infinite;
+    }
+    .cylinder-item {
+      position: static;
+      flex: 0 0 auto;
+      width: auto;
+      min-width: 148px;
+      height: 42px;
+      padding: 0 18px;
+      font-size: 11px;
+      letter-spacing: 0.04em;
+      transform: none !important;
+      backface-visibility: visible;
+    }
+    .cylinder-item::before { margin-right: 8px; }
+  }
+  @keyframes mobileChipsMarquee {
+    from { transform: translateX(24px); }
+    to { transform: translateX(-50%); }
   }
 
   /* ========================================== */
@@ -3436,6 +3499,9 @@
               scrub: 0.5,
               onEnter: () => {
                 verifySection.classList.add('visible');
+                verifySection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+                  runScramble(el, idx * 250);
+                });
                 triggerVerificationCodeScramble();
                 triggerStatsCountUp();
               }
@@ -3610,6 +3676,9 @@
             start: "top 80%",
             onEnter: () => {
               verifySection.classList.add('visible');
+              verifySection.querySelectorAll('[data-scramble]').forEach((el, idx) => {
+                runScramble(el, idx * 250);
+              });
               triggerVerificationCodeScramble();
               triggerStatsCountUp();
             }
@@ -4286,22 +4355,26 @@
     let items = itemsUA;
 
     const n = items.length;
-    let radius = window.innerWidth < 768 ? 220 : 380;
+    let radius = window.innerWidth < 768 ? 145 : 380;
 
     function buildCylinder() {
       track.innerHTML = '';
-      items.forEach((item, i) => {
+      const isMobileCarousel = window.innerWidth < 768;
+      const renderItems = isMobileCarousel ? [...items, ...items] : items;
+      renderItems.forEach((item, i) => {
         const div = document.createElement('div');
         div.className = 'cylinder-item';
         div.textContent = item;
-        const angle = i * (360 / n);
-        div.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+        if (!isMobileCarousel) {
+          const angle = i * (360 / n);
+          div.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+        }
         track.appendChild(div);
       });
     }
 
     function handleResize() {
-      radius = window.innerWidth < 768 ? 220 : 380;
+      radius = window.innerWidth < 768 ? 145 : 380;
       buildCylinder();
     }
 
@@ -4322,8 +4395,12 @@
 
     function rotate() {
       scrollVelocity *= 0.94; // friction
-      rotationY += (targetSpeed + scrollVelocity);
-      track.style.transform = `rotateY(${-rotationY}deg)`;
+      if (window.innerWidth >= 768) {
+        rotationY += (targetSpeed + scrollVelocity);
+        track.style.transform = `rotateY(${-rotationY}deg)`;
+      } else {
+        track.style.transform = '';
+      }
       requestAnimationFrame(rotate);
     }
     requestAnimationFrame(rotate);
