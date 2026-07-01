@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="ru">
+<html lang="uk">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DipLogic — Сайты, которые работают</title>
+<title>DipLogic — Сайти, які працюють</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -298,6 +298,41 @@
     transition: color 0.2s;
   }
   .nav-links a:hover { color: var(--white); }
+
+  .nav-right {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .lang-switch {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+  }
+  .lang-btn {
+    background: none;
+    border: none;
+    color: var(--gray-400);
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 13px;
+    transition: color 0.2s ease, text-shadow 0.2s ease;
+    padding: 4px 6px;
+    letter-spacing: 0.05em;
+  }
+  .lang-btn:hover {
+    color: var(--white);
+  }
+  .lang-btn.active {
+    color: var(--white);
+    text-shadow: 0 0 10px rgba(255, 255, 255, 0.4);
+  }
+  .lang-divider {
+    color: var(--gray-700);
+    pointer-events: none;
+  }
   .btn-primary, .nav-cta {
     position: relative;
     z-index: 1;
@@ -930,7 +965,7 @@
     line-height: 1.7;
     max-width: 460px;
   }
-  /* Verification card — терминал проверки */
+  /* Verification card — check terminal */
   .verify-card {
     border: 1px solid var(--card-border);
     border-radius: 12px;
@@ -2392,12 +2427,14 @@
     DipLogic
   </a>
   <ul class="nav-links">
-    <li><a href="#services">Услуги</a></li>
-    <li><a href="#process">Процесс</a></li>
-    <li><a href="#verify">Квалификация</a></li>
-    <li><a href="#why">Почему мы</a></li>
+    <li><a href="#services" data-i18n="nav_services">Послуги</a></li>
+    <li><a href="#process" data-i18n="nav_process">Процес</a></li>
+    <li><a href="#verify" data-i18n="nav_verify">Кваліфікація</a></li>
+    <li><a href="#why" data-i18n="nav_why">Чому ми</a></li>
   </ul>
-  <a href="https://t.me/DipLogic" class="nav-cta magnetic" target="_blank">Обсудить проект</a>
+  <div class="nav-right">
+    <a href="https://t.me/DipLogic" class="nav-cta magnetic" target="_blank" data-i18n="nav_cta">Обговорити проєкт</a>
+  </div>
 </nav>
 
 <!-- HERO -->
@@ -2407,19 +2444,19 @@
       <section class="hero">
     <canvas class="hero-bg-grid" id="heroGrid"></canvas>
     <div class="hero-content" id="heroContent">
-      <div class="hero-badge">Открыты к новым проектам</div>
+      <div class="hero-badge" data-i18n="hero_badge">Відкриті до нових проєктів</div>
       <h1 class="hero-title">
-        <span data-scramble data-line="0">Сайты,</span><br>
-        <span data-scramble data-line="1">которые</span><br>
-        <em data-scramble data-line="2">продают</em>
+        <span data-scramble data-line="0" data-i18n="hero_title_0">Сайти,</span><br>
+        <span data-scramble data-line="1" data-i18n="hero_title_1">які</span><br>
+        <em data-scramble data-line="2" data-i18n="hero_title_2">продають</em>
       </h1>
       <div class="hero-bottom">
-        <p class="hero-desc" data-scramble data-line="3">
-          Разрабатываем лендинги, визитки, интернет-магазины и приложения. Не шаблоны — работающие продукты под ваш бизнес.
+        <p class="hero-desc" data-scramble data-line="3" data-i18n="hero_desc">
+          Розробляємо лендинги, візитки, інтернет-магазини та застосунки. Не шаблони — робочі продукти під ваш бізнес.
         </p>
         <div class="hero-actions">
           <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
-            Начать проект
+            <span data-i18n="hero_action">Почати проєкт</span>
             <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
               <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
             </svg>
@@ -2442,30 +2479,30 @@
       <div class="review-bubble" style="--rx: -26vw; --ry: -24vh; --delay: 1.0;">
         <div class="review-header">
           <span class="review-avatar">А</span>
-          <span class="review-user">Артём Петров</span>
+          <span class="review-user" data-i18n="review_user_petrov">Артем Петров</span>
         </div>
-        <div class="review-text">Быстрый запуск за 2 дня. Результат супер!</div>
+        <div class="review-text" data-i18n="review_text_petrov">Швидкий запуск за 2 дні. Результат супер!</div>
       </div>
       <div class="review-bubble" style="--rx: 26vw; --ry: -22vh; --delay: 1.6;">
         <div class="review-header">
           <span class="review-avatar">М</span>
-          <span class="review-user">Мария Громова</span>
+          <span class="review-user" data-i18n="review_user_gromova">Марія Громова</span>
         </div>
-        <div class="review-text">Конверсия выросла в 2 раза после редизайна.</div>
+        <div class="review-text" data-i18n="review_text_gromova">Конверсія зросла в 2 рази після редизайну.</div>
       </div>
       <div class="review-bubble" style="--rx: -24vw; --ry: 16vh; --delay: 2.2;">
         <div class="review-header">
           <span class="review-avatar">Д</span>
-          <span class="review-user">Денис Кравцов</span>
+          <span class="review-user" data-i18n="review_user_kravtsov">Денис Кравцов</span>
         </div>
-        <div class="review-text">Чистейший код, бесшовная интеграция с API.</div>
+        <div class="review-text" data-i18n="review_text_kravtsov">Чистісінький код, безшовна інтеграція з API.</div>
       </div>
       <div class="review-bubble" style="--rx: 24vw; --ry: 18vh; --delay: 2.8;">
         <div class="review-header">
           <span class="review-avatar">К</span>
-          <span class="review-user">Кирилл Соколов</span>
+          <span class="review-user" data-i18n="review_user_sokolov">Кирило Соколов</span>
         </div>
-        <div class="review-text">UX продуман до мелочей. Заказы сданы в срок.</div>
+        <div class="review-text" data-i18n="review_text_sokolov">UX продуманий до дрібниць. Замовлення здані вчасно.</div>
       </div>
     </div>
 
@@ -2482,11 +2519,11 @@
   <div class="reveal-content">
     <div class="services-header">
     <h2 class="services-title">
-      <span data-scramble data-line="1">Что мы</span><br>
-      <span data-scramble data-line="2">делаем</span>
+      <span data-scramble data-line="1" data-i18n="services_title_1">Що ми</span><br>
+      <span data-scramble data-line="2" data-i18n="services_title_2">робимо</span>
     </h2>
-    <p class="services-intro">
-      Каждый проект — это диалог. Мы не просто верстаем макеты, мы вникаем в ваш бизнес и создаём инструмент, который решает реальные задачи.
+    <p class="services-intro" data-i18n="services_intro">
+      Кожен проєкт — це діалог. Ми не просто верстаємо макети, ми заглиблюємося у ваш бізнес і створюємо інструмент, який вирішує реальні завдання.
     </p>
   </div>
   <div class="services-grid">
@@ -2498,10 +2535,10 @@
         <path d="M10 12h2M15 12h2"/>
         <path d="M12 24h24M12 30h16"/>
       </svg>
-      <div class="service-name">Лендинги</div>
-      <p class="service-desc">Одностраничники, которые конвертируют посетителей в клиентов. Чёткая структура, убедительный текст, правильные призывы к действию.</p>
+      <div class="service-name" data-i18n="service_name_1">Лендинги</div>
+      <p class="service-desc" data-i18n="service_desc_1">Односторінкові сайти, які конвертують відвідувачів у клієнтів. Чітка структура, переконливий текст, правильні заклики до дії.</p>
       <span class="service-arrow">
-        Открыть сайт
+        <span data-i18n="service_open_1">Відкрити сайт</span>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
@@ -2514,10 +2551,10 @@
         <circle cx="16" cy="25" r="5"/>
         <path d="M26 22h10M26 28h6"/>
       </svg>
-      <div class="service-name">Сайты-визитки</div>
-      <p class="service-desc">Профессиональное присутствие в сети. Расскажите о себе, своих услугах и контактах — просто и убедительно.</p>
+      <div class="service-name" data-i18n="service_name_2">Сайти-візитки</div>
+      <p class="service-desc" data-i18n="service_desc_2">Професійна присутність у мережі. Розкажіть про себе, свої послуги та контакти — просто та переконливо.</p>
       <span class="service-arrow">
-        Смотреть демо
+        <span data-i18n="service_open_2">Дивитися демо</span>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
@@ -2532,10 +2569,10 @@
         <circle cx="32" cy="40" r="2"/>
         <path d="M16 18h16M24 14v8"/>
       </svg>
-      <div class="service-name">Интернет-магазины</div>
-      <p class="service-desc">Продавайте онлайн. Каталог, корзина, оплата, доставка — полный цикл от витрины до оформления заказа.</p>
+      <div class="service-name" data-i18n="service_name_3">Інтернет-магазини</div>
+      <p class="service-desc" data-i18n="service_desc_3">Продавайте онлайн. Каталог, кошик, оплата, доставка — повний цикл від вітрини до оформлення замовлення.</p>
       <span class="service-arrow">
-        Смотреть демо
+        <span data-i18n="service_open_3">Дивитися демо</span>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
@@ -2549,10 +2586,10 @@
         <circle cx="24" cy="39" r="1.5" fill="currentColor" stroke="none"/>
         <path d="M18 18h12M18 24h8"/>
       </svg>
-      <div class="service-name">Приложения</div>
-      <p class="service-desc">Мобильные и веб-приложения под ваши процессы. Удобный интерфейс, стабильная работа, масштабируемость.</p>
+      <div class="service-name" data-i18n="service_name_4">Застосунки</div>
+      <p class="service-desc" data-i18n="service_desc_4">Мобільні та веб-застосунки під ваші процеси. Зручний інтерфейс, стабільна робота, масштабованість.</p>
       <span class="service-arrow">
-        Смотреть демо
+        <span data-i18n="service_open_4">Дивитися демо</span>
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
           <path d="M2 7H12M12 7L8 3M12 7L8 11" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
@@ -2566,31 +2603,31 @@
 <section class="process reveal" id="process">
   <div class="reveal-content">
     <div class="process-header">
-      <div class="section-label">Как мы работаем</div>
-      <h2 class="process-title" data-scramble data-line="1">Четыре шага от идеи до запуска</h2>
+      <div class="section-label" data-i18n="process_label">Як ми працюємо</div>
+      <h2 class="process-title" data-scramble data-line="1" data-i18n="process_title">Чотири кроки від ідеї до запуску</h2>
     </div>
     <div class="process-steps">
       <div class="process-line-bg"></div>
       <div class="process-line-fill" id="processLineFill"></div>
       <div class="process-step">
       <div class="step-num">01</div>
-      <div class="step-title">Бриф</div>
-      <p class="step-desc">Разбираемся в вашем бизнесе, аудитории и целях. Фиксируем задачу письменно — без воды.</p>
+      <div class="step-title" data-i18n="process_step_title_1">Бриф</div>
+      <p class="step-desc" data-i18n="process_step_desc_1">Розбираємося у вашому бізнесі, аудиторії та цілях. Фіксуємо завдання письмово — без зайвих слів.</p>
     </div>
     <div class="process-step">
       <div class="step-num">02</div>
-      <div class="step-title">Дизайн</div>
-      <p class="step-desc">Создаём прототип и визуальную концепцию. Согласовываем с вами до старта разработки.</p>
+      <div class="step-title" data-i18n="process_step_title_2">Дизайн</div>
+      <p class="step-desc" data-i18n="process_step_desc_2">Створюємо прототип та візуальну концепцію. Узгоджуємо з вами до старту розробки.</p>
     </div>
     <div class="process-step">
       <div class="step-num">03</div>
-      <div class="step-title">Разработка</div>
-      <p class="step-desc">Верстаем и программируем. Обновляем вас на каждом этапе. Никаких сюрпризов в конце.</p>
+      <div class="step-title" data-i18n="process_step_title_3">Розробка</div>
+      <p class="step-desc" data-i18n="process_step_desc_3">Верстаємо та програмуємо. Інформуємо вас на кожному етапі. Жодних сюрпризів наприкінці.</p>
     </div>
     <div class="process-step">
       <div class="step-num">04</div>
-      <div class="step-title">Запуск</div>
-      <p class="step-desc">Публикуем, проверяем, передаём. И остаёмся на связи — не исчезаем после оплаты.</p>
+      <div class="step-title" data-i18n="process_step_title_4">Запуск</div>
+      <p class="step-desc" data-i18n="process_step_desc_4">Публікуємо, перевіряємо, передаємо. І залишаємося на зв'язку — не зникаємо після оплати.</p>
     </div>
   </div>
   </div>
@@ -2604,36 +2641,36 @@
   <div class="reveal-content">
     <div class="why-inner">
       <div class="why-header">
-        <div class="section-label">Почему мы</div>
-        <h2 class="why-title" data-scramble data-line="1">Не просто подрядчики</h2>
+        <div class="section-label" data-i18n="why_label">Чому ми</div>
+        <h2 class="why-title" data-scramble data-line="1" data-i18n="why_title">Не просто підрядники</h2>
       </div>
       <div class="why-items">
       <div class="why-item">
         <div class="why-item-num">01</div>
         <div>
-          <div class="why-item-title">Вникаем в бизнес</div>
-          <p class="why-item-desc">Не делаем «красиво ради красиво». Каждое решение — дизайн, текст, структура — работает на вашу цель. Будь то заявки, продажи или доверие.</p>
+          <div class="why-item-title" data-i18n="why_item_title_1">Заглиблюємося в бізнес</div>
+          <p class="why-item-desc" data-i18n="why_item_desc_1">Не робимо «красиво заради красивого». Кожне рішення — дизайн, текст, структура — працює на вашу мету. Будь то заявки, продажі чи довіра.</p>
         </div>
       </div>
       <div class="why-item">
         <div class="why-item-num">02</div>
         <div>
-          <div class="why-item-title">Честные сроки</div>
-          <p class="why-item-desc">Называем дату и держим её. Если что-то меняется — говорим сразу, не в последний момент. Уважаем ваше время.</p>
+          <div class="why-item-title" data-i18n="why_item_title_2">Чесні терміни</div>
+          <p class="why-item-desc" data-i18n="why_item_desc_2">Називаємо дату та дотримуємося її. Якщо щось змінюється — говоримо одразу, а не в останній момент. Поважаємо ваш час.</p>
         </div>
       </div>
       <div class="why-item">
         <div class="why-item-num">03</div>
         <div>
-          <div class="why-item-title">Без лишних посредников</div>
-          <p class="why-item-desc">Вы общаетесь напрямую с теми, кто делает проект. Никаких менеджеров, которые пересказывают ваши слова разработчикам.</p>
+          <div class="why-item-title" data-i18n="why_item_title_3">Без зайвих посередників</div>
+          <p class="why-item-desc" data-i18n="why_item_desc_3">Ви спілкуєтеся безпосередньо з тими, хто розробляє проєкт. Жодних менеджерів, які переказують ваші слова розробникам.</p>
         </div>
       </div>
       <div class="why-item">
         <div class="why-item-num">04</div>
         <div>
-          <div class="why-item-title">Поддержка после сдачи</div>
-          <p class="why-item-desc">Помогаем с правками, объясняем как всё работает, остаёмся доступными. Сдали проект — не пропали.</p>
+          <div class="why-item-title" data-i18n="why_item_title_4">Підтримка після здачі</div>
+          <p class="why-item-desc" data-i18n="why_item_desc_4">Допомагаємо з правками, пояснюємо як усе працює, залишаємося на зв'язку. Здали проєкт — не зникли.</p>
         </div>
       </div>
     </div>
@@ -2646,29 +2683,30 @@
   <div class="reveal-content">
     <div class="verify-inner">
       <div class="verify-left">
-        <div class="section-label">Квалификация</div>
-        <h2 class="verify-headline" data-scramble data-line="1">Подтверждённый профессионал</h2>
-        <p class="verify-text">
-          За дизайном стоит профильное образование по UI/UX и диплом международной академии. Подлинность не на словах — нажмите на карточку и сверьте номер прямо в официальном реестре STEP Computer Academy.
+        <div class="section-label" data-i18n="verify_label">Кваліфікація</div>
+        <h2 class="verify-headline" data-scramble data-line="1" data-i18n="verify_headline">Підтверджений професіонал</h2>
+        <p class="verify-text" data-i18n="verify_desc">
+          За дизайном стоїть профільна освіта з UI/UX та диплом міжнародної академії. Справжність не на словах — натисніть на картку та перевірте номер прямо в офіційному реєстрі STEP Computer Academy.
         </p>
         <div class="stats-inner">
           <div class="stat">
             <div class="stat-num" data-target="14">0</div>
-            <div class="stat-label">Проектов запущено</div>
+            <div class="stat-label" data-i18n="verify_stat_1">Проєктів запущено</div>
           </div>
           <div class="stat">
             <div class="stat-num" data-target="2">0</div>
-            <div class="stat-label">Дня — средний срок лендинга</div>
+            <div class="stat-label" data-i18n="verify_stat_2">Дні — середній термін лендингу</div>
           </div>
           <div class="stat">
             <div class="stat-num" data-target="100">0</div>
-            <div class="stat-label">% возврат средств при срыве дедлайнов</div>
+            <div class="stat-label" data-i18n="verify_stat_3">% повернення коштів у разі зриву дедлайнів</div>
           </div>
         </div>
       </div>
 
       <div class="verify-card" id="verifyCard" role="button" tabindex="0"
-           title="Нажмите, чтобы проверить диплом в официальном реестре STEP">
+           title="Натисніть, щоб перевірити диплом в офіційному реєстрі STEP"
+           data-i18n-attr="title:verify_card_title">
         <div class="verify-scan"></div>
         <div class="verify-card-top">
           <div class="verify-dots"><span></span><span></span><span></span></div>
@@ -2682,38 +2720,38 @@
                 <span class="verify-val">Cherniakov Oleh</span>
               </div>
               <div class="verify-row">
-                <span class="verify-key">Программа</span>
+                <span class="verify-key" data-i18n="verify_program">Програма</span>
                 <span class="verify-val">UI/UX Design</span>
               </div>
               <div class="verify-row">
-                <span class="verify-key">Академия</span>
+                <span class="verify-key" data-i18n="verify_academy">Академія</span>
                 <span class="verify-val">STEP Academy</span>
               </div>
               <div class="verify-row">
-                <span class="verify-key">Оценка</span>
+                <span class="verify-key" data-i18n="verify_grade">Оцінка</span>
                 <span class="verify-val">Excellent</span>
               </div>
               <div class="verify-row">
-                <span class="verify-key">Выдан</span>
+                <span class="verify-key" data-i18n="verify_issued">Виданий</span>
                 <span class="verify-val mono">11.05.2025 · Kyiv</span>
               </div>
             </div>
             <div class="verify-actions-col">
               <div class="verify-code-block">
                 <div>
-                  <div class="verify-code-label">Verification code</div>
+                  <div class="verify-code-label" data-i18n="verify_code_label">Verification code</div>
                   <div class="verify-code-value" data-verify>KVY-017627</div>
                 </div>
                 <span class="verify-status">
                   <span class="verify-status-dot"></span>
-                  VERIFIED
+                  <span data-i18n="verify_status_val">VERIFIED</span>
                 </span>
               </div>
               <div class="verify-cta-hint" id="verifyHint">
                 <svg width="14" height="14" viewBox="0 0 16 16" fill="none">
                   <path d="M6 3.5 10.5 8 6 12.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
                 </svg>
-                Проверить в официальном реестре STEP
+                <span data-i18n="verify_cta">Перевірити в офіційному реєстрі STEP</span>
               </div>
             </div>
           </div>
@@ -2727,20 +2765,20 @@
 <section class="cta-section reveal" id="contact">
   <div class="reveal-content">
     <div class="cta-bg"></div>
-    <div class="cta-label">Начать сотрудничество</div>
+    <div class="cta-label" data-i18n="cta_label">Почати співпрацю</div>
     <h2 class="cta-title">
-      Готовы обсудить<br>
-      <em>ваш проект?</em>
+      <span data-i18n="cta_title_1">Готові обговорити</span><br>
+      <em data-i18n="cta_title_2">ваш проєкт?</em>
     </h2>
     <div class="cta-actions">
       <a href="https://t.me/DipLogic" class="btn-primary magnetic" target="_blank">
-        Написать в Telegram
+        <span data-i18n="cta_telegram">Написати в Telegram</span>
         <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
           <path d="M3 8H13M13 8L9 4M13 8L9 12" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
-      <a href="mailto:diplogic.2026@gmail.com" class="btn-secondary magnetic">
-        Написать на почту
+      <a href="mailto:diplogic.2026@gmail.com" class="btn-secondary magnetic" data-i18n="cta_email">
+        Написати на пошту
       </a>
     </div>
   </div>
@@ -2756,9 +2794,9 @@
       DipLogic
     </div>
     <div class="footer-links">
-      <a href="#services">Услуги</a>
-      <a href="#process">Процесс</a>
-      <a href="#why">О нас</a>
+      <a href="#services" data-i18n="nav_services">Послуги</a>
+      <a href="#process" data-i18n="nav_process">Процес</a>
+      <a href="#why" data-i18n="footer_links_about">Про нас</a>
       <a href="https://t.me/DipLogic" target="_blank">Telegram</a>
       <a href="mailto:diplogic.2026@gmail.com">Email</a>
     </div>
@@ -2772,9 +2810,9 @@
     <div class="modal-head">
       <div class="modal-head-left">
         <span class="modal-tag" id="modalTag">DEMO</span>
-        <span class="modal-title" id="modalTitle">Демо</span>
+        <span class="modal-title" id="modalTitle" data-i18n="modal_title">Демо</span>
       </div>
-      <button class="modal-close" id="modalClose" aria-label="Закрыть">
+      <button class="modal-close" id="modalClose" aria-label="Закрити" data-i18n-attr="aria-label:modal_close">
         <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
           <path d="M4 4l10 10M14 4L4 14" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
         </svg>
@@ -2790,12 +2828,12 @@
               <svg width="22" height="22" viewBox="0 0 28 28" fill="none"><rect x="2" y="4" width="5" height="20" fill="white"/><path d="M9 4 H14 C20 4 24 8.5 24 14 C24 19.5 20 24 14 24 H9 Z" fill="white"/><rect x="17" y="4" width="7" height="3" fill="black"/></svg>
               SpreadScan
             </div>
-            <span class="mk-arb-live"><span class="pulse"></span>LIVE · обновление 2s</span>
+            <span class="mk-arb-live"><span class="pulse"></span>LIVE · оновлення 2s</span>
           </div>
           <div class="mk-arb-layout">
             <div class="mk-arb-side">
               <div>
-                <h4>Мин. спред</h4>
+                <h4>Мін. спред</h4>
                 <div class="mk-filter-val" id="arbSpreadVal">2.5%</div>
                 <div class="mk-slider" id="arbSlider">
                   <div class="mk-slider-fill" id="arbFill" style="width:25%"></div>
@@ -2803,14 +2841,14 @@
                 </div>
               </div>
               <div>
-                <h4>Объём 24h</h4>
+                <h4>Обсяг 24h</h4>
                 <div class="mk-toggle-row">
                   <div class="mk-toggle on">&gt;100K</div>
                   <div class="mk-toggle">&gt;1M</div>
                 </div>
               </div>
               <div>
-                <h4>Комиссия</h4>
+                <h4>Комісія</h4>
                 <div class="mk-toggle-row">
                   <div class="mk-toggle on" data-fee>Maker</div>
                   <div class="mk-toggle" data-fee>Taker</div>
@@ -2819,13 +2857,13 @@
             </div>
             <div class="mk-arb-table" id="arbTable">
               <div class="mk-tr head">
-                <span>Пара</span><span>Покупка</span><span>Продажа</span><span>Спред</span><span class="mk-hide-m">Сеть</span><span></span>
+                <span>Пара</span><span>Купівля</span><span>Продаж</span><span>Спред</span><span class="mk-hide-m">Мережа</span><span></span>
               </div>
               <!-- rows injected by JS -->
             </div>
           </div>
         </div>
-        <div class="demo-caption"><span class="dot"></span>Интерактив: двигай ползунок спреда и жми «Сигнал». Данные обновляются в реальном времени.</div>
+        <div class="demo-caption" data-i18n="demo_caption_arb"><span class="dot"></span>Інтерактив: рухай повзунок спреду і натискай «Сигнал». Дані оновлюються у реальному часі.</div>
       </div>
 
       <!-- DEMO: BOT LANDING (landing) -->
@@ -2833,47 +2871,47 @@
         <div class="mk-bot">
           <div class="mk-bot-hero">
             <div class="mk-bot-eyebrow">Algorithmic Trading · Copy-trading</div>
-            <div class="mk-bot-h1">Ваш капитал работает<br>пока вы спите</div>
-            <p class="mk-bot-sub">Подключите счёт к проверенному торговому алгоритму. Прозрачная статистика, контроль рисков, ежемесячные выплаты.</p>
-            <span class="mk-bot-cta">Подключить счёт →</span>
+            <div class="mk-bot-h1">Ваш капітал працює<br>поки ви спите</div>
+            <p class="mk-bot-sub">Підключіть рахунок до перевіреного торгового алгоритму. Прозора статистика, контроль ризиків, щомісячні виплати.</p>
+            <span class="mk-bot-cta">Підключити рахунок →</span>
           </div>
           <div class="mk-bot-stats">
-            <div class="mk-bot-stat"><div class="mk-bot-stat-num green">+8.4%</div><div class="mk-bot-stat-label">Средняя доходность / мес</div></div>
-            <div class="mk-bot-stat"><div class="mk-bot-stat-num red">−6.2%</div><div class="mk-bot-stat-label">Макс. просадка</div></div>
-            <div class="mk-bot-stat"><div class="mk-bot-stat-num" id="botUsers">1 240</div><div class="mk-bot-stat-label">Активных счетов</div></div>
+            <div class="mk-bot-stat"><div class="mk-bot-stat-num green">+8.4%</div><div class="mk-bot-stat-label">Середня дохідність / міс</div></div>
+            <div class="mk-bot-stat"><div class="mk-bot-stat-num red">−6.2%</div><div class="mk-bot-stat-label">Макс. просідання</div></div>
+            <div class="mk-bot-stat"><div class="mk-bot-stat-num" id="botUsers">1 240</div><div class="mk-bot-stat-label">Активних рахунків</div></div>
           </div>
           <div class="mk-calc">
             <div>
-              <h3>Калькулятор доходности</h3>
-              <p>Прикиньте потенциал вашего депозита за 12 месяцев при реинвестировании прибыли.</p>
-              <div class="mk-calc-label"><span>Стартовый депозит</span><b id="calcDep">$5 000</b></div>
+              <h3>Калькулятор дохідності</h3>
+              <p>Оцініть потенціал вашого депозиту за 12 місяців при реінвестуванні прибутку.</p>
+              <div class="mk-calc-label"><span>Стартовий депозит</span><b id="calcDep">$5 000</b></div>
               <div class="mk-slider" id="calcSlider" style="margin-bottom:20px">
                 <div class="mk-slider-fill" id="calcFill" style="width:33%"></div>
                 <div class="mk-slider-knob" id="calcKnob" style="left:33%"></div>
               </div>
-              <div class="mk-calc-label"><span>Срок</span><b>12 месяцев · 8.4%/мес</b></div>
+              <div class="mk-calc-label"><span>Термін</span><b>12 місяців · 8.4%/міс</b></div>
             </div>
             <div class="mk-calc-result">
-              <div class="mk-calc-result-label">Прогноз через год</div>
+              <div class="mk-calc-result-label">Прогноз через рік</div>
               <div class="mk-calc-result-val" id="calcResult">$13 100</div>
-              <div class="mk-calc-result-sub" id="calcProfit">прибыль +$8 100</div>
+              <div class="mk-calc-result-sub" id="calcProfit">прибуток +$8 100</div>
             </div>
           </div>
           <div class="mk-ib">
-            <h3>Партнёрская программа (IB)</h3>
+            <h3>Партнерська програма (IB)</h3>
             <div class="mk-ib-table">
-              <div class="mk-ib-tr head"><span>Уровень</span><span>Реферал</span><span>Рибейт со спреда</span></div>
-              <div class="mk-ib-tr"><span>Уровень 1</span><span>Прямые</span><b>40%</b></div>
-              <div class="mk-ib-tr"><span>Уровень 2</span><span>Сеть</span><b>15%</b></div>
-              <div class="mk-ib-tr"><span>Уровень 3</span><span>Глубина</span><b>5%</b></div>
+              <div class="mk-ib-tr head"><span>Рівень</span><span>Реферал</span><span>Рибейт зі спреду</span></div>
+              <div class="mk-ib-tr"><span>Рівень 1</span><span>Прямі</span><b>40%</b></div>
+              <div class="mk-ib-tr"><span>Рівень 2</span><span>Мережа</span><b>15%</b></div>
+              <div class="mk-ib-tr"><span>Рівень 3</span><span>Глибина</span><b>5%</b></div>
             </div>
           </div>
         </div>
         <div class="demo-caption">
           <span class="dot"></span>
-          Интерактив: двигай ползунок депозита — калькулятор пересчитывает прогноз вживую.
+          Інтерактив: рухай повзунок депозиту — калькулятор перераховує прогноз наживо.
           <a href="aura.html" target="_blank" class="demo-fullsite-btn">
-            Открыть реальный лендинг (AURA) →
+            <span data-i18n="demo_open_aura">Відкрити реальний лендинг (AURA) →</span>
           </a>
         </div>
       </div>
@@ -2882,47 +2920,47 @@
       <div class="demo-frame" data-frame="shop">
         <div class="mk-game">
           <div class="mk-game-hero">
-            <div class="mk-game-online"><span class="gd"></span>1 847 игроков онлайн</div>
+            <div class="mk-game-online"><span class="gd"></span>1 847 гравців онлайн</div>
             <div class="mk-game-title">NEXUS REALMS</div>
-            <div class="mk-game-sub">Кастомный режим выживания · Сезон 4 уже идёт</div>
+            <div class="mk-game-sub">Кастомний режим виживання · Сезон 4 уже триває</div>
           </div>
           <div class="mk-game-store">
-            <h3>Магазин <span class="mk-cart-badge">🛒 Корзина: <b id="cartCount">0</b></span></h3>
+            <h3>Магазин <span class="mk-cart-badge">🛒 Кошик: <b id="cartCount">0</b></span></h3>
             <div class="mk-products">
               <div class="mk-prod">
                 <span class="mk-prod-badge">-30%</span>
                 <div class="mk-prod-icon">👑</div>
                 <div class="mk-prod-name">VIP Пакет</div>
-                <div class="mk-prod-desc">Приоритетный вход, эксклюзивный чат, x2 к опыту на 30 дней.</div>
+                <div class="mk-prod-desc">Пріоритетний вхід, ексклюзивний чат, x2 до досвіду на 30 днів.</div>
                 <div class="mk-prod-price"><span class="now">350₽</span><span class="old">500₽</span></div>
-                <button class="mk-buy" data-add>В корзину</button>
+                <button class="mk-buy" data-add data-i18n="shop_add">До кошика</button>
               </div>
               <div class="mk-prod">
-                <span class="mk-prod-badge">Хит</span>
+                <span class="mk-prod-badge">Хіт</span>
                 <div class="mk-prod-icon">💰</div>
                 <div class="mk-prod-name">1000 Coins</div>
-                <div class="mk-prod-desc">Внутриигровая валюта для покупки предметов и бустов.</div>
+                <div class="mk-prod-desc">Внутрішньоігрова валюта для купівлі предметів і бустів.</div>
                 <div class="mk-prod-price"><span class="now">199₽</span><span class="old">280₽</span></div>
-                <button class="mk-buy" data-add>В корзину</button>
+                <button class="mk-buy" data-add data-i18n="shop_add">До кошика</button>
               </div>
               <div class="mk-prod">
                 <span class="mk-prod-badge">NEW</span>
                 <div class="mk-prod-icon">⚔️</div>
-                <div class="mk-prod-name">Скин «Дракон»</div>
-                <div class="mk-prod-desc">Уникальный анимированный скин с эффектом пламени.</div>
+                <div class="mk-prod-name">Скін «Дракон»</div>
+                <div class="mk-prod-desc">Унікальний анімований скін з ефектом полум'я.</div>
                 <div class="mk-prod-price"><span class="now">420₽</span><span class="old">600₽</span></div>
-                <button class="mk-buy" data-add>В корзину</button>
+                <button class="mk-buy" data-add data-i18n="shop_add">До кошика</button>
               </div>
             </div>
           </div>
           <div class="mk-game-account">
             <div class="mk-acc-item"><h5>Баланс</h5><div class="v neon">2 450 💰</div></div>
             <div class="mk-acc-item"><h5>Статус</h5><div class="v">VIP</div></div>
-            <div class="mk-acc-item"><h5>Уровень</h5><div class="v">47</div></div>
+            <div class="mk-acc-item"><h5>Рівень</h5><div class="v">47</div></div>
             <div class="mk-acc-item"><h5>Покупок</h5><div class="v">12</div></div>
           </div>
         </div>
-        <div class="demo-caption"><span class="dot"></span>Интерактив: добавляй товары в корзину — счётчик считает покупки.</div>
+        <div class="demo-caption" data-i18n="demo_caption_shop"><span class="dot"></span>Інтерактив: додавай товари до кошика — лічильник рахує покупки.</div>
       </div>
 
       <!-- DEMO: BUSINESS CARD (card) -->
@@ -2930,8 +2968,8 @@
         <div class="mk-card">
           <div class="mk-card-hero">
             <div class="mk-card-avatar">АП</div>
-            <div class="mk-card-name">Артём Петров</div>
-            <div class="mk-card-role">Частный юрист · Корпоративное право</div>
+            <div class="mk-card-name">Артем Петров</div>
+            <div class="mk-card-role">Приватний юрист · Корпоративне право</div>
             <div class="mk-card-socials">
               <div class="mk-card-soc"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0a8 8 0 100 16A8 8 0 008 0zm3.5 5.5l-1.2 5.6c-.1.4-.3.5-.6.3l-1.7-1.3-.8.8c-.1.1-.2.2-.4.2l.1-1.9 3.3-3c.1-.1 0-.2-.2-.1L5.6 9.2 4 8.7c-.4-.1-.4-.4.1-.6l6.6-2.5c.3-.1.6.1.5.5z"/></svg></div>
               <div class="mk-card-soc"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M3 0h10a3 3 0 013 3v10a3 3 0 01-3 3H3a3 3 0 01-3-3V3a3 3 0 013-3zm1.5 5.5h-2v6h2v-6zm-1-1a1.1 1.1 0 100-2.2 1.1 1.1 0 000 2.2zm8.5 7v-3.3c0-1.8-1-2.6-2.3-2.6-1 0-1.5.6-1.7 1v-.9h-2v6h2V8.3c0-.6.4-1 .9-1s.9.4.9 1v3.2h2z"/></svg></div>
@@ -2939,15 +2977,15 @@
             </div>
           </div>
           <div class="mk-card-grid">
-            <div class="mk-card-cell"><h4>Сделки M&A</h4><p>Сопровождение слияний и поглощений под ключ.</p></div>
-            <div class="mk-card-cell"><h4>Договоры</h4><p>Аудит и составление коммерческих контрактов.</p></div>
-            <div class="mk-card-cell"><h4>Споры</h4><p>Представительство в арбитражных судах.</p></div>
+            <div class="mk-card-cell"><h4>Угоди M&A</h4><p>Супровід злиттів і поглинань під ключ.</p></div>
+            <div class="mk-card-cell"><h4>Договори</h4><p>Аудит і складання комерційних контрактів.</p></div>
+            <div class="mk-card-cell"><h4>Спори</h4><p>Представництво в арбітражних судах.</p></div>
           </div>
           <div class="mk-card-contact">
-            <span class="mk-card-contact-btn">Записаться на консультацию</span>
+            <span class="mk-card-contact-btn">Записатися на консультацію</span>
           </div>
         </div>
-        <div class="demo-caption"><span class="dot"></span>Чистый сайт-визитка: имя, специализация, услуги, соцсети и кнопка связи.</div>
+        <div class="demo-caption"><span class="dot"></span>Чистий сайт-візитка: ім'я, спеціалізація, послуги, соцмережі та кнопка зв'язку.</div>
       </div>
 
     </div>
@@ -3047,7 +3085,7 @@
     }
   }
 
-  // Binary Decrypt Animation — построчное дешифрование слева направо
+  // Binary Decrypt Animation — line-by-line left-to-right reveal
   const scrambleElements = document.querySelectorAll('[data-scramble]');
   if (!reduceMotion) {
     scrambleElements.forEach(el => {
@@ -3632,7 +3670,7 @@
     });
   });
 
-  // Verification code — прокрутка при появлении
+  // Verification code — scroll on reveal
   const verifyEl = document.querySelector('[data-verify]');
   let verifyCodeScrambled = false;
   function triggerVerificationCodeScramble() {
@@ -3698,9 +3736,9 @@
 
   const demoMeta = {
     landing: { title: 'Лендинг торгового бота', tag: 'CASE · FINTECH' },
-    card:    { title: 'Сайт-визитка', tag: 'CASE · PERSONAL' },
-    shop:    { title: 'Донат-магазин игры', tag: 'CASE · GAMEDEV' },
-    app:     { title: 'Арбитражный дашборд', tag: 'CASE · CRYPTO' }
+    card:    { title: 'Сайт-візитка', tag: 'CASE · PERSONAL' },
+    shop:    { title: 'Донат-магазин гри', tag: 'CASE · GAMEDEV' },
+    app:     { title: 'Арбітражний дашборд', tag: 'CASE · CRYPTO' }
   };
 
   let lastFocus = null;
@@ -3825,13 +3863,13 @@
         `<span class="mk-exch">${p[1]}</span>`+
         `<span class="mk-exch">${p[2]}</span>`+
         `<span class="mk-spread ${spreadClass(spread)}">+${spread.toFixed(2)}%</span>`+
-        `<span class="mk-hide-m"><span class="mk-net ${netClosed?'closed':''}"><span class="nd"></span>${netClosed?'Закрыт':'Открыт'}</span></span>`+
+        `<span class="mk-hide-m"><span class="mk-net ${netClosed?'closed':''}"><span class="nd"></span>${netClosed?'Закрито':'Відкрито'}</span></span>`+
         `<span><button class="mk-sig-btn">⚡ Сигнал</button></span>`;
       table.appendChild(row);
     });
     table.querySelectorAll('.mk-sig-btn').forEach(b => {
       b.addEventListener('click', () => {
-        b.classList.add('sent'); b.textContent = '✓ Отправлен';
+        b.classList.add('sent'); b.textContent = '✓ Надіслано';
         setTimeout(() => { b.classList.remove('sent'); b.textContent = '⚡ Сигнал'; }, 2000);
       });
     });
@@ -3892,7 +3930,7 @@
     const profit = document.getElementById('calcProfit');
     const MIN = 1000, MAX = 50000, RATE = 0.084;
     let dragging = false;
-    function fmt(n) { return '$' + Math.round(n).toLocaleString('ru-RU').replace(/,/g,' '); }
+    function fmt(n) { return '$' + Math.round(n).toLocaleString('uk-UA').replace(/,/g,' '); }
     function setFromX(clientX) {
       const rect = slider.getBoundingClientRect();
       let pct = ((clientX - rect.left) / rect.width) * 100;
@@ -3902,7 +3940,7 @@
       const final = deposit * Math.pow(1 + RATE, 12);
       dep.textContent = fmt(deposit);
       res.textContent = fmt(final);
-      profit.textContent = 'прибыль +' + fmt(final - deposit);
+      profit.textContent = 'прибуток +' + fmt(final - deposit);
     }
     slider.addEventListener('mousedown', e => { dragging = true; setFromX(e.clientX); });
     window.addEventListener('mousemove', e => { if (dragging) setFromX(e.clientX); });
@@ -3917,15 +3955,15 @@
     cartCount = 0;
     const c = document.getElementById('cartCount');
     if (c) c.textContent = '0';
-    document.querySelectorAll('.mk-buy').forEach(b => { b.classList.remove('added'); b.textContent = 'В корзину'; });
+    document.querySelectorAll('.mk-buy').forEach(b => { b.classList.remove('added'); b.textContent = 'До кошика'; });
   }
   document.querySelectorAll('[data-add]').forEach(btn => {
     btn.addEventListener('click', () => {
       cartCount++;
       const c = document.getElementById('cartCount');
       if (c) c.textContent = cartCount;
-      btn.classList.add('added'); btn.textContent = '✓ Добавлено';
-      setTimeout(() => { btn.classList.remove('added'); btn.textContent = 'В корзину'; }, 1500);
+      btn.classList.add('added'); btn.textContent = '✓ Додано';
+      setTimeout(() => { btn.classList.remove('added'); btn.textContent = 'До кошика'; }, 1500);
     });
   });
 
@@ -4239,12 +4277,13 @@
     const track = document.getElementById('cylinderTrack');
     if (!track) return;
 
-    const items = [
-      'Лендинги', 'Визитки', 'Интернет-магазины', 'Приложения', 
-      'SEO-оптимизация', 'Дизайн под ключ', 'Быстрая загрузка', 
-      'UI/UX дизайн', 'Веб-разработка', 'Интеграции API', 
-      'Аналитика', 'Поддержка'
+    const itemsUA = [
+      'Лендинги', 'Візитки', 'Інтернет-магазини', 'Застосунки',
+      'SEO-оптимізація', 'Дизайн під ключ', 'Швидке завантаження',
+      'UI/UX дизайн', 'Веб-розробка', 'Інтеграції API',
+      'Аналітика', 'Підтримка'
     ];
+    let items = itemsUA;
 
     const n = items.length;
     let radius = window.innerWidth < 768 ? 220 : 380;
@@ -4399,7 +4438,7 @@
 
 <!-- INTERACTIVE STYLE CUSTOMIZER -->
 <div class="customizer-widget" id="customizerWidget">
-  <button class="customizer-toggle" id="customizerToggle" aria-label="Кастомизировать дизайн">
+  <button class="customizer-toggle" id="customizerToggle" aria-label="Кастомізувати дизайн" data-i18n-attr="aria-label:customizer_toggle">
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
       <path d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
       <path d="M12 8C14.2091 8 16 9.79086 16 12C16 14.2091 14.2091 16 12 16C9.79086 16 8 14.2091 8 12C8 9.79086 9.79086 8 12 8Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
@@ -4407,8 +4446,8 @@
   </button>
   <div class="customizer-panel" id="customizerPanel">
     <div class="customizer-header">
-      <h4>Дизайн кнопок</h4>
-      <p>Выбери стиль кнопок для всего сайта</p>
+      <h4 data-i18n="customizer_title">Дизайн кнопок</h4>
+      <p data-i18n="customizer_desc">Обери стиль кнопок для всього сайту</p>
     </div>
     <div class="customizer-options">
       <div class="customizer-option active" data-style="obsidian">
@@ -4502,6 +4541,7 @@
       });
     }
   })();
+
 </script>
 </body>
 </html>
